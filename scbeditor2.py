@@ -31,31 +31,16 @@ import os
 import sys
 import platform
 from datetime import datetime
-# import base64
-# Python mega widgets (module to add to Python 3.7.9)
-# import Pmw
-# from setuptools import setup, find_packages
-# packages = find_packages(where='.', exclude=('.vscode', '__pycache__', '_Exemples', '_Help', '_Images', '_OLD_', '_old_version', '=SE= M221CE16R', 'build', 'dist', 'Fonts', 'Livraisons', 'Mail', 'rsc'))
 
 # GUI
 import tkinter as tk_gui
 import tkinter.font as tkFont
 from tkinter import messagebox
 
-# Normal Tkinter.* widgets are not themed!   # Frame, Scale, LabelFrame,
-# from tkinter import Label, Button, Entry, Checkbutton, IntVar, BooleanVar, Toplevel, messagebox, StringVar
-# from tkinter.ttk import Separator, Combobox
-# from ttkthemes              import ThemedTk, THEMES, ThemedStyle
-
-#from PIL import Image
-#from pillow import Image
-
 # Source code of the application
 import src.my_constants as constant
 from src.my_tools import MyExitWithRelaunch, force_exit_application, get_memory_used
 from src.my_log_an_usage import MyLogAnUsage
-#from src.my_configuration_data import MyConfigurationData
-#from src.my_configuration_data_gui import MyConfigurationDataGui
 from src.my_main_window import MyMainWindow
 
 # ###############################################################################################
@@ -68,9 +53,9 @@ __credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vig
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.0.1-07"
+    __version__ = "2.0.1-09"
 else:
-    __version__ = "2.0.1.07"
+    __version__ = "2.0.1.09"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"

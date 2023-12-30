@@ -18,7 +18,7 @@ import tkinter as tk_gui
 
 from datetime import datetime
 from enum import IntEnum
-from tkinter import Label, Button, Canvas, Entry
+from tkinter import Label, Button, Entry
 from tkinter.ttk import Separator
 from functools import partial
 
@@ -26,8 +26,6 @@ import tkinter.font as tkFont
 
 # from ttkthemes              import ThemedTk, THEMES, ThemedStyle
 from PIL import Image, ImageTk
-# import matplotlib as tkMapPlot
-# import matplotlib.pyplot as plt
 
 import src.my_constants as constant
 # from .my_log_an_usage import MyLogAnUsage
@@ -74,9 +72,10 @@ class MyMainWindow:
         self.a_palette_button_lst = []
         self.a_work_img = None
         self.a_bmp_image_file = None
-        self.a_canvas = None
+        self.a_picture_lbl = None
         self.a_render = None
         self.a_image = None
+        self.a_filename_lbl = None
         self.a_mouse_pos_x = None
         self.a_mouse_pos_Y = None
         self.a_color_lbl = None
@@ -123,18 +122,18 @@ class MyMainWindow:
         a_pic_frame = tk_gui.Frame(self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_pic_frame.place(x=2, y=98, width=self.i_main_window_width-4, height=400+15)  # fill :  must be 'none', 'x', 'y', or 'both'
 
+        a_pic_sep_h0 = Separator(a_pic_frame, orient='horizontal')
+        a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
+        a_pic_sep_lbl_h0 = Label(a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h0.grid(row=i_index_base_block, column=0, padx=15)
         a_pic_sep_h1 = Separator(a_pic_frame, orient='horizontal')
-        a_pic_sep_h1.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h1 = Label(a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h1.grid(row=i_index_base_block, column=0, padx=15)
-        a_pic_sep_h2 = Separator(a_pic_frame, orient='horizontal')
-        a_pic_sep_h2.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h2 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h2.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
+        a_pic_sep_h1.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
+        a_pic_sep_lbl_h1 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h1.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
 
         i_index_base_block += 1
-        self.a_canvas = Canvas(a_pic_frame, width=640, height=404, background='darkgray')
-        self.a_canvas.grid(row=i_index_base_block, column=0, sticky='e')
+        self.a_picture_lbl = Label(a_pic_frame, image=None, width=640, height=400, background=constant.BACKGROUD_COLOR_UI)
+        self.a_picture_lbl.grid(row=i_index_base_block, column=0, sticky='e')
 
         # Create SCB frame
         a_scb_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background='white')     # background='darkgray' or 'light grey'
@@ -142,9 +141,21 @@ class MyMainWindow:
 
         # Create details frame
         a_details_pic_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_details_pic_frame.place(x=668, y=15, width=self.i_main_window_width - 668, height=404)
+        a_details_pic_frame.place(x=668, y=30, width=self.i_main_window_width - 668, height=404)
 
         i_index_base_block = 0
+        a_pic_sep_lbl_h2 = Label(a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h2.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
+
+        i_index_base_block += 1
+        self.a_filename_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
+        self.a_filename_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
+
+        i_index_base_block += 1
+        a_space_lbl_h1 = Label(a_details_pic_frame, text="", background=constant.BACKGROUD_COLOR_UI)
+        a_space_lbl_h1.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
+
+        i_index_base_block += 1
         a_pic_sep_lbl_h3 = Label(a_details_pic_frame, text="Mouse position", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h3.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
 
@@ -324,9 +335,10 @@ class MyMainWindow:
     def __mw_print_widget_under_mouse(self, root):
         """ Print the widget type """
         __i_pos_x,__i_pos_y = root.winfo_pointerxy()
-        __a_widget = root.winfo_containing(__i_pos_x,__i_pos_y)
-        if __a_widget:
-            if "canvas" in str( __a_widget):
+        a_widget = root.winfo_containing(__i_pos_x,__i_pos_y)
+        if a_widget:
+            if "label3" in str( a_widget):
+                print( "\ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
                 # x,y = a_widget.winfo_pointerxy()
                 # print('{}, {}'.format(x, y))
                 __i_pos_x = __i_pos_x - (root.winfo_rootx() + 4)
@@ -335,6 +347,7 @@ class MyMainWindow:
                 if (__i_pos_x > 640):
                     __i_pos_x = 640
                 __i_pos_y = __i_pos_y - (root.winfo_rooty() + 98 + 15 + 8)  # 98 = top bar; 15 = separator; 8 = ???
+                print( "/ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
                 if (__i_pos_y < 0):
                     __i_pos_y = 0
                 if (__i_pos_y > 400):
@@ -347,11 +360,7 @@ class MyMainWindow:
                     i_offset = self.a_work_img.getpixel((__i_pos_x/2, __i_pos_y/2))
                     self.a_color_lbl.configure( text=str(i_offset))
                     self.a_scb_lbl.configure( text=str(int(i_offset/16)))
-                    # self.a_pic_color_lbl.configure(background= s_red + s_green + s_blue)
-                    # self.a_image
-                # if self.a_bmp_image_file:
-                #     a_pixel = self.a_bmp_image_file.map.read_byte(__i_pos_x, __i_pos_y)
-                #     __i_pos_x = __i_pos_x
+                    self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget('bg'))
             else:
                 self.a_mouse_pos_x.delete( 0, 10)
                 self.a_mouse_pos_y.delete( 0, 10)
@@ -406,26 +415,24 @@ class MyMainWindow:
             if width != 320 and height != 200:
                 return False
 
-            width = width * 2
-            height = height * 2
-            self.a_work_img = self.a_work_img.resize((width,height))
-            self.a_work_img.save(s_filename + ".bmp")
+            self.a_work_img = self.a_work_img.resize((width*2,height*2))
+            width, height = self.a_work_img.size
+            if width != 640 and height != 400:
+                return False
 
-            self.a_bmp_image_file = Image.open(s_filename + ".bmp")
-            w, h = self.a_bmp_image_file.size
-            
-            if self.a_image is not None:          # if an image was already loaded
-                self.a_canvas.delete(self.a_image)  # remove the previous image
+            for i_loop in range( 0, 60, 1):
+                i_palette_Offset = self.a_work_img.getpixel((0,i_loop))
+                print( str(i_loop) + " i_palette_Offset = " + str(i_palette_Offset) + "  pal= " + str(int(i_palette_Offset/16)) + " ndx= " + str( i_palette_Offset - (int(i_palette_Offset/16)) * 16))
 
-            # a_photo_image = plt.imread( 'G:\Collector\_Apple IIgs\_DiskCrackBand_\Iron_Lord\dessin.bmp\medite.ch.bmp')
-            # a_label_picture = Label( None, text='', width=320, image=a_photo_image)  # add , background='darkgray' to show where is the cell
+            self.a_render = ImageTk.PhotoImage(self.a_work_img)
+            self.a_picture_lbl.config(image=self.a_render)
+            self.a_picture_lbl.photo = self.a_render
 
-            self.a_render = ImageTk.PhotoImage(self.a_bmp_image_file) #must keep a reference to this
-            self.a_image = self.a_canvas.create_image(((w/2), (h/2)), image=self.a_render)
+            s_a_pathname, s_a_filename = os.path.split(s_filename)
+            self.a_filename_lbl.config(text=s_a_filename)
 
             a_palette_list = self.a_work_img.getpalette()
             print( 'Palette :')
-
             i_element = 0
             i_to = 0
             for i_loop in range( 0, 16, 1):

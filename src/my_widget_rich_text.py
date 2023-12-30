@@ -33,8 +33,8 @@ class MyRichTextWidget( Text):
         super().__init__( *args, **kwargs)
         default_font = tkFont.nametofont( self.cget( "font"))
 
-        size_of_char = default_font.measure( "m")
-        default_size = default_font.cget( "size")
+        i_size_of_char = default_font.measure( "m")
+        i_default_size = default_font.cget( "size")
         bold_font = tkFont.Font( **default_font.configure())
         italic_font = tkFont.Font( **default_font.configure())
         bold_italic_font = tkFont.Font( **default_font.configure())
@@ -44,15 +44,15 @@ class MyRichTextWidget( Text):
         bold_font.configure( weight="bold")
         italic_font.configure( slant="italic")
         bold_italic_font.configure( weight="bold", slant="italic")
-        h1_font.configure( size=int( default_size * 1.5), weight="bold")
+        h1_font.configure( size=int( i_default_size * 1.5), weight="bold")
 
         self.tag_configure( "bold", font=bold_font)
         self.tag_configure( "italic", font=italic_font)
         self.tag_configure( "bold-italic", font=bold_italic_font)
-        self.tag_configure( "h1", font=h1_font, spacing3=default_size)
+        self.tag_configure( "h1", font=h1_font, spacing3=i_default_size)
 
-        lmargin2 = size_of_char + default_font.measure( "\u2022 ")
-        self.tag_configure( "bullet", lmargin1=size_of_char, lmargin2=lmargin2)
+        lmargin2 = i_size_of_char + default_font.measure( "\u2022 ")
+        self.tag_configure( "bullet", lmargin1=i_size_of_char, lmargin2=lmargin2)
 
     # ####################### insert_bullet ########################
     def insert_bullet( self, index, text):
