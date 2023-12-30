@@ -64,13 +64,13 @@ from src.my_main_window import MyMainWindow
 __softname__ = constant.MY_APPLICATION_NAME
 __author__ = "Renaud Malaval"
 __copyright__ = "Copyright © 2023-2024, Disk Crack Band"
-__credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vignau","Olivier ZARDINI","https://www.flaticon.com/free-icon/"]
+__credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vignau","Olivier ZARDINI","https://www.flaticon.com/authors/reion"]
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.0.1-05"
+    __version__ = "2.0.1-07"
 else:
-    __version__ = "2.0.1.05"
+    __version__ = "2.0.1.07"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"
@@ -151,7 +151,7 @@ def main( argv):
     get_memory_used( c_my_main_window)
     c_my_main_window.mw_create_main_window()
     get_memory_used( c_my_main_window)
-    c_my_main_window.mw_load_main_window()
+    # c_my_main_window.mw_load_main_window()
 
     __print_font_info( 'TkDefaultFont')
 #    __print_font_info( 'TkMenuFont')

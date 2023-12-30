@@ -95,10 +95,10 @@ def get_memory_used( a_class):
     print( 'get_memory_used() : self                  = ', str( sys.getsizeof( a_class)))
 
 # ####################### open_file ########################
-def open_file(self):
+def open_file( w_main_windows):
     """ Return the selected picture file or None """
     s_filename = None
-    s_filename = filedialog.askopenfilename(initialdir=os.getcwd(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
+    s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=os.getcwd(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
     # if not filename:
         # return # user cancelled; stop this method
 

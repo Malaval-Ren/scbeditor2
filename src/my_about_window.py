@@ -77,6 +77,10 @@ class MyAboutWindow:
         a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=constant.BACKGROUD_COLOR_UI, anchor='center')  # background='darkgray' or 'light grey' == constant.BACKGROUD_COLOR_UI
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
 
+        _a_french_touch_photo = self.c_the_icons.get_french_photo()
+        a_name_photo_label = Label( top_left_frame, image=_a_french_touch_photo, background=constant.BACKGROUD_COLOR_UI, anchor='center')  # background='darkgray' or 'light grey' == constant.BACKGROUD_COLOR_UI
+        a_name_photo_label.grid( row=4, column=1, padx=4, pady=4)
+
         # #### TOP RIGHT #####
         __s_0_part = self.a_list_application_info[0] + '\n'
         __s_1_part = 'Version' + '\t' + self.a_list_application_info[5] + '\n' + \

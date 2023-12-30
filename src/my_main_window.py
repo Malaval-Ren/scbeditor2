@@ -367,10 +367,16 @@ class MyMainWindow:
     # ####################### mw_create_main_window ########################
     def mw_create_main_window( self):
         """ Design the main windows """
-
+        # set windows attribute
         __s_windows_size_and_position = ( str( self.i_main_window_width) + 'x' + str( self.i_main_window_height) + '+' + str( self.i_main_window_x) + '+' + str( self.i_main_window_y) )
         self.w_main_windows.geometry( __s_windows_size_and_position)  # dimension + position x/y a l'ouverture
         self.w_main_windows.update()
+        # lock resize of main window
+        self.w_main_windows.minsize( self.i_main_window_width, self.i_main_window_height)
+        self.w_main_windows.maxsize( self.i_main_window_width, self.i_main_window_height)
+        # no resize for both directions
+        self.w_main_windows.resizable( False, False)
+        self.w_main_windows.iconphoto( True, self.c_the_icons.get_app_photo())
 
         # Create 2 lines : icons, empty
         a_top_bar_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
@@ -391,7 +397,7 @@ class MyMainWindow:
     # ####################### mw_load_main_window ########################
     def mw_load_main_window(self):
         """ load a picture and fill the interface """
-        s_filename = open_file(self)
+        s_filename = open_file(self.w_main_windows)
         if s_filename:
             print( '\nLoading : ' + s_filename)
             # resize the original bmp from 320x200 to 640x400
