@@ -17,12 +17,9 @@ import os
 import tkinter as tk_gui
 
 from datetime import datetime
-from enum import IntEnum
-from tkinter import Label, Button, Entry
+from tkinter import font, Label, Button, Entry
 from tkinter.ttk import Separator
 from functools import partial
-
-import tkinter.font as tkFont
 
 # from ttkthemes              import ThemedTk, THEMES, ThemedStyle
 from PIL import Image, ImageTk
@@ -65,9 +62,10 @@ class MyMainWindow:
         self.i_main_window_height = MAIN_WINDOWS_HEIGHT
         # Position of the main windows
         self.i_main_window_x = 20
-        self.i_main_window_y = 20       
+        self.i_main_window_y = 20
         self.w_main_windows.background = constant.BACKGROUD_COLOR_UI
         self.c_the_icons = MyIconPictures( w_main_windows)
+        self.c_mains_icon_bar = None
         self.s_platform = platform.system()
         self.a_palette_button_lst = []
         self.a_work_img = None
@@ -77,7 +75,7 @@ class MyMainWindow:
         self.a_image = None
         self.a_filename_lbl = None
         self.a_mouse_pos_x = None
-        self.a_mouse_pos_Y = None
+        self.a_mouse_pos_y = None
         self.a_color_lbl = None
         self.a_scb_lbl = None
         self.a_pic_color_lbl = None
@@ -86,11 +84,10 @@ class MyMainWindow:
         self.a_blue = None
         self.a_red_dec_lbl = None
         self.a_green_dec_lbl = None
-        self.a_blue_dec_lbl = None        
+        self.a_blue_dec_lbl = None
         self.a_btn_x_lbl = None
         self.a_btn_y_lbl = None
         self.a_the_color_lbl = None
-        
         self.__mw_print_widget_under_mouse( w_main_windows)
 
     # ####################### __repr__ ########################
@@ -126,10 +123,10 @@ class MyMainWindow:
         a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
         a_pic_sep_lbl_h0 = Label(a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h0.grid(row=i_index_base_block, column=0, padx=15)
-        a_pic_sep_h1 = Separator(a_pic_frame, orient='horizontal')
-        a_pic_sep_h1.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h1 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h1.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
+        a_pic_sep_h0 = Separator(a_pic_frame, orient='horizontal')
+        a_pic_sep_h0.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
+        a_pic_sep_lbl_h0 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h0.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
 
         i_index_base_block += 1
         self.a_picture_lbl = Label(a_pic_frame, image=None, width=640, height=400, background=constant.BACKGROUD_COLOR_UI)
@@ -201,7 +198,7 @@ class MyMainWindow:
         i_index_base_block = 0
         a_bottom_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_bottom_frame.place( x=2, y=98+400+14, width=self.i_main_window_width-4, height=294 )
-        
+
         a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
         a_palette_sep_h2.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
         a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
@@ -227,7 +224,7 @@ class MyMainWindow:
         self.a_red = Entry( a_color_bottom_frame, textvariable="", background='white', foreground='red')
         self.a_red.grid( row=i_index_base_block, column=0, padx=7)
         self.a_red_dec_lbl = Label( a_color_bottom_frame, text="   ", background='white', foreground='red')
-        self.a_red_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7, sticky='ew')       
+        self.a_red_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7, sticky='ew')
         i_index_base_block += 1
         a_color_name_lbl = Label( a_color_bottom_frame, text="Green", background=constant.BACKGROUD_COLOR_UI, foreground='green')
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=7)
@@ -263,12 +260,12 @@ class MyMainWindow:
         self.a_btn_y_lbl = Label( a_color_bottom_frame, text="   ", background='white', foreground='black')
         self.a_btn_y_lbl.grid( row=i_index_base_block, column=1, padx=7, sticky='ew')
         i_index_base_block += 1
-        a_zButton = Button( a_color_bottom_frame, text='Set color', width=14, height=1)
-        a_zButton.grid( row=i_index_base_block, column=0, columnspan=2, padx=7, pady=8, sticky='ew')
+        a_change_color_btn = Button( a_color_bottom_frame, text='Set color', width=14, height=1)
+        a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=7, pady=8, sticky='ew')
 
         # creating a font object with little size for color buttons
-        a_font_label = tkFont.Font(size=6)
-        a_font_button = tkFont.Font(size=5)
+        a_font_label = font.Font(size=6)
+        a_font_button = font.Font(size=5)
 
         i_index_base_block += 1
         i_index_base_column = 1
@@ -286,7 +283,7 @@ class MyMainWindow:
             a_label = Label(a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
-            for i_index in range( i_from, i_to, 3):
+            for _ in range( i_from, i_to, 3):
                 a_button_color = Button( a_palette_bottom_frame, text='', width=4, height=1, background="#FFFFFF", font=a_font_button)
                 a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 self.a_palette_button_lst.append(a_button_color)
@@ -338,20 +335,16 @@ class MyMainWindow:
         a_widget = root.winfo_containing(__i_pos_x,__i_pos_y)
         if a_widget:
             if "label3" in str( a_widget):
-                print( "\ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
+                print( r"\ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
                 # x,y = a_widget.winfo_pointerxy()
                 # print('{}, {}'.format(x, y))
                 __i_pos_x = __i_pos_x - (root.winfo_rootx() + 4)
-                if (__i_pos_x < 0):
-                    __i_pos_x = 0
-                if (__i_pos_x > 640):
-                    __i_pos_x = 640
+                __i_pos_x = max(__i_pos_x, 0)
+                __i_pos_x = min(__i_pos_x, 640)
                 __i_pos_y = __i_pos_y - (root.winfo_rooty() + 98 + 15 + 8)  # 98 = top bar; 15 = separator; 8 = ???
                 print( "/ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
-                if (__i_pos_y < 0):
-                    __i_pos_y = 0
-                if (__i_pos_y > 400):
-                    __i_pos_y = 400
+                __i_pos_y = max(__i_pos_y, 0)
+                __i_pos_y = min(__i_pos_y, 400)
                 self.a_mouse_pos_x.delete( 0, 10)
                 self.a_mouse_pos_x.insert( "end", str(__i_pos_x))
                 self.a_mouse_pos_y.delete( 0, 10)
@@ -406,30 +399,29 @@ class MyMainWindow:
     # ####################### mw_load_main_window ########################
     def mw_load_main_window(self):
         """ load a picture and fill the interface """
-        s_filename = open_file(self.w_main_windows)
+        s_filename = open_file( self.w_main_windows)
         if s_filename:
             print( '\nLoading : ' + s_filename)
             # resize the original bmp from 320x200 to 640x400
-            self.a_work_img = Image.open(s_filename)
+            self.a_work_img = Image.open( s_filename)
             width, height = self.a_work_img.size
             if width != 320 and height != 200:
                 return False
 
-            self.a_work_img = self.a_work_img.resize((width*2,height*2))
+            self.a_work_img = self.a_work_img.resize( (width*2,height*2))
             width, height = self.a_work_img.size
             if width != 640 and height != 400:
                 return False
 
             for i_loop in range( 0, 60, 1):
-                i_palette_Offset = self.a_work_img.getpixel((0,i_loop))
-                print( str(i_loop) + " i_palette_Offset = " + str(i_palette_Offset) + "  pal= " + str(int(i_palette_Offset/16)) + " ndx= " + str( i_palette_Offset - (int(i_palette_Offset/16)) * 16))
+                i_palette_offset = self.a_work_img.getpixel( (0,i_loop))
+                print( str(i_loop) + " i_palette_Offset = " + str(i_palette_offset) + "  pal= " + str(int(i_palette_offset/16)) + " ndx= " + str( i_palette_offset - (int(i_palette_offset/16)) * 16))
 
-            self.a_render = ImageTk.PhotoImage(self.a_work_img)
-            self.a_picture_lbl.config(image=self.a_render)
+            self.a_render = ImageTk.PhotoImage( self.a_work_img)
+            self.a_picture_lbl.config( image=self.a_render)
             self.a_picture_lbl.photo = self.a_render
 
-            s_a_pathname, s_a_filename = os.path.split(s_filename)
-            self.a_filename_lbl.config(text=s_a_filename)
+            self.a_filename_lbl.config( text=os.path.basename( s_filename))
 
             a_palette_list = self.a_work_img.getpalette()
             print( 'Palette :')
@@ -439,20 +431,20 @@ class MyMainWindow:
                 i_from = i_to
                 i_to = i_to + 48
                 if i_loop < 10:
-                    s_my_hex = "0" + str(i_loop) + " "
+                    s_my_hex = "0" + str( i_loop) + " "
                 else:
-                    s_my_hex = str(i_loop) + " "
+                    s_my_hex = str( i_loop) + " "
 
                 for i_index in range( i_from, i_to, 3):
-                    if (a_palette_list[ i_index] > 15):
+                    if a_palette_list[ i_index] > 15:
                         s_red = f'#{a_palette_list[ i_index]:X}'
                     else:
                         s_red = f'#0{a_palette_list[ i_index]:X}'
-                    if (a_palette_list[ i_index + 1] > 15):
+                    if a_palette_list[ i_index + 1] > 15:
                         s_green = f'{a_palette_list[ i_index + 1]:X}'
                     else:
                         s_green = f'0{a_palette_list[ i_index + 1]:X}'
-                    if (a_palette_list[ i_index + 2] > 15):
+                    if a_palette_list[ i_index + 2] > 15:
                         s_blue = f'{a_palette_list[ i_index + 2]:X}'
                     else:
                         s_blue = f'0{a_palette_list[ i_index + 2]:X}'

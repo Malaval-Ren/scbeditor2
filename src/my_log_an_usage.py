@@ -15,7 +15,7 @@ import platform
 
 from datetime import datetime
 
-from .my_log_mail import MyLogMail
+# from .my_log_mail import MyLogMail
 from .my_log_txt import MyLogText
 
 # __name__ = "MyLogAnUsage"
@@ -54,6 +54,7 @@ class MyLogAnUsage:
             MyLogAnUsage.s_log_text = ""
             MyLogAnUsage.s_log_latest_text = ""
             MyLogAnUsage._instance._b_sealed = False
+            MyLogAnUsage.c_the_log = None
 
         return MyLogAnUsage._instance
 
@@ -71,7 +72,7 @@ class MyLogAnUsage:
 
     # ####################### __add_log ########################
     def __add_log( self, s_text):
-        """ add log private text string to __s_log_text """
+        """ Add log private text string to __s_log_text """
         if s_text != "":
             self.s_log_text = self.s_log_text + s_text + '\n'
 
@@ -92,11 +93,8 @@ class MyLogAnUsage:
                 self.__b_log_is_enabled = False
             elif self._s_storage != s_storage:
                 if s_storage == 'mail':
-                    self.c_the_log = MyLogMail( self._a_list_application_info)
-                    self.s_log_text = self.s_log_text[:-1] # remove the last char : '\n'
-                    self.c_the_log.add_log( self.s_log_text)
-                    self.s_log_text = ""
-                    self.__b_log_is_enabled = True
+                    # feature removed
+                    self.__b_log_is_enabled = False
                 elif s_storage == 'file':
                     self.c_the_log = MyLogText( self._a_list_application_info)
                     self.s_log_text = self.s_log_text[:-1]  # remove the last char : '\n'

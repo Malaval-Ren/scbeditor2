@@ -14,7 +14,7 @@
 # constant.MAX_NUMBER_OF_DEVICE
 #
 
-__name__ = "MyConstants"
+# __name__ = "MyConstants"
 
 # #######========================= constant =========================
 

@@ -273,7 +273,7 @@ class MyIconPictures:
         ozpl84uKnyK/br5U9RwrsbuoAMALITqzNiultGmaWmutW19fd5999tlTlc3vWhRF9NJLL1G1WhVCCCr+gINwzhEzY2pqip6Xv3xxHMhGo8HFWiZrrX2apt45x7Vazd+9e5f39vZO9gccBu3KlSt0/fp1MDMlSQLnHFWr1a/EF4B7e3sdgDDG8Pvvv4/bt28zJvb52f8BhDjWoKfE66cAAAAASUVORK5CYII=
         """
         self.french_photo = PhotoImage( master=self.w_windows_parent, data=__french_photo_base_64)
-        
+
     # ####################### log_size_of_photo ########################
     # def log_size_of_photo( self, a_photo):
     #     """log the size of a photo"""
@@ -296,7 +296,7 @@ class MyIconPictures:
     def get_open_photo( self):
         """Get open icon for the main windows"""
         return self.open_photo
-    
+
     # ####################### get_save_photo ########################
     def get_save_photo( self):
         """Get save icon for the main windows"""
@@ -305,4 +305,4 @@ class MyIconPictures:
     # ####################### get_french_photo ########################
     def get_french_photo( self):
         """Get french flag icon for the main windows"""
-        return self.french_photo    
+        return self.french_photo

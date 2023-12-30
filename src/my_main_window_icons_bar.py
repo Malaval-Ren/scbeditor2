@@ -14,11 +14,7 @@
 
 import platform
 
-from functools import partial
-from tkinter import Button, messagebox, StringVar
-# from ttkthemes              import ThemedTk, THEMES, ThemedStyle
-# network
-from pythonping import ping
+from tkinter import Button
 
 import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
@@ -74,6 +70,8 @@ class MyMainWindowIconsBar:
     def __mwib_save_box( self):
         """ Button configuration of the main window """
         self.c_the_log.add_string_to_log( 'Do save picture')
+        self.c_main_window.bell()
+        self.c_main_window.bell()
         # self.w_front_window = MyConfigurationWindow( self.c_main_window)
         # self.w_front_window.cw_create_configuration_window()
         # self.w_front_window = None
@@ -88,7 +86,6 @@ class MyMainWindowIconsBar:
     def mwib_create_top_bar_icons( self, i_row_line):
         """ Design the top row for the main windows """
         # print( "mw_top_bar_icons_cmd() color : " + self.w_main_windows['background'])
-        # a_about_photo = self.c_the_icons.get_about_photo()
 
         s_button_style = 'flat'
         i_column = 0
@@ -98,7 +95,6 @@ class MyMainWindowIconsBar:
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
 
-        # config_action_with_arg = partial( conf_create_configuration_box, self, self.c_the_configuration_data.get_list_configuration())
         i_column += 1
         if self.s_platform == "Darwin":
             a_button_preference = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
@@ -106,29 +102,12 @@ class MyMainWindowIconsBar:
             a_button_preference = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_preference.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
-        # config_action_with_arg = partial( conf_create_configuration_box, self, self.c_the_configuration_data.get_list_configuration())
         i_column += 1
         if self.s_platform == "Darwin":
-            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
+            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_config.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        # Display info in column 2, last colomn of first group (1 -> 4)
-        # dimensions = "Image size is\n\n%dx%d" % (aboutPhoto.width(), aboutPhoto.height())
-        # label_about = Label( self.a_top_frame_of_main_window, text=dimensions, foreground='purple')
-        # label_about = Label( self.a_top_frame_of_main_window, text='Device is a\n\nTM221CE16R', foreground='purple')
-        # label_about.grid( row=i_row_line, column=2)
- 
-        # a_name_photo = self.c_the_icons.get_schneider_electric_photo()
-        # if i_number_of_device == 1:
-        #     # i_name_photo_width = a_name_photo.width() + 31
-        #     # sous linux cela est parfait
-        #     i_name_photo_width = self.i_main_window_width - (( 3 * (85 + 4)) + 33)
-        # else:
-        #     i_name_photo_width = self.i_main_window_width - (( 3 * (85 + 4)) + 33)
-        # a_name_photo_label = Label( self.a_top_frame_of_main_window, width=i_name_photo_width, image=a_name_photo, background=constant.BACKGROUD_COLOR_UI, anchor='e')  # background='darkgray' or 'light grey' == constant.BACKGROUD_COLOR_UI
-        # a_name_photo_label.grid( row=i_row_line, column=3, padx=2, pady=2)  # , sticky='nsw'
 
         i_row_line += 1
         return i_row_line
