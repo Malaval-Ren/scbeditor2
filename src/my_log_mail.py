@@ -131,7 +131,7 @@ class MyLogMail:
                 self.__b_email_is_enabled = False
             else:
                 __mail = self.__mail_by_outlook.CreateItem( 0)
-                __mail.To = 'renaud.malaval@se.com'   # mail du destinataire
+                __mail.To = 'renaud.malaval@free.fr'   # mail du destinataire
                 __mail.Subject = os.getlogin() + '  ' + self.__softname + '  v' + self.__version
                 if self.__s_email_body == '':
                     self.__s_email_body = 'nothing was done.'
