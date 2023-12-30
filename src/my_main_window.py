@@ -128,57 +128,61 @@ class MyMainWindow:
         a_pic_sep_lbl_h1 = Label(a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h1.grid(row=i_index_base_block, column=0, padx=15)
         a_pic_sep_h2 = Separator(a_pic_frame, orient='horizontal')
-        a_pic_sep_h2.grid(row=i_index_base_block, column=1, columnspan=3, sticky='ew')
+        a_pic_sep_h2.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
         a_pic_sep_lbl_h2 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h2.grid(row=i_index_base_block, column=1, columnspan=3, padx=15, sticky='ew')
+        a_pic_sep_lbl_h2.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
 
         i_index_base_block += 1
         self.a_canvas = Canvas(a_pic_frame, width=640, height=404, background='darkgray')
         self.a_canvas.grid(row=i_index_base_block, column=0, sticky='e')
 
+        # Create SCB frame
+        a_scb_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background='white')     # background='darkgray' or 'light grey'
+        a_scb_frame.place(x=648, y=20, width=20, height=399)
+
         # Create details frame
         a_details_pic_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_details_pic_frame.place(x=640, y=15, width=self.i_main_window_width - 640, height=404)
+        a_details_pic_frame.place(x=668, y=15, width=self.i_main_window_width - 668, height=404)
 
         i_index_base_block = 0
         a_pic_sep_lbl_h3 = Label(a_details_pic_frame, text="Mouse position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid(row=i_index_base_block, column=1, columnspan=2, padx=7)
+        a_pic_sep_lbl_h3.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label(a_details_pic_frame, text="X: ", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid(row=i_index_base_block, column=1, padx=7)
+        a_pic_sep_lbl_h4.grid(row=i_index_base_block, column=1, padx=4)
         self.a_mouse_pos_x = Entry(a_details_pic_frame, textvariable="", background='white', foreground='black')
-        self.a_mouse_pos_x.grid(row=i_index_base_block, column=2, padx=7)
+        self.a_mouse_pos_x.grid(row=i_index_base_block, column=2, padx=4)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y: ", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=7)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4)
         self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable="", background='white', foreground='black')
-        self.a_mouse_pos_y.grid( row=i_index_base_block, column=2, padx=7)
+        self.a_mouse_pos_y.grid( row=i_index_base_block, column=2, padx=4)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h5 = Label( a_details_pic_frame, text="Color offset", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=7)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
 
         i_index_base_block += 1
         self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7, sticky='ew')
+        self.a_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette number / SCB", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=2, padx=7)
+        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
 
         i_index_base_block += 1
         self.a_scb_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_scb_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7, sticky='ew')
+        self.a_scb_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
 
         i_index_base_block += 1
         a_color_name_lbl = Label( a_details_pic_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
-        a_color_name_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7)
+        a_color_name_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
 
         i_index_base_block += 1
         self.a_pic_color_lbl = Label( a_details_pic_frame, text="", background='white', foreground='black')
-        self.a_pic_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=7, sticky='ew')
+        self.a_pic_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
 
     # ####################### __mw_palette_zone ########################
     def __mw_palette_zone(self):
@@ -188,14 +192,14 @@ class MyMainWindow:
         a_bottom_frame.place( x=2, y=98+400+14, width=self.i_main_window_width-4, height=294 )
         
         a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h2.grid( row=i_index_base_block, column=0, columnspan=6, sticky='ew')
+        a_palette_sep_h2.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
         a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=0, columnspan=6, padx=15)
+        a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
 
         a_palette_sep_h3 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h3.grid( row=i_index_base_block, column=6, columnspan=3, sticky='ew')
+        a_palette_sep_h3.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
         a_palette_sep_lbl_h3 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h3.grid( row=i_index_base_block, column=6, columnspan=3, padx=15)
+        a_palette_sep_lbl_h3.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
 
         # Create palette button left frame
         a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
