@@ -1,0 +1,29 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.py text
+*.sh text
+*.spec text
+*.md text
+*.txt text
+*.code-workspace text
+
+# Declare files that will always have CRLF line endings on checkout.  LINUX
+*.desktop text eol=lf
+
+# Declare files that will always have CRLF line endings on checkout.  WINDOWS
+*.cfg text eol=crlf
+*.smbp text eol=crlf
+*.ini text eol=crlf
+
+# Denote all files that are truly binary and should not be modified.  PICTURES
+*.icns binary
+*.ico binary
+*.gif binary
+*.jpg binary
+*.png binary
+
+# Visio
+*.vsd  binary

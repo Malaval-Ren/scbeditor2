@@ -1,0 +1,38 @@
+#Visual studio code
+/.vscode
+*/.vscode
+
+#not used file just to known where I'am
+__LINUX__
+__LINUX_VM__
+__MAC_OS__
+__Box_Sync__
+__SD_RAM__
+
+# Generated files
+/__pycache__
+*/__pycache__
+/build
+/dist
+Control_M221_DI-DO_quad.spec
+Control_M221_Di-Do.spec
+*.cfg
+*_log_Control_M221_Di-Do.txt
+
+# type file word
+*.doc
+*.docx
+*.odt
+
+*.bak
+*.rtf
+
+# Icone du dossier sur ma becane sous windows 10
+desktop.ini
+desktop_T_512x512.ico
+
+# destop file on Mac OS
+.DS_Store
+
+# Enforce a “no spaces in filenames” policy
+**\ **

@@ -1,0 +1,3 @@
+The application is installed.
+
+The first launch will create the default configuration file.
