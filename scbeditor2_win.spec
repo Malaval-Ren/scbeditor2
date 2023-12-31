@@ -2,11 +2,6 @@
 
 block_cipher = None
 
-#           pathex=['/media/renaud/tempo/Linux - NeXTStep/Python'],
-#           pathex=['/media/ysee/RMa/Personnel Privée/Python'],
-#           pathex=['/Users/renaud/Documents/Python'],
-#           pathex=['G:\\DEV\\Python\\scbeditor2_v2=v501_to'],
-
 a = Analysis(['scbeditor2.py'],
             pathex=['G:\\DEV\\Python\\scbeditor2\\scbeditor2'],
             binaries=[],

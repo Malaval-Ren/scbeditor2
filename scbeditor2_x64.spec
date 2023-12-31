@@ -2,13 +2,8 @@
 
 block_cipher = None
 
-#           pathex=['/media/renaud/tempo/Linux - NeXTStep/Python'],
-#           pathex=['/media/ysee/RMa/Personnel Privée/Python'],
-#           pathex=['/Users/renaud/Documents/Python'],
-#           pathex=['G:\\DEV\\Python\\Control_M221_Di-Do\\Control_M221_Di-Do'],
-
-a = Analysis(['Control_M221_Di-Do.py'],
-            pathex=['/home/renaud/Documents/Control_M221_DI-DO', '/home/renaud/Documents/Control_M221_DI-DO/src'],
+a = Analysis(['scbeditor2.py'],
+            pathex=['/home/renaud/Documents/scbeditor2', '/home/renaud/Documents/scbeditor2/src'],
             binaries=[],
             datas=[],
             hiddenimports=[],
@@ -25,7 +20,7 @@ exe = EXE(pyz,
             a.scripts,
             [],
             exclude_binaries=True,
-            name='Control_M221_Di-Do',
+            name='scbeditor2',
             debug=False,
             bootloader_ignore_signals=False,
             strip=False,
@@ -39,5 +34,5 @@ coll = COLLECT(exe,
             upx=False,
             upx_exclude=[],
             icon='appIcon_x64_T_256x256.gif',
-            version='Control_M221_Di-Do_version.txt',
-            name='Control_M221_Di-Do')
+            version='scbeditor2_version.txt',
+            name='scbeditor2')

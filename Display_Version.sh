@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Create a .desktop file to allow launch of PyInstaller application
-# This is for mime type application/x-shellscript
+# Create a eversioning.dmg file for application installation eversioning
 #
-# From : https://github.com/linuxmint/nemo/issues/2385
+# from : https://github.com/create-dmg/create-dmg
 #
 # Copyright (C) 2020-2024 Renaud Malaval <renaud.malaval@free.fr>
 # 
@@ -22,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.01'
+version='1.30'
 
 # definition all colors and styles to use with an echo
 
@@ -132,24 +131,107 @@ aError=$NO_ERROR
 
 #Clear the terminal screen
 # printf "\033c"
+pyInstall_Name=$(basename "$PWD")
+pyInstall_getVersion="StringStruct(u'ProductVersion', u'"
+pyInstall_version=""
 
-destopUserPathName='~/.local/share/applications/run-executable.desktop'
-# destopUserPathName='./run-executable.desktop'
-
-destopFilecontent="[Desktop Entry]
-Type=Application
-Name=Run Executable
-NoDisplay=true
-Icon=application-x-executable
-Exec=/bin/sh -c 'zenity --question --title=\"\$0\" --text=\"What do you wish to do with this executable file ?\" --no-wrap --ok-label Execute --cancel-label Cancel && \"\$0\"' %f
-Terminal=false
-MimeType=application/x-sharedlib
-"
-
-if [[ ! -f "$destopUserPathName" ]]
+if [[ "$OSTYPE" == "msys" ]]
 then
-    echo "${destopFilecontent}" > "$destopUserPathName"
-    echo -e $BGreen "Launch of application with mime 'application/x-sharedlib' is enabled." $Color_Off
+    python_version=$(python --version)
+    pyinstaller_version=$(pyinstaller --version)
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    python_version=$(python3 --version)
+    pyinstaller_version=$(pyinstaller -v)
+elif [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    python_version=$(python --version)
+    pyinstaller_version=$(pyinstaller --version)
 else
-    echo -e $BRed "Launch of application with mime 'application/x-sharedlib' already exist." $Color_Off
+    echo -e $IRed "Unknown OS" $Color_Off
+    exit $ERROR_SH_OS
 fi
+
+echo
+echo -e $BGreen "$pyInstall_Name" $Color_Off
+echo
+echo -e $IGreen "Python version      :" "$python_version" $Color_Off
+echo -e $IGreen "PyInstaller version :" "$pyinstaller_version" $Color_Off
+echo -e $IGreen "Get version from    :" "./"$pyInstall_Name"_version.txt" $Color_Off
+echo
+
+pyInstall_fileVersion="./"$pyInstall_Name"_Version.txt"
+if [ -f "$pyInstall_fileVersion" ]
+then
+    temp=$(grep -F "$pyInstall_getVersion" "$pyInstall_fileVersion")
+    echo -e $Green "grep line result    :" "'""$temp""'" $Color_Off
+    echo
+    tempNoSpace=$(echo $temp | tr -d ' ')
+    echo -e $Green "result no space     :" "$tempNoSpace" $Color_Off
+    echo
+
+    # extract version method 1
+    refLineLen=${#pyInstall_getVersion}
+    refLineLen=$refLineLen-2
+    regexp='^[0-9]+$'
+    j=$refLineLen
+    tempVersionOne=""
+    while j=$(( j + 1 ))
+    do
+        tempchar=${tempNoSpace:j:1}
+        # echo -e $Green "char tested         : @" "$j" ":" "$tempchar" $Color_Off
+        if [[ $tempchar =~ $regexp ]] || [ $tempchar == "." ]
+        then
+            tempVersionOne=$tempVersionOne$tempchar
+        elif [ $tempchar == "'" ] || [ $tempchar == ")" ]
+        then
+            break
+        fi
+    done
+    echo -e $Green "result concat       :" "$tempVersionOne" $Color_Off
+    echo
+
+    # extract version method 2
+    refLineLen=${#pyInstall_getVersion}
+    # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
+    refLineLen=$(($refLineLen - 1))
+	tempNoSpaceLen=${#tempNoSpace}
+    # echo -e $IGreen "tempNoSpaceLen len  :" "$tempNoSpaceLen" $Color_Off
+	calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
+	calcVersionLen=$(($calcVersionLen - 4))
+    # echo -e $IGreen "calcVersionLen len  :" "$calcVersionLen" $Color_Off
+    tempVersionTwo=${tempNoSpace:refLineLen:calcVersionLen}
+    # echo -e $IGreen "result filter       :" "$tempVersionTwo" $Color_Off
+    # versionLen=${#tempVersionTwo}
+    echo -e $Green "result extract      :" "$tempVersionTwo" $Color_Off
+    echo
+
+    if [[ $tempVersionOne != $tempVersionTwo ]]
+    then
+        echo -e $IRed "Version are different" $Color_Off 
+        exit $ERROR_SH_FILE
+    fi
+
+    versionLen=${#tempVersionOne}
+    echo -e $Green "len result filter   :" "$versionLen" $Color_Off
+    echo
+    if [ $versionLen -ge 7 ]
+    then
+        pyInstall_version="_v""$tempVersionOne"
+        echo -e $IGreen "Version found is    :" "$pyInstall_version" $Color_Off
+    else
+        pyInstall_version=""
+        echo -e $IYellow "Version is no available" $Color_Off 
+    fi
+else
+    echo -e $BRed "File version not found    : " "$pyInstall_fileVersion" $Color_Off
+    exit $ERROR_SH_FILE
+fi
+
+if [[ "$pyInstall_version" == "" ]]
+then
+    echo -e $BRed "Version not found in file : " "$pyInstall_fileVersion" $Color_Off
+    exit $ERROR_SH_FILE
+fi
+
+exit $NO_ERROR

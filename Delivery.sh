@@ -1,9 +1,25 @@
 #!/bin/bash
 #
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
 # Build Python script program to an application
 # create a backup folder
 #
-# renaud.malaval@free.fr
+# Copyright (C) 2020-2024 Renaud Malaval <renaud.malaval@free.fr>
+# 
+# This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 version='1.75'
 
 # definition all colors and styles to use with an echo
@@ -147,12 +163,12 @@ if [[ "$OSTYPE" == "msys" ]]
 then
     python_version=$(python --version)
     pyinstaller_version=$(pyinstaller --version)
-    if [[ "$pyinstaller_version" != "4.10" ]]
-    then
-        echo -e $IYellow "pyinstaller version is wrong back to 4.10" $Color_Off     
-        pip install pyinstaller==4.10
-        pyinstaller_version=$(pyinstaller --version)
-    fi
+    # if [[ "$pyinstaller_version" != "4.10" ]]
+    # then
+        # echo -e $IYellow "pyinstaller version $pyinstaller_version is wrong back to 4.10" $Color_Off     
+        # pip install pyinstaller==4.10 --user
+        # pyinstaller_version=$(pyinstaller --version)
+    # fi
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     python_version=$(python3 --version)
@@ -321,7 +337,7 @@ then
     then
         pyInstallSpec_Src=$pyInstallSpec_Windows
         # pyInstall_Parameter="-w -F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcons_T_512x512.ico' './""$pyInstall_Name"".py'"
-        pyInstall_Parameter="-w -F -y --clean --log-level DEBUG "$pyInstallSpec
+        pyInstall_Parameter="-w -y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Windows $Color_Off
         exit $ERROR_SH_OS    

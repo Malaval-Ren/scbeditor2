@@ -14,10 +14,6 @@ __SD_RAM__
 */__pycache__
 /build
 /dist
-Control_M221_DI-DO_quad.spec
-Control_M221_Di-Do.spec
-*.cfg
-*_log_Control_M221_Di-Do.txt
 
 # type file word
 *.doc

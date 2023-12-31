@@ -1,10 +1,26 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-# script by  Renaud Malaval
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+#
+# This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
+#
+# Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
+# 
+# This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
-This script is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
-
 Coding rule (added to PEP8) :
 
 b_ this is a boolean
@@ -48,7 +64,7 @@ from src.my_main_window import MyMainWindow
 __softname__ = constant.MY_APPLICATION_NAME
 __author__ = "Renaud Malaval"
 __copyright__ = "Copyright © 2023-2024, Disk Crack Band"
-__credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vignau","Olivier ZARDINI","https://www.flaticon.com/authors/reion"]
+__credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vignau","Olivier ZARDINI","Reion : https://www.flaticon.com/authors/reion"]
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
