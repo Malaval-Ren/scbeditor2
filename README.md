@@ -3,25 +3,12 @@
 
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
-The application scbeditor2 for Python main project file, pyinstaller file and Linux file
+ This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
+ 
+ This is an help for cross-dev
 
-The goal is to increase 5 files (XXX is the name of the project) :
-
-- XXX_version.txt
-- XXX.py
-- XXX.desktop (if file exist)
-- unitTestShell.bat (if file exist)
-- XXX_osx.spec
-
-For a Release delivered (git branch master) :
-
- major.minor.maintenance.build (example: 1.1.3.99)
-
-For a Debug (git branch develop) :
-
- minor.maintenance.build (example: 1.3.99)
-
-> note : XXX must be the same name of the folder and the main project file
+> note : My first release was on Apple IIGS **S.C.B. Editor** version 1.5a
+> You could found it in the image scbeditor.po
 
 &nbsp;
 
