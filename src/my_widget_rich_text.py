@@ -9,7 +9,7 @@
 # Copyright (C) Jul 26, 2020 Bryan Oakley
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or

@@ -6,7 +6,7 @@
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -45,11 +45,14 @@ MY_APPLICATION_NAME = 'SCB Editor II'
 # size of a button is number of charracters here 7 charracters => 49 pixels
 DEFAULT_BUTTON_WIDTH = 7
 
+# Color informations
+# https://matplotlib.org/stable/gallery/color/named_colors.html
+
 COLOR_WINDOWS_MENU_BAR = '#0063B1'  # rgb(0, 99, 177)
 
-# BACKGROUD_COLOR_UI = 'light grey' or 'darkgray'
+# BACKGROUD_COLOR_UI = 'light grey' or 'darkgray' or 'gray'
 # gray color for windows 211,211,211 -> '#D3D3D3'
-BACKGROUD_COLOR_UI = 'darkgray' # 'light grey'
+BACKGROUD_COLOR_UI = 'gray'
 
 DARK_COLOR_UI = '#000000' # 'black'
 LIGHT_COLOR_UI = '#FFFFFF' # 'white'

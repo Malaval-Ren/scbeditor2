@@ -6,7 +6,7 @@
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -62,6 +62,7 @@ class MyAboutWindow:
         self.i_width = 0
         self.i_position_x = 0
         self.i_position_y = 0
+        self.about_background = 'darkgray'
 
     # ####################### __aw_about_ok_button ########################
     def __aw_about_ok_button( self):
@@ -82,21 +83,21 @@ class MyAboutWindow:
     def __aw_about_block( self):
         """ Create a about dialog """
         # global s_device_information
-        top_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        top_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=self.about_background)   # darkgray or light grey
         top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
         button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=constant.BACKGROUD_COLOR_UI, width=_a_about_photo.width(), height=_a_about_photo.height())   # darkgray or light grey
+        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.about_background, width=_a_about_photo.width(), height=_a_about_photo.height())   # darkgray or light grey
         top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
-        a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=constant.BACKGROUD_COLOR_UI, anchor='center')  # background='darkgray' or 'light grey' == constant.BACKGROUD_COLOR_UI
+        a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=self.about_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
 
         _a_french_touch_photo = self.c_the_icons.get_french_photo()
-        a_name_photo_label = Label( top_left_frame, image=_a_french_touch_photo, background=constant.BACKGROUD_COLOR_UI, anchor='center')  # background='darkgray' or 'light grey' == constant.BACKGROUD_COLOR_UI
+        a_name_photo_label = Label( top_left_frame, image=_a_french_touch_photo, background=self.about_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=4, column=1, padx=4, pady=4)
 
         # #### TOP RIGHT #####
@@ -108,14 +109,13 @@ class MyAboutWindow:
             'Thanks to\n'
         __s_4_part = \
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
-            '  ' + self.a_list_application_info[3][2] + ": " + self.a_list_application_info[3][3] + ", " + self.a_list_application_info[3][4] + '\n' + \
-            '  ' + self.a_list_application_info[3][5] + '\n'
+            '  ' + self.a_list_application_info[3][2] + '\n'
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
         __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved' + '\n' + \
             '\n' + \
             'eMail' + '\t' + self.a_list_application_info[7] + '\n'
 
-        a_middle_text = MyRichTextWidget( top_left_frame, background=constant.BACKGROUD_COLOR_UI, relief='sunken', tabs=('7c', '16c'), width=60, height=18)  # , exportselection=0, takefocus=0
+        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=18)  # , exportselection=0, takefocus=0
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
         a_middle_text.insert( 'end', self.a_list_application_info[1] + '\n', "bold-italic")
@@ -128,7 +128,7 @@ class MyAboutWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, background=constant.BACKGROUD_COLOR_UI).pack( side='right', padx=4, pady=4 )
+        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, background=self.about_background).pack( side='right', padx=4, pady=4 )
 
         self.w_about_window.update()
 
@@ -148,13 +148,21 @@ class MyAboutWindow:
         self.w_about_window.maxsize( self.i_width, self.i_height)
         # no resize for both directions
         self.w_about_window.resizable( False, False)
+        self.w_about_window.iconphoto( True, self.c_the_icons.get_app_photo())
 
         print( '\npw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
 
     # ##########################################################################################
-    # #######################                                           ########################
-    # #######################                   PUBLIC                  ########################
-    # #######################                                           ########################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   ######  #     # ######  #       ###  #####
+    #   #     # #     # #     # #        #  #     #
+    #   #     # #     # #     # #        #  #
+    #   ######  #     # ######  #        #  #
+    #   #       #     # #     # #        #  #
+    #   #       #     # #     # #        #  #     #
+    #   #        #####  ######  ####### ###  #####
+    #
     # ##########################################################################################
 
     # ####################### aw_create_about_window ########################
@@ -169,7 +177,7 @@ class MyAboutWindow:
         # window dialog is on top of w_parent_window
         self.w_about_window.grab_set()
         self.w_about_window.focus_set()
-        self.w_about_window.configure( background=constant.BACKGROUD_COLOR_UI)
+        self.w_about_window.configure( background=self.about_background)
 
         # ####################### disable_event ########################
         # disable click on the X on top right of the window

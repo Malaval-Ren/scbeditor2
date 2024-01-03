@@ -143,10 +143,10 @@ ERROR_GIT_init=$(($ERROR_GIT+1))
 aError=$NO_ERROR
 
 # How to install package 
-# sudo apt-get install ./scbeditor2_2.0.1-11_amd64.deb
+# sudo apt-get install ./scbeditor2_2.0.2-13_amd64.deb
 #
 # How to uninstall package
-# sudo apt-get remove ./scbeditor2_2.0.1-11_amd64.deb
+# sudo apt-get remove ./scbeditor2_2.0.2-13_amd64.deb
 
 # How to uninstall package manualy
 # sudo rm -r /usr/bin/scbeditor2
@@ -154,7 +154,7 @@ aError=$NO_ERROR
 # sudo rm -r /usr/share/icons/scbeditor2.png
 
 # if problem
-# sudo dpkg -i ./scbeditor2_2.0.1-11_amd64.deb
+# sudo dpkg -i ./scbeditor2_2.0.2-13_amd64.deb
 # sudo dpkg -r scbeditor2
 
 #Clear the terminal screen

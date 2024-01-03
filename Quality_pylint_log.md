@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  sam. 30 déc. 2023 23:21:30
+date :  mer. 3 janv. 2024 23:03:52
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -12,7 +12,7 @@ date :  sam. 30 déc. 2023 23:21:30
 | Perl | 5.36.0 |
 | Bash | 5.1.16(1)-release |
 | *Project* |  |
-| scbeditor2 | 2.0.1.11 |
+| scbeditor2 | 2.0.2.13 |
 
 &nbsp;
 
@@ -20,12 +20,8 @@ date :  sam. 30 déc. 2023 23:21:30
 
 > pylint: disable=line-too-long
   
-*** Module scbeditor2  
-
-scbeditor2.py:6:0: C0301: Line too long (103/100) (line-too-long)
-
-------------------------------------------------------------------
-Your code has been rated at 9.87/10 (previous run: 9.87/10, +0.00)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
@@ -83,15 +79,21 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window  
 
-src\my_main_window.py:116:4: R0915: Too many statements (59/50) (too-many-statements)
-src\my_main_window.py:196:4: R0914: Too many local variables (20/15) (too-many-locals)
-src\my_main_window.py:196:4: R0915: Too many statements (81/50) (too-many-statements)
-src\my_main_window.py:400:4: R0914: Too many local variables (17/15) (too-many-locals)
-src\my_main_window.py:400:4: R0912: Too many branches (16/12) (too-many-branches)
-src\my_main_window.py:400:4: R0915: Too many statements (51/50) (too-many-statements)
+src\my_main_window.py:107:38: C0303: Trailing whitespace (trailing-whitespace)
+src\my_main_window.py:160:4: R0915: Too many statements (57/50) (too-many-statements)
+src\my_main_window.py:228:12: W0612: Unused variable 'a_rect' (unused-variable)
+src\my_main_window.py:233:4: R0915: Too many statements (78/50) (too-many-statements)
+src\my_main_window.py:412:39: W0613: Unused argument 'event' (unused-argument)
+src\my_main_window.py:419:41: W0613: Unused argument 'event' (unused-argument)
+src\my_main_window.py:426:40: W0613: Unused argument 'event' (unused-argument)
+src\my_main_window.py:433:42: W0613: Unused argument 'event' (unused-argument)
+src\my_main_window.py:438:4: R0914: Too many local variables (20/15) (too-many-locals)
+src\my_main_window.py:438:4: R0915: Too many statements (93/50) (too-many-statements)
+src\my_main_window.py:753:4: R0912: Too many branches (14/12) (too-many-branches)
+src\my_main_window.py:639:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.82/10 (previous run: 9.82/10, +0.00)
+Your code has been rated at 9.76/10 (previous run: 9.77/10, -0.02)
 
 &nbsp;
 
@@ -125,5 +127,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.969 / 10**
+**note = 9.976 / 10**
 

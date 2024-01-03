@@ -6,7 +6,7 @@
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -64,13 +64,13 @@ from src.my_main_window import MyMainWindow
 __softname__ = constant.MY_APPLICATION_NAME
 __author__ = "Renaud Malaval"
 __copyright__ = "Copyright © 2023-2024, Disk Crack Band"
-__credits__ = ["Frédéric Mure","Patrice Afflatet","Brutal Deluxe","Antoine Vignau","Olivier ZARDINI","Reion: https://www.flaticon.com/authors/reion"]
+__credits__ = ["Frédéric Mure","Patrice Afflatet","Reion: https://www.flaticon.com/authors/reion"]
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.0.1-11"
+    __version__ = "2.0.2-13"
 else:
-    __version__ = "2.0.1.11"
+    __version__ = "2.0.2.13"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"
@@ -130,7 +130,18 @@ def __print_font_info( s_font_tkinter_name):
         i_loop += 1
     print()
 
-# #######========================= tkinter =========================
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    # #    #   ##   # #    #
+    # ##  ##  #  #  # ##   #
+    # # ## # #    # # # #  #
+    # #    # ###### # #  # #
+    # #    # #    # # #   ##
+    # #    # #    # # #    #
+    #
+    # ##########################################################################################
+
 # ####################### main ########################
 def main():
     """ The entry function of the application """

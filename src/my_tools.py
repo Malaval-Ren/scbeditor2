@@ -6,7 +6,7 @@
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or

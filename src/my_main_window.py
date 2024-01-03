@@ -6,7 +6,7 @@
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -35,7 +35,7 @@ import os
 import tkinter as tk_gui
 
 from datetime import datetime
-from tkinter import font, Label, Button, Entry, Scale, StringVar
+from tkinter import font, Label, Button, Entry, Canvas, Scale, StringVar
 from tkinter.ttk import Separator
 from functools import partial
 
@@ -54,7 +54,7 @@ from .my_tools import open_file
 # #######========================= constant private =========================
 
 MAIN_WINDOWS_WIDTH = 840
-MAIN_WINDOWS_HEIGHT = 806
+MAIN_WINDOWS_HEIGHT = 824
 WAIT_TIME_COM = 0.05
 
 # ###############################################################################################
@@ -89,13 +89,22 @@ class MyMainWindow:
         self.a_work_img = None
         self.a_bmp_image_file = None
         self.a_picture_lbl = None
+        self.a_scb_cnvs = None
         self.a_render = None
         self.a_image = None
         self.a_filename_lbl = None
         self.a_mouse_pos_x = None
         self.a_mouse_pos_y = None
+        self.a_mouse_pos_x_input_var= StringVar()
+        self.a_mouse_pos_y_input_var = StringVar()
+        self.a_pos_x_true_lbl = None
+        self.a_pos_y_true_lbl = None
         self.a_color_lbl = None
         self.a_scb_lbl = None
+        self.a_scb_start_lbl = None
+        self.a_scb_start_true_lbl = None
+        self.a_scb_end_lbl = None
+        self.a_scb_end_true_lbl = None        
         self.a_pic_color_lbl = None
         self.a_red_ntr = None
         self.a_green_ntr = None
@@ -134,86 +143,208 @@ class MyMainWindow:
     #         return cls.__getattr__( self, name)
     #     return AttributeError( f"{cls.name} object has no attribute {name}")
 
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    # #     #                                  ######
+    # ##   ## # #####  #####  #      ######    #     # #  ####  ##### #    # #####  ######    #####    ##   #####  #####
+    # # # # # # #    # #    # #      #         #     # # #    #   #   #    # #    # #         #    #  #  #  #    #   #
+    # #  #  # # #    # #    # #      #####     ######  # #        #   #    # #    # #####     #    # #    # #    #   #
+    # #     # # #    # #    # #      #         #       # #        #   #    # #####  #         #####  ###### #####    #
+    # #     # # #    # #    # #      #         #       # #    #   #   #    # #   #  #         #      #    # #   #    #
+    # #     # # #####  #####  ###### ######    #       #  ####    #    ####  #    # ######    #      #    # #    #   #
+    #
+    # ##########################################################################################
+
+    # ####################### __mw_click_on_picture ########################
+    def __mw_click_on_picture( self, event):
+        """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
+        self.__mv_entry_black_focus_out( None)
+        if self.a_work_img:
+            # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
+            i_pos_x = max( event.x, 0)
+            i_pos_x = min( event.x, 640)
+            i_pos_y = max( event.y, 0)
+            i_pos_y = min( event.y, 400)
+
+            self.a_mouse_pos_x_input_var.set( str( i_pos_x))
+            self.a_mouse_pos_y_input_var.set( str( i_pos_y))
+            self.a_pos_x_true_lbl.configure( text=str( int( ( i_pos_x & 1022) / 2)))
+            self.a_pos_y_true_lbl.configure( text=str( int( ( i_pos_y & 1022) / 2)))
+
+            i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
+            self.a_color_lbl.configure( text=str( i_offset))
+            self.a_scb_lbl.configure( text=str( int( i_offset/16)))
+            self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
+
+            # Draw the SCB rectangle
+            i_palette_number = int( i_offset/16)
+            print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y))
+            if i_pos_y & 1:
+                i_pos_y -= 1
+            if i_pos_x & 1:
+                i_pos_x -= 1
+
+            # search for previous line to see if they use the same palette
+            i_rect_high = max( i_pos_y - 2, 0)
+            print( "| H i_rect_high= " + str( i_rect_high))
+            i_from = i_rect_high
+            i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
+            print( "| H i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
+            while (i_from > -2) and (int( i_offset/16) == i_palette_number):
+                i_rect_high = i_from
+                i_from -= 2
+                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
+                print( "| H i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
+            print( "| H  i_rect_high= " + str( i_rect_high))
+            print( "|")
+
+            # search for next line to see if they use the same palette
+            i_rect_low = min( i_pos_y + 2, 400)
+            print( "| L i_rect_low= " + str( i_rect_low))
+            i_from = i_rect_low
+            i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
+            print( "| L i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
+            while (i_from < 399) and (int( i_offset/16) == i_palette_number):
+                i_rect_low = i_from
+                i_from += 2
+                i_from = min( i_from, 399)
+                print( "| L i_from= " + str( i_from))
+                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
+                print( "| L i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
+            print( "| L  i_rect_low= " + str( i_rect_low))
+
+            if i_rect_high & 1:
+                i_rect_high -= 1
+            if i_rect_low & 1:
+                i_rect_low -= 1
+
+            self.a_scb_start_lbl.configure( text=str( i_rect_high))
+            self.a_scb_end_lbl.configure( text=str( i_rect_low))
+            self.a_scb_start_true_lbl.configure( text=str( int( i_rect_high/2)))
+            self.a_scb_end_true_lbl.configure( text=str( int(i_rect_low/2)))
+            print( r"\  i_rect_high= " + str( i_rect_high) + "   i_rect_low= " + str( i_rect_low))
+            self.a_scb_cnvs.delete("all")
+            a_rect = self.a_scb_cnvs.create_rectangle( 0, i_rect_high, 20, i_rect_low, fill='blue', outline='blue')
+            self.w_main_windows.update()
+            print()
 
     # ####################### __mw_picture_zone ########################
-    def __mw_picture_zone(self):
-        """ Frame with the picture to left, and details to right """        
-        i_index_base_block = 0
-        a_pic_frame = tk_gui.Frame(self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_pic_frame.place(x=2, y=98, width=self.i_main_window_width-4, height=400+15)  # fill :  must be 'none', 'x', 'y', or 'both'
+    def __mw_picture_zone( self, a_pic_frame):
+        """ Frame with the picture to left, and details to right """
 
-        a_pic_sep_h0 = Separator(a_pic_frame, orient='horizontal')
+        i_index_base_block = 0
+        a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
         a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h0 = Label(a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid(row=i_index_base_block, column=0, padx=15)
-        a_pic_sep_h0 = Separator(a_pic_frame, orient='horizontal')
-        a_pic_sep_h0.grid(row=i_index_base_block, column=1, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h0 = Label(a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid(row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
+        a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=0, padx=15)
+        a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
+        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=1, sticky='ew')
+        a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
 
         i_index_base_block += 1
-        self.a_picture_lbl = Label(a_pic_frame, image=None, width=640, height=400, background=constant.BACKGROUD_COLOR_UI)
-        self.a_picture_lbl.grid(row=i_index_base_block, column=0, sticky='e')
+        self.a_picture_lbl = Label( a_pic_frame, padx=0, pady=0, image=None, width=640, height=410, background=constant.BACKGROUD_COLOR_UI)
+        self.a_picture_lbl.grid( row=i_index_base_block, column=0, sticky='nw')
+        self.a_picture_lbl.bind( '<Button>', self.__mw_click_on_picture)
 
-        # Create SCB frame
-        a_scb_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background='white')     # background='darkgray' or 'light grey'
-        a_scb_frame.place(x=648, y=20, width=20, height=399)
+        # Create SCB frame to fraw rectangle to present SCB
+        a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_scb_frame.place( x=644, y=28, width=20, height=400)
+
+        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=400, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
+        self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
 
         # Create details frame
-        a_details_pic_frame = tk_gui.Frame(a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_details_pic_frame.place(x=668, y=30, width=self.i_main_window_width - 668, height=404)
+        a_details_pic_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_details_pic_frame.place( x=664, y=30, width=self.i_main_window_width - 664, height=400)
 
         i_index_base_block = 0
-        a_pic_sep_lbl_h2 = Label(a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h2.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_pic_sep_lbl_h2 = Label( a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h2.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
         self.a_filename_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_filename_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
+        self.a_filename_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        a_space_lbl_h1 = Label(a_details_pic_frame, text="", background=constant.BACKGROUD_COLOR_UI)
-        a_space_lbl_h1.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_space_lbl_h1 = Label( a_details_pic_frame, text="", background=constant.BACKGROUD_COLOR_UI)
+        a_space_lbl_h1.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h3 = Label(a_details_pic_frame, text="Mouse position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid(row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_pic_sep_lbl_h3 = Label( a_details_pic_frame, text="Mouse position", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h4 = Label(a_details_pic_frame, text="X: ", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid(row=i_index_base_block, column=1, padx=4)
-        self.a_mouse_pos_x = Entry(a_details_pic_frame, textvariable="", background='white', foreground='black')
-        self.a_mouse_pos_x.grid(row=i_index_base_block, column=2, padx=4)
+        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        self.a_mouse_pos_x = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, background='white', foreground='black')
+        self.a_mouse_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1)
+        self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y: ", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4)
-        self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable="", background='white', foreground='black')
-        self.a_mouse_pos_y.grid( row=i_index_base_block, column=2, padx=4)
+        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, background='white', foreground='black')
+        self.a_mouse_pos_y.grid( row=i_index_base_block, column=2, padx=4, pady=1)
+        self.a_pos_y_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h5 = Label( a_details_pic_frame, text="Color offset", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
         self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
+        self.a_color_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette number / SCB", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
         self.a_scb_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_scb_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
+        self.a_scb_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
+
+        i_index_base_block += 1
+        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="From", width=5, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        self.a_scb_start_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_scb_start_lbl.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
+        self.a_scb_start_true_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_scb_start_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
+
+        i_index_base_block += 1
+        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="To", width=5, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        self.a_scb_end_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_scb_end_lbl.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
+        self.a_scb_end_true_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
+        self.a_scb_end_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_color_name_lbl = Label( a_details_pic_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
-        a_color_name_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4)
+        a_color_name_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
 
         i_index_base_block += 1
-        self.a_pic_color_lbl = Label( a_details_pic_frame, text="", background='white', foreground='black')
-        self.a_pic_color_lbl.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, sticky='ew')
+        self.a_pic_color_lbl = Label( a_details_pic_frame, text=None, background='white', foreground='black')
+        self.a_pic_color_lbl.grid( row=i_index_base_block, rowspan=2, column=1, columnspan=3, padx=4, pady=1, sticky='nsew')
+        # self.a_the_color_new_lbl = Label( a_color_bottom_frame, text="", width=8, background=constant.LIGHT_COLOR_UI, foreground='black')
+        # self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=4, column=2, columnspan=1, padx=4, pady=1, sticky='ewns')
+
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    # ######
+    # #     #  ####  ##### #####  ####  #    #    #####    ##   #      ###### ##### ##### ######    #####    ##   #####  #####
+    # #     # #    #   #     #   #    # ##  ##    #    #  #  #  #      #        #     #   #         #    #  #  #  #    #   #
+    # ######  #    #   #     #   #    # # ## #    #    # #    # #      #####    #     #   #####     #    # #    # #    #   #
+    # #     # #    #   #     #   #    # #    #    #####  ###### #      #        #     #   #         #####  ###### #####    #
+    # #     # #    #   #     #   #    # #    #    #      #    # #      #        #     #   #         #      #    # #   #    #
+    # ######   ####    #     #    ####  #    #    #      #    # ###### ######   #     #   ######    #      #    # #    #   #
+    #
+    # ##########################################################################################
 
     # ####################### __mw_restore_old_color ########################
     def __mw_restore_old_color( self):
@@ -271,7 +402,7 @@ class MyMainWindow:
         self.a_blue_ntr_dec_lbl.configure( text=i_value)
         s_red = self.a_red_input_var.get()
         if len( s_red) != 2:
-            s_red = "0" + s_red 
+            s_red = "0" + s_red
         s_green = self.a_green_input_var.get()
         if len( s_green) != 2:
             s_green = "0" + s_green
@@ -280,7 +411,7 @@ class MyMainWindow:
     # ####################### __mv_entry_red_focus_in ########################
     def __mv_entry_red_focus_in( self, event):
         """ Select of red entry widget focus events prepare scale to move """
-        self.a_color_slider.config( foreground='red')       
+        self.a_color_slider.config( foreground='red')
         self.a_color_slider.set( int(self.a_red_ntr.get(), 16) )
         self.a_color_slider.config( command=self.__mv_update_red_entry )
 
@@ -304,12 +435,10 @@ class MyMainWindow:
         self.a_color_slider.config( foreground='black')
 
     # ####################### __mw_palette_zone ########################
-    def __mw_palette_zone(self):
+    def __mw_palette_zone(self, a_bottom_frame):
         """ Frame with the palette button to left, and details to right """
-        i_index_base_block = 0
-        a_bottom_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_bottom_frame.place( x=2, y=98+400+14, width=self.i_main_window_width-4, height=294 )
 
+        i_index_base_block = 0
         a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
         a_palette_sep_h2.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
         a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
@@ -322,7 +451,7 @@ class MyMainWindow:
 
         # Create palette button left frame
         a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_palette_bottom_frame.place( x=2, y=15, width=570, height=276 )
+        a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
         # creating a font object with little size for color buttons to reduce their size
         a_font_label = font.Font(size=6)
@@ -356,10 +485,7 @@ class MyMainWindow:
 
         # Create color button right frame
         a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_color_bottom_frame.place( x=572, y=15, width=self.i_main_window_width - 572, height=276 )
-
-        for i_loop in range( 0, 9, 1):
-            a_color_bottom_frame.columnconfigure(i_loop, weight=4)
+        a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276 )
 
         i_index_base_block = 0
         a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='red')
@@ -368,11 +494,9 @@ class MyMainWindow:
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1)
 
         i_index_base_block += 1
-        # textvariable=StringVar()
         self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='red')
         self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
         self.a_red_ntr.bind( "<FocusIn>", self.__mv_entry_red_focus_in)
-        # self.a_red_ntr.bind( "<FocusOut>", self.__mv_entry_Black_focus_out)
         self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='red')
         self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
@@ -393,7 +517,6 @@ class MyMainWindow:
         self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='green')
         self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_green_ntr.bind( "<FocusIn>", self.__mv_entry_green_focus_in)
-        # self.a_green_ntr.bind( "<FocusOut>", self.__mv_entry_Black_focus_out)
         self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='green')
         self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
         i_index_base_block += 1
@@ -403,7 +526,6 @@ class MyMainWindow:
         self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='blue')
         self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_blue_ntr.bind( "<FocusIn>", self.__mv_entry_blue_focus_in)
-        # self.a_blue_ntr.bind( "<FocusOut>", self.__mv_entry_Black_focus_out)
         self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='blue')
         self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
@@ -413,7 +535,7 @@ class MyMainWindow:
 
         i_index_base_block += 1
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1, sticky='ew')        
+        a_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Palette Y", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=1, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset X", background=constant.BACKGROUD_COLOR_UI)
@@ -421,7 +543,7 @@ class MyMainWindow:
         i_index_base_block += 1
 
         self.a_btn_offset_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='black')
-        self.a_btn_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, sticky='ew')      
+        self.a_btn_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, sticky='ew')
         self.a_btn_x_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='black')
         self.a_btn_x_lbl.grid( row=i_index_base_block, column=2, padx=4, sticky='ew')
         self.a_btn_y_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='black')
@@ -445,35 +567,32 @@ class MyMainWindow:
         # print( "s_string_apres %s = ", s_string_apres)
         # print( "s_insert       %S = ", s_insert)
         # print( "a_name         %W = ", s_name)
-        b_result = True
 
-        # # fake stuff to get the 1st frame for the first device and tranform this function in method with usage of self.a_dico_cw_gui_config_element
-        # if self.a_dico_cw_gui_config_element[ 1] != "":
-        #     a_dico_cw_line_elements = self.a_dico_cw_gui_config_element[ 1]
-        #     a_config_frame = a_dico_cw_line_elements[ self.a_list_cw_element_name_keys[ self.a_cw_key_number.GroupFrame]]
+        if (s_insert >= 'a') & (s_insert <= 'f'):
+            s_insert.upper()
 
-        # if (s_insert == '') | (s_insert == '.') | ( (s_insert >= '0') & (s_insert <= '9')):
-        #     # print( '__cw_set_max_len_to_fifteen_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
-        #     if int( i_action) == 0:     # deletion
-        #         # print( '__cw_set_max_len_to_fifteen_chars_and_filter() : action = deletion' )
-        #         if len( s_string_apres) + 1 > 8:
-        #             b_result = True
-        #         else:
-        #             a_config_frame.bell()
-        #             b_result = False
-        #     elif int( i_action) == 1:   # insertion
-        #         # print( '__cw_set_max_len_to_fifteen_chars_and_filter() : action = insertion' )
-        #         if len( s_string_apres) + 1 > 15:
-        #             a_config_frame.bell()
-        #             b_result = False
-        #         else:
-        #             b_result = True
-        #     else:
-        #         # print( '__cw_set_max_len_to_fifteen_chars_and_filter() : autre' )
-        #         b_result = True
-        # else:
-        #     a_config_frame.bell()
-        #     b_result = False
+        if (s_insert == '') | ((s_insert >= 'A') & (s_insert <= 'F')) | ( (s_insert >= '0') & (s_insert <= '9')):
+            # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
+            if int( i_action) == 0:     # deletion
+                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : action = deletion' )
+                if len( s_string_apres) + 1 > 8:
+                    b_result = True
+                else:
+                    self.w_main_windows.bell()
+                    b_result = False
+            elif int( i_action) == 1:   # insertion
+                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : action = insertion' )
+                if len( s_string_apres) + 1 > 15:
+                    self.w_main_windows.bell()
+                    b_result = False
+                else:
+                    b_result = True
+            else:
+                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : autre' )
+                b_result = True
+        else:
+            self.w_main_windows.bell()
+            b_result = False
 
         return b_result
 
@@ -494,7 +613,7 @@ class MyMainWindow:
         __i_complete = int( i_number / 16)
         __i_rest = i_number - ( __i_complete * 16)
         # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
-        self.a_btn_offset_lbl.configure( text=str( i_number))     # label under Offset 
+        self.a_btn_offset_lbl.configure( text=str( i_number))         # label under Offset
         if i_number > 15:
             self.a_btn_x_lbl.configure( text=str( __i_complete))      # label under Palette Y
         else:
@@ -512,8 +631,8 @@ class MyMainWindow:
         i_index = int(self.a_btn_offset_lbl.cget( "text"))
         a_palette_button = self.a_palette_button_lst[i_index]
         # ready when color modification will be done
-        # a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
-        # 
+        a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
+        #
         # to do : Modify the picture palette
 
     # ####################### __mw_clock_in_window_bar ########################
@@ -527,47 +646,68 @@ class MyMainWindow:
         self.w_main_windows.after( 1000, self.__mw_clock_in_window_bar)
 
     # ####################### __mw_print_widget_under_mouse ########################
-    def __mw_print_widget_under_mouse(self, root):
+    def __mw_print_widget_under_mouse( self, root):
         """ Show position of the mouse in the loaded picture """
-        __i_pos_x,__i_pos_y = root.winfo_pointerxy()
-        a_widget = root.winfo_containing( __i_pos_x,__i_pos_y)
-        if a_widget:
-            if "label3" in str( a_widget):
-                # print( r"\ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
-                # x,y = a_widget.winfo_pointerxy()
-                # print('{}, {}'.format(x, y))
-                __i_pos_x = __i_pos_x - ( root.winfo_rootx() + 4)
-                __i_pos_x = max( __i_pos_x, 0)
-                __i_pos_x = min( __i_pos_x, 640)
-                __i_pos_y = __i_pos_y - ( root.winfo_rooty() + 98 + 15 + 8)  # 98 = top bar; 15 = separator; 8 = ???
-                # print( "/ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
-                __i_pos_y = max( __i_pos_y, 0)
-                __i_pos_y = min( __i_pos_y, 400)
-                self.a_mouse_pos_x.delete( 0, 10)
-                self.a_mouse_pos_x.insert( "end", str(__i_pos_x))
-                self.a_mouse_pos_y.delete( 0, 10)
-                self.a_mouse_pos_y.insert( "end", str(__i_pos_y))
-                # Disabled during debug, evolution of feature is necessary
-                # if self.a_work_img:
-                #     i_offset = self.a_work_img.getpixel((__i_pos_x/2, __i_pos_y/2))
-                #     self.a_color_lbl.configure( text=str(i_offset))
-                #     self.a_scb_lbl.configure( text=str(int(i_offset/16)))
-                #     self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget('bg'))
-            # else:
-            #     self.a_mouse_pos_x.delete( 0, 10)
-            #     self.a_mouse_pos_y.delete( 0, 10)
+        if self.a_work_img:
+            self.__mv_entry_black_focus_out( None)
+            # i_pos_x = root.winfo_x()
+            # i_pos_y = root.winfo_y()
+            # print( "-> i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y))
+        #     i_pos_x = max( event.x, 0)
+        #     i_pos_x = min( event.x, 640)
+        #     i_pos_y = max( event.y, 0)
+        #     i_pos_y = min( event.y, 400)
 
-        root.after(500, self.__mw_print_widget_under_mouse, root)
+        #     self.a_mouse_pos_x_input_var.set( str( i_pos_x))
+        #     self.a_mouse_pos_y_input_var.set( str( i_pos_y))
+        #     self.a_pos_x_true_lbl.configure( text=str( int( ( i_pos_x and 1022)/2)))
+        #     self.a_pos_y_true_lbl.configure( text=str( int( ( i_pos_y and 1022/2))))
+
+        # __i_pos_x, __i_pos_y = root.winfo_pointerxy()
+        # a_widget = root.winfo_containing( __i_pos_x,__i_pos_y)
+        # if a_widget:
+        #     if "label3" in str( a_widget):
+        #         # print( r"\ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
+        #         # x,y = a_widget.winfo_pointerxy()
+        #         # print('{}, {}'.format(x, y))
+        #         __i_pos_x = __i_pos_x - ( root.winfo_rootx() + 4)
+        #         __i_pos_x = max( __i_pos_x, 0)
+        #         __i_pos_x = min( __i_pos_x, 640)
+        #         __i_pos_y = __i_pos_y - ( root.winfo_rooty() + 98 + 15 + 8)  # 98 = top bar; 15 = separator; 8 = ???
+        #         # print( "/ i_pos_x= " + str(__i_pos_x) + "   i_pos_y= " + str(__i_pos_y))
+        #         __i_pos_y = max( __i_pos_y, 0)
+        #         __i_pos_y = min( __i_pos_y, 400)
+        #         self.a_mouse_pos_x_input_var.set( str( __i_pos_x))
+        #         self.a_mouse_pos_y_input_var.set( str( __i_pos_y))
+
+        #         # Disabled during debug, evolution of feature is necessary
+        #         # if self.a_work_img:
+        #         #     i_offset = self.a_work_img.getpixel( (__i_pos_x/2, __i_pos_y/2))
+        #         #     self.a_color_lbl.configure( text=str( i_offset))
+        #         #     self.a_scb_lbl.configure( text=str( int( i_offset/16)))
+        #         #     self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
+        #     # else:
+        #     #     self.a_mouse_pos_x.delete( 0, 10)
+        #     #     self.a_mouse_pos_y.delete( 0, 10)
+
+            root.after( 500, self.__mw_print_widget_under_mouse, root)
 
     # ####################### __mw_change_focus ########################
     def __mw_change_focus( self, event):
-        """ De selected all entry widget """
+        """ De selected an entry widget, when a button is clicked ie the palette button """
         event.widget.focus_set()
 
     # ##########################################################################################
-    # #######################                                           ########################
-    # #######################                   PUBLIC                  ########################
-    # #######################                                           ########################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   ######  #     # ######  #       ###  #####
+    #   #     # #     # #     # #        #  #     #
+    #   #     # #     # #     # #        #  #
+    #   ######  #     # ######  #        #  #
+    #   #       #     # #     # #        #  #
+    #   #       #     # #     # #        #  #     #
+    #   #        #####  ######  ####### ###  #####
+    #
     # ##########################################################################################
 
     # ####################### mw_create_main_window ########################
@@ -584,25 +724,30 @@ class MyMainWindow:
         self.w_main_windows.resizable( False, False)
         self.w_main_windows.iconphoto( True, self.c_the_icons.get_app_photo())
 
-        # Create 2 lines : icons, empty
+        # Create 1 line of action icons
         a_top_bar_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
         a_top_bar_frame.place(x=2, y=0, width=self.i_main_window_width-4, height=98 )   # fill :  must be 'none', 'x', 'y', or 'both'
-
         self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_main_windows, self.a_list_application_info, a_top_bar_frame)
         self.c_mains_icon_bar.mwib_create_top_bar_icons( 1)
 
         # Create picture frame
-        self.__mw_picture_zone()
+        a_pic_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=400+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+        self.__mw_picture_zone( a_pic_frame)
 
         # Create palette frame
-        self.__mw_palette_zone()
+        a_palette_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_palette_frame.place( x=2, y=98+400+22+8, width=self.i_main_window_width-4, height=294 )
+        self.__mw_palette_zone( a_palette_frame)
+        self.w_main_windows.update()
 
         self.w_main_windows.bind( '<Button>', self.__mw_change_focus)
 
         # disabled during debug
         # if self.s_platform == "Windows":
         #     self.__mw_clock_in_window_bar()
-        #     self.__mw_print_widget_under_mouse( self.w_main_windows)
+            # if self.a_work_img:
+            #     self.__mw_print_widget_under_mouse( self.w_main_windows)
 
     # ####################### mw_load_main_window ########################
     def mw_load_main_window(self):
@@ -637,7 +782,9 @@ class MyMainWindow:
             # print( 'Palette :')
             i_element = 0
             i_to = 0
-            for i_loop in range( 0, 16, 1):
+            # Disabled for debug
+            # for i_loop in range( 0, 16, 1):
+            for _ in range( 0, 16, 1):
                 i_from = i_to
                 i_to = i_to + 48
                 # Disabled for debug
@@ -674,6 +821,8 @@ class MyMainWindow:
                 self.w_main_windows.update()
                 # Disabled for debug
                 # print( s_my_hex)
+                if self.a_work_img:
+                    self.__mw_print_widget_under_mouse( self.a_picture_lbl)
 
             self.w_main_windows.update()
         else:
