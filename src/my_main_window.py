@@ -33,6 +33,7 @@
 import platform
 import os
 import tkinter as tk_gui
+import array
 
 from datetime import datetime
 from tkinter import font, Label, Button, Entry, Canvas, Scale, StringVar
@@ -53,7 +54,7 @@ from .my_tools import open_file
 # ###############################################################################################
 # #######========================= constant private =========================
 
-MAIN_WINDOWS_WIDTH = 840
+MAIN_WINDOWS_WIDTH = 1060
 MAIN_WINDOWS_HEIGHT = 824
 WAIT_TIME_COM = 0.05
 
@@ -106,6 +107,7 @@ class MyMainWindow:
         self.a_scb_end_lbl = None
         self.a_scb_end_true_lbl = None        
         self.a_pic_color_lbl = None
+        self.a_bar_chart_cnvs = None
         self.a_red_ntr = None
         self.a_green_ntr = None
         self.a_blue_ntr = None
@@ -178,54 +180,42 @@ class MyMainWindow:
             self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
 
             # Draw the SCB rectangle
-            i_palette_number = int( i_offset/16)
-            print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y))
+            i_palette_number = int( i_offset/16) * 16
+            print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y)+ "   i_offset= " + str( i_offset) + "   i_palette_number= " + str( i_palette_number))
             if i_pos_y & 1:
                 i_pos_y -= 1
             if i_pos_x & 1:
                 i_pos_x -= 1
 
-            # search for previous line to see if they use the same palette
-            i_rect_high = max( i_pos_y - 2, 0)
-            print( "| H i_rect_high= " + str( i_rect_high))
-            i_from = i_rect_high
-            i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
-            print( "| H i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
-            while (i_from > -2) and (int( i_offset/16) == i_palette_number):
-                i_rect_high = i_from
-                i_from -= 2
-                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
-                print( "| H i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
-            print( "| H  i_rect_high= " + str( i_rect_high))
-            print( "|")
-
-            # search for next line to see if they use the same palette
-            i_rect_low = min( i_pos_y + 2, 400)
-            print( "| L i_rect_low= " + str( i_rect_low))
-            i_from = i_rect_low
-            i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
-            print( "| L i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
-            while (i_from < 399) and (int( i_offset/16) == i_palette_number):
-                i_rect_low = i_from
-                i_from += 2
-                i_from = min( i_from, 399)
-                print( "| L i_from= " + str( i_from))
-                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_from))
-                print( "| L i_from= " + str( i_from) + "   i_offset= " + str( i_offset) + "   int( i_offset/16)= " + str( int( i_offset/16)) + "   i_offset/16= " + str( i_offset/16))
-            print( "| L  i_rect_low= " + str( i_rect_low))
-
-            if i_rect_high & 1:
-                i_rect_high -= 1
-            if i_rect_low & 1:
-                i_rect_low -= 1
-
-            self.a_scb_start_lbl.configure( text=str( i_rect_high))
-            self.a_scb_end_lbl.configure( text=str( i_rect_low))
-            self.a_scb_start_true_lbl.configure( text=str( int( i_rect_high/2)))
-            self.a_scb_end_true_lbl.configure( text=str( int(i_rect_low/2)))
-            print( r"\  i_rect_high= " + str( i_rect_high) + "   i_rect_low= " + str( i_rect_low))
             self.a_scb_cnvs.delete("all")
-            a_rect = self.a_scb_cnvs.create_rectangle( 0, i_rect_high, 20, i_rect_low, fill='blue', outline='blue')
+            for i_loop in range( 0, 398, 2):
+                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
+                i_inter = int( i_offset/16) * 16
+                if (i_inter == i_palette_number):
+                    self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
+                else:
+                    i_inter = 0
+
+            # Draw bar chart for couleur in usage in a line 
+            self.a_bar_chart_cnvs.delete( "all")
+            a_usage_color_rry = array.array( 'i')
+            a_usage_color_rry = [1] * 16
+
+            for i_loop in range( 0, 638, 2):
+                i_offset = self.a_work_img.getpixel( ( i_loop, i_pos_y))
+                i_offset = i_offset - (int( i_offset / 16) * 16)
+                a_usage_color_rry[i_offset] +=1
+
+            for i_loop in range( 0, 16, 1):
+                a_usage_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 74) / 320) + 0.5)
+                print( str(i_loop) + "  "+ str( a_usage_color_rry[i_loop]))
+
+            i_colmun_x = 0
+            for i_loop in range( 0, 16, 1):
+                i_hauteur = a_usage_color_rry[i_loop]
+                self.a_bar_chart_cnvs.create_rectangle( i_colmun_x, 74-i_hauteur, i_colmun_x+20, 74, fill=self.a_palette_button_lst[i_palette_number+i_loop].cget( 'bg'), outline='white')
+                i_colmun_x += 24
+
             self.w_main_windows.update()
             print()
 
@@ -252,12 +242,18 @@ class MyMainWindow:
         a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_scb_frame.place( x=644, y=28, width=20, height=400)
 
-        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=400, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
+        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=400, background='green', highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
 
         # Create details frame
         a_details_pic_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_details_pic_frame.place( x=664, y=30, width=self.i_main_window_width - 664, height=400)
+
+        a_bar_chart_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_bar_chart_frame.place( x=664, y=30+(400-74), width=self.i_main_window_width - 438, height=74)
+
+        self.a_bar_chart_cnvs = Canvas( a_bar_chart_frame, width=self.i_main_window_width - (438+8), height=74, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
+        self.a_bar_chart_cnvs.grid( row=0, column=0, padx=4, sticky='ewns')
 
         i_index_base_block = 0
         a_pic_sep_lbl_h2 = Label( a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
