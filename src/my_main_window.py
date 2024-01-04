@@ -36,7 +36,7 @@ import tkinter as tk_gui
 import array
 
 from datetime import datetime
-from tkinter import font, Label, Button, Entry, Canvas, Scale, StringVar
+from tkinter import font, Label, Button, Entry, Canvas, Scale, StringVar, Radiobutton, IntVar
 from tkinter.ttk import Separator
 from functools import partial
 
@@ -106,8 +106,9 @@ class MyMainWindow:
         self.a_scb_start_true_lbl = None
         self.a_scb_end_lbl = None
         self.a_scb_end_true_lbl = None        
-        self.a_pic_color_lbl = None
         self.a_bar_chart_cnvs = None
+
+        self.color_radio_button = IntVar()
         self.a_red_ntr = None
         self.a_green_ntr = None
         self.a_blue_ntr = None
@@ -177,7 +178,16 @@ class MyMainWindow:
             i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
             self.a_color_lbl.configure( text=str( i_offset))
             self.a_scb_lbl.configure( text=str( int( i_offset/16)))
-            self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
+            # self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
+            
+            # Select the radio button color in the palette
+            a_color_selected = self.a_palette_button_lst[i_offset].cget( 'bg')
+            s_color_true=a_color_selected.replace( "#","")
+            s_red = s_color_true[0:0+2]
+            s_green = s_color_true[2:2+2]
+            s_blue = s_color_true[4:4+2]
+            self.a_palette_button_lst[i_offset].select()
+            self.__mw_color_button( i_offset, "#" + s_red, s_green, s_blue)
 
             # Draw the SCB rectangle
             i_palette_number = int( i_offset/16) * 16
@@ -187,7 +197,7 @@ class MyMainWindow:
             if i_pos_x & 1:
                 i_pos_x -= 1
 
-            self.a_scb_cnvs.delete("all")
+            self.a_scb_cnvs.delete( "all")
             for i_loop in range( 0, 398, 2):
                 i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
                 i_inter = int( i_offset/16) * 16
@@ -319,16 +329,6 @@ class MyMainWindow:
         self.a_scb_end_true_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
         self.a_scb_end_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
-        i_index_base_block += 1
-        a_color_name_lbl = Label( a_details_pic_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
-        a_color_name_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
-
-        i_index_base_block += 1
-        self.a_pic_color_lbl = Label( a_details_pic_frame, text=None, background='white', foreground='black')
-        self.a_pic_color_lbl.grid( row=i_index_base_block, rowspan=2, column=1, columnspan=3, padx=4, pady=1, sticky='nsew')
-        # self.a_the_color_new_lbl = Label( a_color_bottom_frame, text="", width=8, background=constant.LIGHT_COLOR_UI, foreground='black')
-        # self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=4, column=2, columnspan=1, padx=4, pady=1, sticky='ewns')
-
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
     #
@@ -450,8 +450,8 @@ class MyMainWindow:
         a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
         # creating a font object with little size for color buttons to reduce their size
-        a_font_label = font.Font(size=6)
-        a_font_button = font.Font(size=5)
+        a_font_label = font.Font( size=6)
+        a_font_button = font.Font( size=3)
 
         i_index_base_block = 0
         i_index_base_column = 1
@@ -460,9 +460,11 @@ class MyMainWindow:
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
 
+        # table of color button for the palette
         i_index_base_block += 1
         i_index_base_column = 0
         i_to = 0
+        i_index = 0
         for i_loop in range( 0, 16, 1):
             i_from = i_to
             i_to = i_to + 48
@@ -470,10 +472,11 @@ class MyMainWindow:
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
             for _ in range( i_from, i_to, 3):
-                a_button_color = Button( a_palette_bottom_frame, text='', width=4, height=1, background=constant.LIGHT_COLOR_UI, font=a_font_button)
+                a_button_color = Radiobutton( a_palette_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
                 a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 self.a_palette_button_lst.append( a_button_color)
                 i_index_base_column += 1
+                i_index += 1
 
             self.w_main_windows.update()
             i_index_base_column = 0
@@ -597,6 +600,8 @@ class MyMainWindow:
         """ Palette of color buttons. note: s_red start by char '#' """
         # self.w_main_windows.bell()
         self.__mv_entry_black_focus_out( None)
+        if (s_red == ""):
+            s_red_true = "VIDE"
         s_red_true=s_red.replace( "#","")
         self.a_red_input_var.set( s_red_true)
         self.a_red_ntr_dec_lbl.configure( text=str( int( s_red_true, 16)))
@@ -806,7 +811,7 @@ class MyMainWindow:
                     # s_my_hex = s_my_hex + s_red + s_green + s_blue + " "
 
                     a_button_color = self.a_palette_button_lst[i_element]
-                    config_palette_bottom_with_arg = partial( self.__mw_color_button, int(i_index / 3), s_red, s_green, s_blue)
+                    config_palette_bottom_with_arg = partial( self.__mw_color_button, int( i_index / 3), s_red, s_green, s_blue)
                     a_button_color.configure( command=config_palette_bottom_with_arg)
                     a_button_color.configure( background=s_red + s_green + s_blue)
                     i_element += 1
