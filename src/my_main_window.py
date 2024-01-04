@@ -105,7 +105,7 @@ class MyMainWindow:
         self.a_scb_start_lbl = None
         self.a_scb_start_true_lbl = None
         self.a_scb_end_lbl = None
-        self.a_scb_end_true_lbl = None        
+        self.a_scb_end_true_lbl = None
         self.a_bar_chart_cnvs = None
 
         self.color_radio_button = IntVar()
@@ -182,8 +182,7 @@ class MyMainWindow:
             i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
             self.a_color_lbl.configure( text=str( i_offset))
             self.a_scb_lbl.configure( text=str( int( i_offset/16)))
-            # self.a_pic_color_lbl.configure( background=self.a_palette_button_lst[i_offset].cget( 'bg'))
-            
+
             # Select the radio button color in the palette
             a_color_selected = self.a_palette_button_lst[i_offset].cget( 'bg')
             s_color_true=a_color_selected.replace( "#","")
@@ -205,12 +204,12 @@ class MyMainWindow:
             for i_loop in range( 0, 398, 2):
                 i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
                 i_inter = int( i_offset/16) * 16
-                if (i_inter == i_palette_number):
+                if i_inter == i_palette_number:
                     self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
                 else:
                     i_inter = 0
 
-            # Draw bar chart for couleur in usage in a line 
+            # Draw bar chart for couleur in usage in a line
             self.a_bar_chart_cnvs.delete( "all")
             a_usage_color_rry = array.array( 'i')
             a_usage_color_rry = [1] * 16
@@ -644,8 +643,8 @@ class MyMainWindow:
         """ Palette of color buttons. note: s_red start by char '#' """
         # self.w_main_windows.bell()
         self.__mv_entry_black_focus_out( None)
-        if (s_red == ""):
-            s_red_true = "VIDE"
+        # if s_red == "":
+        #     s_red_true = "VIDE"
         s_red_true=s_red.replace( "#","")
         self.a_red_input_var.set( s_red_true)
         self.a_red_ntr_dec_lbl.configure( text=str( int( s_red_true, 16)))
