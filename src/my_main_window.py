@@ -124,6 +124,10 @@ class MyMainWindow:
         self.a_the_color_new_lbl = None
         self.a_color_old_btn = None
         self.a_color_slider = None
+        self.a_zoom_lbl = None
+        self.a_arround_cursor = None
+        self.a_zoom_work_img = None
+        self.a_render_zoom = None
 
     # ####################### __repr__ ########################
     def __repr__( self):
@@ -217,15 +221,38 @@ class MyMainWindow:
                 a_usage_color_rry[i_offset] +=1
 
             for i_loop in range( 0, 16, 1):
-                a_usage_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 74) / 320) + 0.5)
+                if a_usage_color_rry[i_loop] == 1:
+                    a_usage_color_rry[i_loop] = 0
+                else:
+                    if a_usage_color_rry[i_loop] < 4:
+                        a_usage_color_rry[i_loop] = 4
+                    a_usage_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 84) / 320) + 0.5)
+
                 print( str(i_loop) + "  "+ str( a_usage_color_rry[i_loop]))
 
             i_colmun_x = 0
             for i_loop in range( 0, 16, 1):
                 i_hauteur = a_usage_color_rry[i_loop]
-                self.a_bar_chart_cnvs.create_rectangle( i_colmun_x, 74-i_hauteur, i_colmun_x+20, 74, fill=self.a_palette_button_lst[i_palette_number+i_loop].cget( 'bg'), outline='white')
+                if a_usage_color_rry[i_loop] > 0:
+                    self.a_bar_chart_cnvs.create_rectangle( i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84, fill=self.a_palette_button_lst[i_palette_number+i_loop].cget( 'bg'), outline='white')
                 i_colmun_x += 24
 
+            # display zoom of a part of the picture
+            i_contour = 26
+            i_top_x = i_pos_x-i_contour
+            if i_pos_x < i_contour:
+                i_top_x = 0
+            i_top_y = i_pos_y-i_contour
+            if i_pos_y < i_contour:
+                i_top_y = 0
+
+            i_box_top = (i_top_x, i_top_y, i_pos_x+i_contour, i_pos_y+i_contour)
+            a_zoom_work_tmp = self.a_work_img.crop( i_box_top)
+            width, height = a_zoom_work_tmp.size
+            self.a_zoom_work_img = a_zoom_work_tmp.resize( (width*4, height*4))
+            self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
+            self.a_zoom_lbl.config( image=self.a_render_zoom)
+            self.a_zoom_lbl.photo = self.a_render_zoom
             self.w_main_windows.update()
             print()
 
@@ -238,13 +265,14 @@ class MyMainWindow:
         a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
         a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=0, padx=15)
+
         a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
-        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=1, sticky='ew')
+        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=8, sticky='ew')
         a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=1, padx=81, sticky='ew')
+        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=8, padx=170, sticky='ew')
 
         i_index_base_block += 1
-        self.a_picture_lbl = Label( a_pic_frame, padx=0, pady=0, image=None, width=640, height=410, background=constant.BACKGROUD_COLOR_UI)
+        self.a_picture_lbl = Label( a_pic_frame, padx=0, pady=0, image=None, width=640, height=410, background=constant.BACKGROUD_COLOR_UI, cursor='circle')
         self.a_picture_lbl.grid( row=i_index_base_block, column=0, sticky='nw')
         self.a_picture_lbl.bind( '<Button>', self.__mw_click_on_picture)
 
@@ -252,7 +280,7 @@ class MyMainWindow:
         a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_scb_frame.place( x=644, y=28, width=20, height=400)
 
-        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=400, background='green', highlightthickness=0)
+        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=400, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
 
         # Create details frame
@@ -260,10 +288,21 @@ class MyMainWindow:
         a_details_pic_frame.place( x=664, y=30, width=self.i_main_window_width - 664, height=400)
 
         a_bar_chart_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_bar_chart_frame.place( x=664, y=30+(400-74), width=self.i_main_window_width - 438, height=74)
+        a_bar_chart_frame.place( x=664, y=30+(400-104), width=self.i_main_window_width - 442, height=104)
 
-        self.a_bar_chart_cnvs = Canvas( a_bar_chart_frame, width=self.i_main_window_width - (438+8), height=74, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
-        self.a_bar_chart_cnvs.grid( row=0, column=0, padx=4, sticky='ewns')
+        i_index_base_block = 0
+        self.a_bar_chart_cnvs = Canvas( a_bar_chart_frame, width=self.i_main_window_width - (438+40), height=84, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0)
+        self.a_bar_chart_cnvs.grid( row=i_index_base_block, column=0, padx=4, sticky='ewns')
+        i_index_base_block += 1
+        i_index_base_column = 0
+        a_font_label = font.Font( size=6)
+
+        a_bar_chart_comment_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_bar_chart_comment_frame.place( x=667, y=30+(400-20), width=self.i_main_window_width - 438, height=15)
+        for i_loop in range( 0, 16, 1):
+            a_label = Label(a_bar_chart_comment_frame, text=str( i_loop), width=2, justify='left', background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label.grid( row=1, column=i_index_base_column, padx=4, pady=0, sticky='w')
+            i_index_base_column += 1
 
         i_index_base_block = 0
         a_pic_sep_lbl_h2 = Label( a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
@@ -435,15 +474,18 @@ class MyMainWindow:
         """ Frame with the palette button to left, and details to right """
 
         i_index_base_block = 0
-        a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h2.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
-        a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
-
-        a_palette_sep_h3 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h3.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
-        a_palette_sep_lbl_h3 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h3.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
+        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
+        a_palette_sep_h1.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
+        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
+        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
+        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
+        a_palette_sep_h1.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
+        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
+        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
+        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
+        a_palette_sep_h1.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
+        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
+        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=13, columnspan=4, padx=90)
 
         # Create palette button left frame
         a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
@@ -453,10 +495,9 @@ class MyMainWindow:
         a_font_label = font.Font( size=6)
         a_font_button = font.Font( size=3)
 
-        i_index_base_block = 0
         i_index_base_column = 1
         for i_loop in range( 0, 16, 1):
-            a_label = Label(a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label = Label(a_palette_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
 
@@ -491,6 +532,9 @@ class MyMainWindow:
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
         a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1)
+
+        self.a_zoom_lbl = Label( a_color_bottom_frame, image=None, background=constant.BACKGROUD_COLOR_UI)
+        self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=10, column=4, columnspan=4, padx=4, pady=1, sticky='ewns')
 
         i_index_base_block += 1
         self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='red')
