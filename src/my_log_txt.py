@@ -34,7 +34,7 @@ import io
 
 from datetime import datetime
 
-from .my_tools import get_path_separator
+from .my_tools import mt_get_path_separator
 
 # __name__ = "MyLogText"
 
@@ -85,7 +85,7 @@ class MyLogText:
         self._a_list_application_info = list_application_info
         self.__s_log_text = ""
         self.s_platform = platform.system()
-        self.s_separator = get_path_separator( self.s_platform)
+        self.s_separator = mt_get_path_separator( self.s_platform)
 
         # Replace ' ' by character '_'
         self._s_log_file_name = self._s_log_file_name.replace( ' ', '_', 2)

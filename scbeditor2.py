@@ -54,7 +54,7 @@ import tkinter.font as tkFont
 
 # Source code of the application
 import src.my_constants as constant
-from src.my_tools import force_exit_application, get_memory_used
+from src.my_tools import mt_force_exit_application, mt_get_memory_used
 from src.my_log_an_usage import MyLogAnUsage
 from src.my_main_window import MyMainWindow
 
@@ -68,9 +68,9 @@ __credits__ = ["Frédéric Mure","Patrice Afflatet","Reion: https://www.flaticon
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.0.3-15"
+    __version__ = "2.0.4-17"
 else:
-    __version__ = "2.0.3.15"
+    __version__ = "2.0.4.17"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"
@@ -109,7 +109,7 @@ def __print_application_info():
         print( ' ' + __softname__ + '\t\t: ' + s_platform)
     else:
         print( ' ' + __softname__ + '\t\t: ' + s_platform + ' not supported.')
-        force_exit_application( 1)
+        mt_force_exit_application( 1)
 
     print( ' ' + __softname__ + '\t\t: ' + platform.machine() )
     print( ' ' + __softname__ + '\t\t: ' + platform.architecture()[0] )
@@ -151,6 +151,10 @@ def main():
 
     __print_application_info()
 
+    c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, None)
+    c_the_log.add_string_to_log( _s_dt_string)
+    c_the_log.add_string_to_log( 'Starting ' + __softname__ + ' release : ' + __version__)
+
     a_main_windows = tk_gui.Tk()
     a_main_windows.configure(bg=constant.BACKGROUD_COLOR_UI) # 'blue'
     a_main_windows.withdraw()
@@ -159,18 +163,14 @@ def main():
     a_main_windows.update()
     a_main_windows.deiconify()
     c_my_main_window = MyMainWindow( a_main_windows, LIST_APPLICATION_INFO)
-    get_memory_used( c_my_main_window)
+    mt_get_memory_used( c_my_main_window)
     c_my_main_window.mw_create_main_window()
-    get_memory_used( c_my_main_window)
+    mt_get_memory_used( c_my_main_window)
     # c_my_main_window.mw_load_main_window()
 
     __print_font_info( 'TkDefaultFont')
 #    __print_font_info( 'TkMenuFont')
 #    __print_font_info( 'TkFixedFont')
-
-    c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, None)
-    c_the_log.add_string_to_log( _s_dt_string)
-    c_the_log.add_string_to_log( 'Starting ' + __softname__ + ' release : ' + __version__)
 
     a_main_windows.mainloop()
 

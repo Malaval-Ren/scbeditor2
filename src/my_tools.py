@@ -52,8 +52,8 @@ class MyExitWithRelaunch( ):
                 MyExitWithRelaunch.c_the_log = c_the_log
         return MyExitWithRelaunch._instance
 
-    # ####################### exit_end_relaunch ########################
-    def exit_end_relaunch( self):
+    # ####################### mt_exit_end_relaunch ########################
+    def mt_exit_end_relaunch( self):
         """ Close the log and relaunch myself """
         if self.c_the_log is not None:
             if '.exe' in self.argv[0]:
@@ -76,8 +76,8 @@ class MyExitWithRelaunch( ):
 # ###############################################################################################
 # #######========================= constant private =========================
 
-# ####################### force_exit_application ########################
-def force_exit_application( i_error, c_the_log=None):
+# ####################### mt_force_exit_application ########################
+def mt_force_exit_application( i_error, c_the_log=None):
     """ Force exit of application """
     if c_the_log is not None:
         c_the_log.add_date_to_log()
@@ -85,8 +85,8 @@ def force_exit_application( i_error, c_the_log=None):
 
     sys.exit( int( i_error))
 
-# ####################### get_path_separator ########################
-def get_path_separator( s_platform):
+# ####################### mt_get_path_separator ########################
+def mt_get_path_separator( s_platform):
     """ Return the separator for pathname """
     if s_platform == "":
         s_separator = ""
@@ -101,23 +101,25 @@ def get_path_separator( s_platform):
 
     return s_separator
 
-# ####################### colored ########################
-def colored_string( red, green, blue, text):
+# ####################### mt_colored_string ########################
+def mt_colored_string( red, green, blue, text):
     """ Do color print in bash shell and visual studio code """
     s_color = "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m"
     return s_color.format(red, green, blue, text)
 
-# ####################### get_memory_used ########################
-def get_memory_used( a_class):
+# ####################### mt_get_memory_used ########################
+def mt_get_memory_used( a_class):
     """ Compute size of in a class """
     print( 'get_memory_used() : self                  = ', str( sys.getsizeof( a_class)))
 
-# ####################### open_file ########################
-def open_file( w_main_windows):
+# ####################### mt_open_file ########################
+def mt_open_file( w_main_windows, a_caller_class):
     """ Return the selected picture file or None """
     s_filename = None
-    s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=os.getcwd(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
-    # if not filename:
+    s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
+    if s_filename:
+        a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
+    # else:
         # return # user cancelled; stop this method
 
     return s_filename
