@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  mar. 16 janv. 2024 22:08:02
+date :  mar. 16 janv. 2024 22:13:32
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -12,7 +12,7 @@ date :  mar. 16 janv. 2024 22:08:02
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | *Project* |  |
-| scbeditor2 | 2.0.4.17 |
+| scbeditor2 | 2.0.5.19 |
 
 &nbsp;
 
@@ -118,7 +118,7 @@ Your code has been rated at 9.77/10 (previous run: 9.77/10, +0.00)
 src\my_main_window_icons_bar.py:150:4: W0238: Unused private member `MyMainWindowIconsBar.__dump_palette_bmp(self)` (unused-private-member)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.93/10 (previous run: 9.87/10, +0.07)
+Your code has been rated at 9.93/10 (previous run: 9.93/10, +0.00)
 
 &nbsp;
 
