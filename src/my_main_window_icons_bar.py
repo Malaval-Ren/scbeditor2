@@ -40,6 +40,8 @@ from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_about_window import MyAboutWindow
 from .my_alert_window import MyAlertWindow
+from .my_progress_bar_window import MyProgressBarWindow
+
 # from .my_tools import mt_open_file, mt_get_path_separator
 from .my_tools import mt_open_file
 
@@ -85,7 +87,7 @@ class MyMainWindowIconsBar:
             converted_bmp = self.a_work_img.copy()
             a_conv_pal_list = converted_bmp.getpalette()
 
-            # Copy the palettes
+            # Copy the 1st palette at index 0 to all 1 .. 16
             for _ in range( 1, 16, 1):
                 for i_index in range( 0, 48, 1):
                     a_conv_pal_list.append( a_org_pal_list[i_index])
@@ -106,6 +108,7 @@ class MyMainWindowIconsBar:
             self.w_front_window.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
             self.w_front_window = None
             self.a_work_img = None
+            self.s_filename = None
 
     # ####################### __mwib_load_and_check_bmp ########################
     def __mwib_load_and_check_bmp( self):
@@ -123,6 +126,8 @@ class MyMainWindowIconsBar:
                 self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
                 self.w_front_window.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
                 self.w_front_window = None
+                self.a_work_img = None
+                self.s_filename = None
             else:
                 a_palette_list = self.a_work_img.getpalette()
                 if len( a_palette_list) < 768:      # Less than 256 colors 2, 4 bpp
@@ -131,11 +136,88 @@ class MyMainWindowIconsBar:
                     self.w_front_window = None
                     if i_result == 1:
                         self.__mwib_convert_bmp()
+                    else:
+                        self.a_work_img = None
+                        self.s_filename = None
                 elif len( a_palette_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
                     self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
                     i_result = self.w_front_window.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
                     self.w_front_window = None
                     self.a_work_img = None
+                    self.s_filename = None
+
+    # ####################### __dump_palette_bmp ########################
+    def __dump_palette_bmp( self):
+        """ dump the palette of the current image a_work_img """
+        if self.a_work_img:
+            a_palette_list = self.a_work_img.getpalette()
+            print( 'Palette :')
+            i_to = 0
+            for i_loop in range( 0, 16, 1):
+                i_from = i_to
+                i_to = i_to + 48
+                if i_loop < 10:
+                    s_my_hex = "0" + str( i_loop) + " "
+                else:
+                    s_my_hex = str( i_loop) + " "
+
+                for i_index in range( i_from, i_to, 3):
+                    s_red = f'{a_palette_list[ i_index]:02X}'
+                    s_green = f'{a_palette_list[ i_index + 1]:02X}'
+                    s_blue = f'{a_palette_list[ i_index + 2]:02X}'
+                    s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
+
+                print( s_my_hex)
+
+    # ####################### __validate_scb_in_bmp ########################
+    def __validate_scb_in_bmp( self):
+        """ Check bitmap to synchronize all lines to use right scb """
+
+        self.w_front_window = MyProgressBarWindow( self.c_main_class, self.a_list_application_info)
+        self.w_front_window.pbw_create_progres_bar_window( 200, "BMP palette checking", "Check bitmap to synchronize all lines to use right SCB.")
+        # print()
+        # self.__dump_palette_bmp()
+        # print()
+        # a_palette_list = self.a_work_img.getpalette()
+
+        self.w_front_window.pbw_progress_bar_start()
+        for i_picture_line_y in range( 0, 199, 1):
+            i_small_index = 255
+            # i_small_pos_x = 255
+            i_big_index = 0
+            # i_big_pos_x = 0
+            self.w_front_window.pbw_progress_bar_step()
+            # - parse a line to get the bigger index of a palette to compute the right line of color to use (SCB)
+            for i_loop in range( 0, 319, 1):
+                i_first_color_offset = self.a_work_img.getpixel( ( i_loop, i_picture_line_y))
+                if i_first_color_offset > i_big_index:
+                    i_big_index = i_first_color_offset
+                    # i_big_pos_x = i_loop
+
+                if i_first_color_offset < i_small_index:
+                    i_small_index = i_first_color_offset
+                    # i_small_pos_x = i_loop
+
+            if int( i_big_index / 16) != int( i_small_index / 16):
+                # - re-pare the line to upgrade each index to have the same SCB on all the line
+                # print( "#" + f"{i_picture_line_y:03d}" + " i_big_index   = " + str( i_big_index) + " line  Y = " + str( int( i_big_index / 16)) + " index X = " + str( i_big_index - int( i_big_index / 16) * 16) + \
+                #     " at pox X = " + str( i_big_pos_x) )
+                # print( "    " + " i_small_index = " + str( i_small_index) + " line  Y = " + str( int( i_small_index / 16)) + " index X = " + str( i_small_index - int( i_small_index / 16) * 16) + \
+                #     " at pox X = " + str( i_small_pos_x) )
+                for i_index in range( 0, 319, 1):
+                    i_current_index = self.a_work_img.getpixel( ( i_index, i_picture_line_y))
+                    if int( i_current_index / 16) != int( i_big_index / 16):
+                        print( "    " + str( i_current_index) )
+                        while int( i_current_index / 16) != int( i_big_index / 16):
+                            i_current_index += 16
+                        if int( i_current_index / 16) == int( i_big_index / 16):
+                            print( "    " + str( i_current_index) )
+                            self.a_work_img.putpixel( ( i_index, i_picture_line_y), i_current_index)
+                        else:
+                            print( "BUG : index is after the big i_big_index")
+
+        self.w_front_window.pbw_progress_bar_stop()
+        self.w_front_window = None
 
     # ####################### __about_dialog_box ########################
     def __mwib_about_dialog_box( self):
@@ -150,7 +232,12 @@ class MyMainWindowIconsBar:
         """ Button preference of the main window """
         self.c_the_log.add_string_to_log( 'Do load picture')
         self.__mwib_load_and_check_bmp()
-        if self.a_work_img:
+        if self.s_filename and self.a_work_img:
+            # Display image already in 8 bpp or a converted to 8 bpp
+            self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
+            self.w_main_windows.update()
+            # increase valueur index to use the right line to be SCB ready
+            self.__validate_scb_in_bmp()
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
 
     # ####################### __mwib_save_box ########################

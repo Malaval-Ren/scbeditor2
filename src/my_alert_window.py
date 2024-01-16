@@ -35,7 +35,7 @@ import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 
-# __name__ = "MyAboutWindow"
+# __name__ = "MyAlertWindow"
 
 # ###############################################################################################
 # #######========================= constant private =========================

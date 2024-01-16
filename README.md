@@ -3,7 +3,7 @@
 
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
- This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
+ This is an application to do modification of bmp file to prepare convertion to an Apple IIGS pic file.
  
  This is an help for cross-dev
 

@@ -105,7 +105,7 @@ def mt_get_path_separator( s_platform):
 def mt_colored_string( red, green, blue, text):
     """ Do color print in bash shell and visual studio code """
     s_color = "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m"
-    return s_color.format(red, green, blue, text)
+    return s_color.format( red, green, blue, text)
 
 # ####################### mt_get_memory_used ########################
 def mt_get_memory_used( a_class):
@@ -117,9 +117,10 @@ def mt_open_file( w_main_windows, a_caller_class):
     """ Return the selected picture file or None """
     s_filename = None
     s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
-    if s_filename:
+    if s_filename and s_filename != "":
         a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
-    # else:
+    else:
+        s_filename = None
         # return # user cancelled; stop this method
 
     return s_filename

@@ -172,9 +172,9 @@ class MyMainWindow:
         if self.a_work_img:
             # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
             i_pos_x = max( event.x, 0)
-            i_pos_x = min( event.x, constant.PICTURE_WIDTH)
+            i_pos_x = min( event.x, constant.PICTURE_WIDTH - 1)
             i_pos_y = max( event.y, 0)
-            i_pos_y = min( event.y, constant.PICTURE_HEIGHT)
+            i_pos_y = min( event.y, constant.PICTURE_HEIGHT - 1)
 
             i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
 
@@ -194,7 +194,7 @@ class MyMainWindow:
             self.a_pos_y_true_lbl.configure( text=str( int( ( i_pos_y & 1022) / 2)))
 
             self.a_color_lbl.configure( text=str( i_offset))
-            self.a_scb_lbl.configure( text=str( int( i_offset/16)))
+            self.a_scb_lbl.configure( text=str( int( i_offset / 16)))
 
             # Select the radio button color in the palette
             a_color_selected = self.a_palette_button_lst[i_offset].cget( 'bg')
@@ -206,13 +206,13 @@ class MyMainWindow:
             self.__mw_color_button( i_offset, "#" + s_red, s_green, s_blue)
 
             # Draw the SCB rectangle
-            i_palette_number = int( i_offset/16) * 16
+            i_palette_number = int( i_offset / 16) * 16
             # print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y)+ "   i_offset= " + str( i_offset) + "   i_palette_number= " + str( i_palette_number))
 
             self.a_scb_cnvs.delete( "all")
             for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
                 i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
-                i_inter = int( i_offset/16) * 16
+                i_inter = int( i_offset / 16) * 16
                 if i_inter == i_palette_number:
                     self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
                 else:
@@ -222,30 +222,30 @@ class MyMainWindow:
             self.a_bar_chart_cnvs.delete( "all")
             a_usage_color_rry = array.array( 'i')
             a_usage_color_rry = [1] * 16
+            a_result_color_rry = array.array( 'i')
+            a_result_color_rry = [0] * 16
 
             for i_loop in range( 0, constant.PICTURE_WIDTH, 2):
                 i_offset = self.a_work_img.getpixel( ( i_loop, i_pos_y))
                 i_offset = i_offset - (int( i_offset / 16) * 16)
                 a_usage_color_rry[i_offset] +=1
 
-            s_debug_colors_number = ""
             for i_loop in range( 0, 16, 1):
                 if a_usage_color_rry[i_loop] == 1:
                     a_usage_color_rry[i_loop] = 0
                 else:
                     if a_usage_color_rry[i_loop] < 4:
-                        a_usage_color_rry[i_loop] = 4
-                    a_usage_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 84) / 320) + 0.5)
-
-                s_debug_colors_number = s_debug_colors_number + "#" + str( i_loop) + " " + str( a_usage_color_rry[i_loop]) + "   "
-
-            print( s_debug_colors_number)
+                        a_result_color_rry[i_loop] = int( (((a_usage_color_rry[i_loop] + 3) * 84) / 320) + 0.5)
+                    else:
+                        a_result_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 84) / 320) + 0.5)
 
             i_colmun_x = 0
             for i_loop in range( 0, 16, 1):
-                i_hauteur = a_usage_color_rry[i_loop]
-                if a_usage_color_rry[i_loop] > 0:
+                i_hauteur = a_result_color_rry[i_loop]
+                if a_result_color_rry[i_loop] > 0:
                     self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.a_palette_button_lst[i_palette_number+i_loop].cget( 'bg'), outline='white')
+                    if a_usage_color_rry[i_loop] > 0 and a_usage_color_rry[i_loop] < 10:
+                        self.a_bar_chart_cnvs.create_text( i_colmun_x+8, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
                 i_colmun_x += 24
 
             # Display zoom of a part of the picture
@@ -649,8 +649,9 @@ class MyMainWindow:
         self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
         i_index_base_block += 1
-        self.a_color_slider = Scale( a_color_bottom_frame, from_=0, to=255, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='darkgray')
-        self.a_color_slider.grid( row=i_index_base_block, column=0, columnspan=4, padx=1, pady=4, sticky='ew')
+        # , borderwidth=0, compound="center", highlightthickness=0
+        self.a_color_slider = Scale( a_color_bottom_frame, from_=0, to=255, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0)
+        self.a_color_slider.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=4, sticky='ew')
 
         i_index_base_block += 1
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset", background=constant.BACKGROUD_COLOR_UI)
@@ -679,18 +680,30 @@ class MyMainWindow:
 
     # ####################### __mw_set_max_len_to_fifteen_chars_and_filter ########################
     def __mw_set_max_len_to_fifteen_chars_and_filter( self, i_action, s_string_apres, s_insert):
-        """ Validates each character as it is entered in the entry for a color value """
-        # print( "i_action       %d = ", str( i_action))
+        """ Validates each character as it is entered in the entry for a color value
+            parameter setup is '%d', '%s', '%S'
+            posibility are
+            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
+            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
+            '%P'	The value that the text will have if the change is allowed.
+            '%s'	The text in the entry before the change.
+            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
+            '%v'	The current value of the widget's validate option.
+            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
+            '%W'	The name of the widget.
+        """
+        print( "i_action       %d = ", str( i_action))
         # print( "i_position     %i = ", str( i_position))
         # print( "s_string_avant %P = ", s_string_avant)
-        # print( "s_string_apres %s = ", s_string_apres)
-        # print( "s_insert       %S = ", s_insert)
+        print( "s_string_apres %s = ", s_string_apres)
+        print( "s_insert       %S = ", s_insert)
         # print( "a_name         %W = ", s_name)
 
-        if (s_insert >= 'a') & (s_insert <= 'f'):
+        # if 'a' <= s_insert <= 'f':
+        if s_insert >= 'a' and s_insert <= 'f':
             s_insert.upper()
 
-        if (s_insert == '') | ((s_insert >= 'A') & (s_insert <= 'F')) | ( (s_insert >= '0') & (s_insert <= '9')):
+        if (s_insert != '') or (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
             # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
             if int( i_action) == 0:     # deletion
                 # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : action = deletion' )
@@ -846,7 +859,7 @@ class MyMainWindow:
         if s_filename and a_work_img:
             self.a_work_img = a_work_img
             width, height = self.a_work_img.size
-            self.a_work_img = self.a_work_img.resize( (width*2,height*2))
+            self.a_work_img = self.a_work_img.resize( (width * 2, height * 2))
 
             # disabled its for debug
             # for i_loop in range( 0, 60, 1):
@@ -876,29 +889,20 @@ class MyMainWindow:
                 #     s_my_hex = str( i_loop) + " "
 
                 for i_index in range( i_from, i_to, 3):
-                    if a_palette_list[ i_index] > 15:
-                        s_red = f'#{a_palette_list[ i_index]:X}'
-                    else:
-                        s_red = f'#0{a_palette_list[ i_index]:X}'
-                    if a_palette_list[ i_index + 1] > 15:
-                        s_green = f'{a_palette_list[ i_index + 1]:X}'
-                    else:
-                        s_green = f'0{a_palette_list[ i_index + 1]:X}'
-                    if a_palette_list[ i_index + 2] > 15:
-                        s_blue = f'{a_palette_list[ i_index + 2]:X}'
-                    else:
-                        s_blue = f'0{a_palette_list[ i_index + 2]:X}'
+                    s_red = f'{a_palette_list[ i_index]:02X}'
+                    s_green = f'{a_palette_list[ i_index + 1]:02X}'
+                    s_blue = f'{a_palette_list[ i_index + 2]:02X}'
                     # Disabled for debug
-                    # s_my_hex = s_my_hex + s_red + s_green + s_blue + " "
+                    # s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
                     a_button_color = self.a_palette_button_lst[i_element]
-                    config_palette_bottom_with_arg = partial( self.__mw_color_button, int( i_index / 3), s_red, s_green, s_blue)
+                    config_palette_bottom_with_arg = partial( self.__mw_color_button, int( i_index / 3), "#" + s_red, s_green, s_blue)
                     a_button_color.configure( command=config_palette_bottom_with_arg)
-                    a_button_color.configure( background=s_red + s_green + s_blue)
+                    a_button_color.configure( background="#" + s_red + s_green + s_blue)
                     i_element += 1
 
                     if i_index == 0:
-                        self.__mw_color_button( i_index, s_red, s_green, s_blue)
+                        self.__mw_color_button( i_index, "#" + s_red, s_green, s_blue)
 
                 self.w_main_windows.update()
                 # Disabled for debug

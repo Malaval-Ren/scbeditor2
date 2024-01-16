@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  jeu. 11 janv. 2024 13:17:50
+date :  mar. 16 janv. 2024 22:08:02
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -92,16 +92,19 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 src\my_main_window.py:181:13: W0511: TODO : CHECK THIS CODE (fixme)
 src\my_main_window.py:69:4: R0915: Too many statements (56/50) (too-many-statements)
 src\my_main_window.py:169:4: R0914: Too many local variables (24/15) (too-many-locals)
-src\my_main_window.py:169:4: R0912: Too many branches (15/12) (too-many-branches)
-src\my_main_window.py:169:4: R0915: Too many statements (69/50) (too-many-statements)
+src\my_main_window.py:169:4: R0912: Too many branches (16/12) (too-many-branches)
+src\my_main_window.py:169:4: R0915: Too many statements (70/50) (too-many-statements)
 src\my_main_window.py:311:4: R0914: Too many local variables (24/15) (too-many-locals)
 src\my_main_window.py:311:4: R0915: Too many statements (94/50) (too-many-statements)
 src\my_main_window.py:549:4: R0914: Too many local variables (19/15) (too-many-locals)
 src\my_main_window.py:549:4: R0915: Too many statements (100/50) (too-many-statements)
-src\my_main_window.py:760:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
+src\my_main_window.py:703:11: R1716: Simplify chained comparison between the operands (chained-comparison)
+src\my_main_window.py:706:32: R1716: Simplify chained comparison between the operands (chained-comparison)
+src\my_main_window.py:706:74: R1716: Simplify chained comparison between the operands (chained-comparison)
+src\my_main_window.py:773:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.82/10 (previous run: 9.82/10, +0.00)
+Your code has been rated at 9.77/10 (previous run: 9.77/10, +0.00)
 
 &nbsp;
 
@@ -110,8 +113,22 @@ Your code has been rated at 9.82/10 (previous run: 9.82/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
--------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 9.80/10, +0.20)
+*** Module src.my_main_window_icons_bar  
+
+src\my_main_window_icons_bar.py:150:4: W0238: Unused private member `MyMainWindowIconsBar.__dump_palette_bmp(self)` (unused-private-member)
+
+------------------------------------------------------------------
+Your code has been rated at 9.93/10 (previous run: 9.87/10, +0.07)
+
+&nbsp;
+
+## *./src/my_progress_bar_window.py*
+
+> pylint: disable=line-too-long  
+> pylint: disable=too-many-instance-attributes  
+  
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
@@ -135,5 +152,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.983 / 10**
+**note = 9.975 / 10**
 
