@@ -47,6 +47,7 @@ import src.my_constants as constant
 # from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_main_window_icons_bar import MyMainWindowIconsBar
+from .my_tools import mt_get_path_separator
 
 # __name__ = "MyMainWindow"
 
@@ -87,6 +88,7 @@ class MyMainWindow:
         self.s_init_pathname = os.getcwd()
         self.c_mains_icon_bar = None
         self.a_palette_button_lst = []
+        self.a_original_img = None
         self.a_work_img = None
         self.a_bmp_image_file = None
         self.a_picture_lbl = None
@@ -104,10 +106,15 @@ class MyMainWindow:
         self.a_pos_y_true_lbl = None
         self.a_color_lbl = None
         self.a_scb_lbl = None
+        self.a_line_slider = None
         self.a_scb_start_lbl = None
         self.a_scb_start_true_lbl = None
         self.a_scb_end_lbl = None
         self.a_scb_end_true_lbl = None
+        self.a_more_x_btn = None
+        self.a_less_x_btn = None
+        self.a_more_y_btn = None
+        self.a_less_y_btn = None
         self.a_bar_chart_cnvs = None
 
         self.color_radio_button = IntVar()
@@ -195,6 +202,7 @@ class MyMainWindow:
 
             self.a_color_lbl.configure( text=str( i_offset))
             self.a_scb_lbl.configure( text=str( int( i_offset / 16)))
+            self.a_line_slider.set( int( i_offset / 16))
 
             # Select the radio button color in the palette
             a_color_selected = self.a_palette_button_lst[i_offset].cget( 'bg')
@@ -269,7 +277,7 @@ class MyMainWindow:
 
     # ####################### __mw_less_x_value_clicked ########################
     def __mw_less_x_value_clicked( self):
-        """ Less value of X clicked """
+        """ Decrease value of X clicked """
         if self.a_work_img:
             i_current_val = int( self.a_mouse_pos_x_input_var.get())
             i_current_val = max( i_current_val-2, 0)
@@ -279,7 +287,7 @@ class MyMainWindow:
 
     # ####################### __mw_more_x_value_clicked ########################
     def __mw_more_x_value_clicked( self):
-        """ Less value of X clicked """
+        """ Increase value of X clicked """
         if self.a_work_img:
             i_current_val = int( self.a_mouse_pos_x_input_var.get())
             i_current_val = min( i_current_val+2, constant.PICTURE_WIDTH)
@@ -289,7 +297,7 @@ class MyMainWindow:
 
     # ####################### __mw_less_y_value_clicked ########################
     def __mw_less_y_value_clicked( self):
-        """ Less value of Y clicked """
+        """ Decrease value of Y clicked """
         if self.a_work_img:
             i_current_val = int( self.a_mouse_pos_y_input_var.get())
             i_current_val = max( i_current_val-2, 0)
@@ -299,7 +307,7 @@ class MyMainWindow:
 
     # ####################### __mw_more_y_value_clicked ########################
     def __mw_more_y_value_clicked( self):
-        """ Less value of Y clicked """
+        """ Increase value of Y clicked """
         if self.a_work_img:
             i_current_val = int( self.a_mouse_pos_y_input_var.get())
             i_current_val = min( i_current_val+2, constant.PICTURE_HEIGHT)
@@ -307,10 +315,106 @@ class MyMainWindow:
             self.a_pos_y_true_lbl.configure( text=str( int( i_current_val / 2)))
             self.a_picture_lbl.event_generate("<1>", x=self.a_mouse_pos_x_input_var.get(), y=i_current_val)
 
+    # ####################### __mv_entry_mouse_x_focus_in ########################
+    def __mv_entry_mouse_x_focus_in( self, _):
+        """ entry mouse pos X take the focus """
+        self.w_main_windows.unbind( "<Key>")
+        print( "__mv_entry_mouse_x_focus_in()")
+
+    # ####################### __mv_entry_mouse_y_focus_in ########################
+    def __mv_entry_mouse_y_focus_in( self, _):
+        """ entry mouse pos Y take the focus """
+        self.w_main_windows.unbind( "<Key>")
+        print( "__mv_entry_mouse_y_focus_in()")
+
+    # ####################### __mv_entry_mouse_x_y_focus_out ########################
+    def __mv_entry_mouse_x_y_focus_out( self, _):
+        """ entry mouse pos X or Y loose the focus """
+        self.w_main_windows.bind( "<Key>" , self.__on_single_key)
+        print( "__mv_entry_mouse_x_y_focus_out()")
+
+    # ####################### __mw_set_max_len_to_four_chars_and_filter ########################
+    def __mw_set_max_len_to_four_chars_and_filter( self, i_action, s_string_apres, s_insert):
+        """ Validates each character as it is entered in the entry for a color value
+            parameter setup is '%d', '%s', '%S'
+            posibility are
+            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
+            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
+            '%P'	The value that the text will have if the change is allowed.
+            '%s'	The text in the entry before the change.
+            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
+            '%v'	The current value of the widget's validate option.
+            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
+            '%W'	The name of the widget.
+        """
+        print( " i_action       %d = ", str( i_action))
+        # print( "i_position     %i = ", str( i_position))
+        # print( "s_string_avant %P = ", s_string_avant)
+        print( " s_string_apres %s = ", s_string_apres)
+        print( " s_insert       %S = ", s_insert)
+        # print( "a_name         %W = ", s_name)
+
+        if 'a' <= s_insert <= 'f':
+        # if s_insert >= 'a' and s_insert <= 'f':
+            s_insert.upper()
+
+        if s_insert in '0123456789ABCDEF':
+        # if (s_insert != '') or (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
+            # print( '__mw_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
+            if int( i_action) == 0:     # deletion
+                # print( '__mw_set_max_len_to_four_chars_and_filter() : action = deletion' )
+                if len( s_string_apres) + 1 > 8:
+                    b_result = True
+                else:
+                    # self.w_main_windows.bell()
+                    b_result = False
+            elif int( i_action) == 1:   # insertion
+                # print( '__mw_set_max_len_to_four_chars_and_filter() : action = insertion' )
+                if len( s_string_apres) + 1 > 15:
+                    # self.w_main_windows.bell()
+                    b_result = False
+                else:
+                    b_result = True
+            else:
+                # print( '__mw_set_max_len_to_four_chars_and_filter() : autre')
+                b_result = True
+        else:
+            # print( '__mw_set_max_len_to_four_chars_and_filter() : character not managed')
+            # self.w_main_windows.bell()
+            b_result = False
+
+        return b_result
+
+    # ####################### __mw_change_scb_line ########################
+    def __mw_change_scb_line( self):
+        """ Change the line palette """
+        self.w_main_windows.bell()
+        if self.a_original_img:
+            i_line_number = int( self.a_pos_y_true_lbl.cget( "text"))
+            i_current_palette_number = int( self.a_scb_lbl.cget( "text"))
+            i_new_palette_number = int( self.a_line_slider.get())
+            if i_current_palette_number != i_new_palette_number:
+                print( " Convert the index." )
+                if i_current_palette_number > i_new_palette_number:
+                    i_delta = (i_new_palette_number - i_current_palette_number) * 16
+                else:
+                    i_delta = (i_current_palette_number - i_new_palette_number) * 16
+
+                for i_index in range( 0, 319, 1):
+                    i_current_index = self.a_original_img.getpixel( ( i_index, i_line_number))
+                    i_current_index += i_delta
+                    self.a_original_img.putpixel( ( i_index, i_line_number), i_current_index)
+
+                width, height = self.a_original_img.size
+                print( "width = " + str( width) + "  height = " + str( height) )
+                # self.a_work_img.save( self.s_filename, 'BMP')
+                # self.a_work_img = Image.open( self.s_filename)
+                s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
+                self.mw_update_main_window( s_filename , self.a_original_img)
+
     # ####################### __mw_picture_zone ########################
     def __mw_picture_zone( self, a_pic_frame):
         """ Frame with the picture to left, and details to right """
-
         i_index_base_block = 0
         a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
         a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
@@ -318,9 +422,9 @@ class MyMainWindow:
         a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=0, padx=15)
 
         a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
-        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=8, sticky='ew')
+        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=9, sticky='ew')
         a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=8, padx=170, sticky='ew')
+        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=9, padx=170, sticky='ew')
 
         i_index_base_block += 1
         self.a_picture_lbl = Label( a_pic_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=0, compound="center", highlightthickness=0)
@@ -329,14 +433,14 @@ class MyMainWindow:
         self.a_picture_lbl.bind( '<Motion>', self.__mw_print_widget_under_mouse)
 
         # Create SCB frame to fraw rectangle to present SCB
-        a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background='orange')     # background='darkgray' or 'light grey'
+        a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_scb_frame.place( x=644, y=21, width=20, height=constant.PICTURE_HEIGHT)
 
         self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
 
         # Create details frame
-        a_details_pic_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_details_pic_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background=constant.BACKGROUD_COLOR_UI or'darkgray' or 'light grey'
         a_details_pic_frame.place( x=664, y=30, width=self.i_main_window_width - 664, height=constant.PICTURE_HEIGHT)
 
         a_bar_chart_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
@@ -358,19 +462,19 @@ class MyMainWindow:
 
         i_index_base_block = 0
         a_pic_sep_lbl_h2 = Label( a_details_pic_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h2.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
+        a_pic_sep_lbl_h2.grid( row=i_index_base_block, column=1, columnspan=7, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        self.a_filename_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_filename_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
+        self.a_filename_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
+        self.a_filename_lbl.grid( row=i_index_base_block, column=1, columnspan=7, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_space_lbl_h1 = Label( a_details_pic_frame, text="", background=constant.BACKGROUD_COLOR_UI)
-        a_space_lbl_h1.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
+        a_space_lbl_h1.grid( row=i_index_base_block, column=1, columnspan=7, padx=4, pady=1)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h3 = Label( a_details_pic_frame, text="Mouse live position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=1)
+        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
@@ -381,68 +485,68 @@ class MyMainWindow:
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=1)
         self.a_mouse_live_pos_y = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
+
+        # stupid stuff to force the number of column in the frame a_details_pic_frame
         a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
         a_fake_pos_y.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+        a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
+        a_fake_pos_y.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
+        a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
+        a_fake_pos_y.grid( row=i_index_base_block, column=7, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h3 = Label( a_details_pic_frame, text="Mouse click position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=5, padx=4, pady=1)
+        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=5, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
-        self.a_mouse_pos_x = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, background='white', foreground='black')
+        self.a_mouse_pos_x = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mw_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
         self.a_mouse_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1)
+        self.a_mouse_pos_x.bind( "<FocusIn>", self.__mv_entry_mouse_x_focus_in)
+        self.a_mouse_pos_x.bind( "<FocusOut>", self.__mv_entry_mouse_x_y_focus_out)
+
         self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-        a_less_x_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_less_x_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
-        a_more_x_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_more_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+        self.a_less_x_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_x_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
+        self.a_more_x_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
-        self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, background='white', foreground='black')
+        self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mw_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
         self.a_mouse_pos_y.grid( row=i_index_base_block, column=2, padx=4, pady=1)
+        self.a_mouse_pos_y.bind( "<FocusIn>", self.__mv_entry_mouse_y_focus_in)
+        self.a_mouse_pos_y.bind( "<FocusOut>", self.__mv_entry_mouse_x_y_focus_out)
+
         self.a_pos_y_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-        a_less_y_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_less_y_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
-        a_more_y_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_more_y_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+        self.a_less_y_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_y_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
+        # self.a_less_y_btn.bind('<KeyRelease-Down>', self.__mw_less_y_value_clicked)
+        self.a_more_y_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_y_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+        # self.a_more_y_btn.bind('<KeyRelease-Up>', self.__mw_more_y_value_clicked)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h5 = Label( a_details_pic_frame, text="Color offset", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=1, sticky='ew')
+        self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
+        self.a_color_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_color_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
+        a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette line", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=1, sticky='ew')
+        self.a_scb_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
+        self.a_scb_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
+        self.a_line_slider = Scale( a_details_pic_frame, from_=0, to=15, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0)
+        self.a_line_slider.grid( row=i_index_base_block, rowspan=2, column=4, columnspan=6, padx=4, pady=2, sticky='ewns')
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette number / SCB", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1)
-
-        i_index_base_block += 1
-        self.a_scb_lbl = Label( a_details_pic_frame, text="   ", background='white', foreground='black')
-        self.a_scb_lbl.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
-
-        # i_index_base_block += 1
-        # a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="From", width=5, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        # a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
-        # self.a_scb_start_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
-        # self.a_scb_start_lbl.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
-        # self.a_scb_start_true_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
-        # self.a_scb_start_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-
-        # i_index_base_block += 1
-        # a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="To", width=5, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        # a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
-        # self.a_scb_end_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
-        # self.a_scb_end_lbl.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
-        # self.a_scb_end_true_lbl = Label( a_details_pic_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='black')
-        # self.a_scb_end_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
+        a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mw_change_scb_line, width=21, height=1, background=constant.BACKGROUD_COLOR_UI)
+        a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -728,6 +832,22 @@ class MyMainWindow:
 
         return b_result
 
+    # ####################### __on_single_key ########################
+    def __on_single_key( self, event):
+        """ Method manage arrow key press for the main windows """
+        # s_key = event.char
+        # if s_key == "":
+        #     return
+
+        if event.keysym == "Left":
+            self.a_less_x_btn.invoke()
+        elif event.keysym == "Right":
+            self.a_more_x_btn.invoke()
+        elif event.keysym == "Up":
+            self.a_less_y_btn.invoke()
+        elif event.keysym == "Down":
+            self.a_more_y_btn.invoke()
+
     # ####################### __mw_color_button ########################
     def __mw_color_button(self, i_number, s_red, s_green, s_blue):
         """ Palette of color buttons. note: s_red start by char '#' """
@@ -846,6 +966,7 @@ class MyMainWindow:
         self.w_main_windows.update()
 
         self.w_main_windows.bind( '<Button>', self.__mw_change_focus)
+        self.w_main_windows.bind( "<Key>" , self.__on_single_key)
 
         # disabled during debug
         # if self.s_platform == "Windows":
@@ -857,6 +978,7 @@ class MyMainWindow:
     def mw_update_main_window( self, s_filename, a_work_img):
         """ load a picture and fill the interface """
         if s_filename and a_work_img:
+            self.a_original_img = a_work_img.copy()
             self.a_work_img = a_work_img
             width, height = self.a_work_img.size
             self.a_work_img = self.a_work_img.resize( (width * 2, height * 2))

@@ -93,30 +93,30 @@ LIST_APPLICATION_INFO = [ __softname__,
 def __print_application_info():
     """ Print application info """
     print()
-    print( ' ' + __softname__ + '\t\t: v' + __version__)
-    print( ' ' + __softname__ + ' - From\t: ' + __author__)
+    print( ' ' + __softname__ + '\t\t\t: v' + __version__)
+    print( ' ' + __softname__ + ' - Author\t\t: ' + __author__)
     print()
-    print( ' ' + __softname__ + ' - Python\t: v' + str( sys.version))
+    print( ' ' + __softname__ + ' - Python\t\t: v' + str( sys.version))
     print( ' ' + __softname__ + ' - tkinter\t: v' + str( tk_gui.TkVersion))
     print()
 
     s_platform = platform.system()
     if s_platform == 'Linux':
-        print( ' ' + __softname__ + '\t\t: ' + s_platform)
+        print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
     elif s_platform == 'Windows':
-        print( ' ' + __softname__ + '\t\t: ' + s_platform)
+        print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
     elif s_platform == 'Darwin':
-        print( ' ' + __softname__ + '\t\t: ' + s_platform)
+        print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
     else:
-        print( ' ' + __softname__ + '\t\t: ' + s_platform + ' not supported.')
+        print( ' ' + __softname__ + '\t\t\t: ' + s_platform + ' not supported.')
         mt_force_exit_application( 1)
 
-    print( ' ' + __softname__ + '\t\t: ' + platform.machine() )
-    print( ' ' + __softname__ + '\t\t: ' + platform.architecture()[0] )
-    print( ' ' + __softname__ + '\t\t: ' + platform.architecture()[1] )
-    print( ' ' + __softname__ + '\t\t: ' + platform.release() )
+    print( ' ' + __softname__ + '\t\t\t: ' + platform.machine() )
+    print( ' ' + __softname__ + '\t\t\t: ' + platform.architecture()[0] )
+    print( ' ' + __softname__ + '\t\t\t: ' + platform.architecture()[1] )
+    print( ' ' + __softname__ + '\t\t\t: ' + platform.release() )
     print()
-    print( ' ' + __softname__ + '\t\t: ' + os.getcwd() )
+    print( ' ' + __softname__ + '\t\t\t: ' + os.getcwd() )
     print()
 
 # ####################### print_font_info ########################
@@ -148,7 +148,6 @@ def main():
     _now = datetime.now()
     # dd/mm/YY H:M:S
     _s_dt_string = _now.strftime( "%d/%m/%Y %H:%M:%S")
-
     __print_application_info()
 
     c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, None)

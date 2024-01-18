@@ -53,7 +53,7 @@ from .my_tools import mt_open_file
 
 # ###############################################################################################
 # #######=========================     GUI     =========================
-# ####################### MyMainWindow ########################
+# ####################### MyMainWindowIconsBar ########################
 class MyMainWindowIconsBar:
     """ Create the icon bar to the main Windows of the application. """
 
@@ -207,11 +207,11 @@ class MyMainWindowIconsBar:
                 for i_index in range( 0, 319, 1):
                     i_current_index = self.a_work_img.getpixel( ( i_index, i_picture_line_y))
                     if int( i_current_index / 16) != int( i_big_index / 16):
-                        print( "    " + str( i_current_index) )
+                        # print( "    " + str( i_current_index) )
                         while int( i_current_index / 16) != int( i_big_index / 16):
                             i_current_index += 16
                         if int( i_current_index / 16) == int( i_big_index / 16):
-                            print( "    " + str( i_current_index) )
+                            # print( "    " + str( i_current_index) )
                             self.a_work_img.putpixel( ( i_index, i_picture_line_y), i_current_index)
                         else:
                             print( "BUG : index is after the big i_big_index")

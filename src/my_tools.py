@@ -110,7 +110,7 @@ def mt_colored_string( red, green, blue, text):
 # ####################### mt_get_memory_used ########################
 def mt_get_memory_used( a_class):
     """ Compute size of in a class """
-    print( 'get_memory_used() : self                  = ', str( sys.getsizeof( a_class)))
+    print( 'get_memory_used() : self\t= ', str( sys.getsizeof( a_class)))
 
 # ####################### mt_open_file ########################
 def mt_open_file( w_main_windows, a_caller_class):
