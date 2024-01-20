@@ -109,13 +109,14 @@ class MyAboutWindow:
             'Thanks to\n'
         __s_4_part = \
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
-            '  ' + self.a_list_application_info[3][2] + '\n'
+            '  ' + self.a_list_application_info[3][2] + '\n' + \
+            '  ' + self.a_list_application_info[3][3] + '\n'
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
         __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved' + '\n' + \
             '\n' + \
             'eMail' + '\t' + self.a_list_application_info[7] + '\n'
 
-        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=18)  # , exportselection=0, takefocus=0
+        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
         a_middle_text.insert( 'end', self.a_list_application_info[1] + '\n', "bold-italic")

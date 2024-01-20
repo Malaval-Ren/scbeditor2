@@ -236,19 +236,18 @@ class MyMainWindowIconsBar:
             # Display image already in 8 bpp or a converted to 8 bpp
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
             self.w_main_windows.update()
+            self.c_main_class.mw_click_in_picture_center()
             # increase valueur index to use the right line to be SCB ready
             self.__validate_scb_in_bmp()
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
+            self.w_main_windows.update()
+            self.c_main_class.mw_click_in_picture_center()
 
     # ####################### __mwib_save_box ########################
     def __mwib_save_box( self):
-        """ Button configuration of the main window """
+        """ Button save the picture modified """
         self.c_the_log.add_string_to_log( 'Do save picture')
-        self.c_main_class.bell()
-        self.c_main_class.bell()
-        # self.w_front_window = MyConfigurationWindow( self.c_main_window)
-        # self.w_front_window.cw_create_configuration_window()
-        # self.w_front_window = None
+        self.c_main_class.mw_save_picture()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/

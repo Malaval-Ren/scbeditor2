@@ -64,6 +64,10 @@ class MyIconPictures:
             MyIconPictures.error_photo = None
             MyIconPictures.question_photo = None
             MyIconPictures.warning_photo = None
+            MyIconPictures.right_arrow_photo = None
+            MyIconPictures.left_arrow_photo = None
+            MyIconPictures.up_arrow_photo = None
+            MyIconPictures.down_arrow_photo = None
             MyIconPictures.__init( MyIconPictures)
         return MyIconPictures._instance
 
@@ -507,6 +511,57 @@ class MyIconPictures:
         """
         MyIconPictures.warning_photo = PhotoImage( master=self.w_windows_parent, data=__app_warning_base_64)
 
+        # Créer un objet app_photo_base_64 pour utiliser l'image dans le coin haut à gauche des fenetres  (256 char / line)
+        # Image file = "../Pictures/Arrow_Right_T_16x16.png"
+        # <a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Pixelmeetup - Flaticon</a>
+        # URL :  https://onlinepngtools.com/convert-png-to-base64
+        # avec notepad++ : regler largeur fenetre a 256 caracterre et tapez Control I
+        # a la fin de chaque ligne ajouter le caracterre '\'
+        __app_right_arrow_base_64 = """
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAWQAAAFkBqp2phgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEkSURBVDiNY2AYEsBhyTcLXHJMxBjAxPh/idPSbx0NDf8x1DMyNPxnYmhg/AejHea/F/jDxsiIrIiNgfUcAwODAgMDw2qWv1yJu+IYv8INkOt4\
+        +uLRDykpOc5nD9g4v6nKCUt9YGBg4MDjoEssf5kCdsVx3od5QZyBgYGJ4T+D6OefvCxE+EjvD/O/007LPjvBDCAHCDP8Z9rptPRLOYaNd5984Pj/n7AJjIwMLDzc7CZkuYCZiemfIDdb4dUckVAWBkaGxwwMDP8YGP4/E/n69vcXTgG8mllZmL7z8rG5XEgTPsbAwMDAiFc1FCj3PP/1+88/Vi525kfcf7mMz5bwvYHJERPqDAz/GRh4udi2X80V\
+        8WFgZPxHlB5koDP5TQzJmugGAFrNU5pndN1cAAAAAElFTkSuQmCC
+        """
+        self.right_arrow_photo = PhotoImage( master=self.w_windows_parent, data=__app_right_arrow_base_64)
+
+        # Créer un objet app_photo_base_64 pour utiliser l'image dans le coin haut à gauche des fenetres  (256 char / line)
+        # Image file = "../Pictures/Arrow_Left_T_16x16.png"
+        # <a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Pixelmeetup - Flaticon</a>
+        # URL :  https://onlinepngtools.com/convert-png-to-base64
+        # avec notepad++ : regler largeur fenetre a 256 caracterre et tapez Control I
+        # a la fin de chaque ligne ajouter le caracterre '\'
+        __app_left_arrow_base_64 = """
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAASJJREFUOI3NkTFLwwAQhb9c0lIsYospokNR1ElxUAcXQTr4C+zm4t5FEFwzuegg+gMEUWcnwU1cRXBxEkEqRESLYtukTWvO0VbEWAXxbfe4796Dg3+ruT1v5jt71kfDcVROR/010AVgJOqA0TrM72qyaXo7QB64CWhMtqUFqidL6WccFRwjxFEx3mF/qGmG\
+        h8DEF4G1YslNBX7XVdEfGMwmXFcAcgflXNMMzyJgAMr1bgslAwjQJ7n9yioqx0BvFPyZrPun2nSlWrdUo5cNgwRitnlyWbDz6WR82RQJf9JAAC4Kmc2eVHw2ZokfBdjVUgPUBUIMbtveOLXxYldN79yrv2ZjljSuV/rjnXdSlbGth6Ph9bugc7hF49uPi7868Gd6A+H8XXwwbKmeAAAAAElFTkSuQmCC
+        """
+        self.left_arrow_photo = PhotoImage( master=self.w_windows_parent, data=__app_left_arrow_base_64)
+
+        # Créer un objet app_photo_base_64 pour utiliser l'image dans le coin haut à gauche des fenetres  (256 char / line)
+        # Image file = "../Pictures/Arrow_Up_T_16x16.png"
+        # <a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Pixelmeetup - Flaticon</a>
+        # URL :  https://onlinepngtools.com/convert-png-to-base64
+        # avec notepad++ : regler largeur fenetre a 256 caracterre et tapez Control I
+        # a la fin de chaque ligne ajouter le caracterre '\'
+        __app_up_arrow_base_64 = """
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAT5JREFUOI3FkTFLAmEYx3/3npoRUZLREAhRTUYILRENIeEnsK2lb9BW4w3RVEs6tQSSDbU0NDZEe5/AhlC4JQ3z9PT0vLchLvJO5Zp6tv//+T+/9+F9YEyli82jZL56Ny4jRg7fGGlQTpotK5vKvx/+CZAptJeQ4hYISQmfpn2euqxtBQJkCnLKVp17YM71\
+        +o4jjEb3ceOsER8L0DQpbNW8Ata9wZ7tTLZU8wUpB2YGxPNq+xTYG7YqgGn1E8lc9WEoYOfa3ASZBd5GAcIh0etY9u5arrrveoo3tF2sxyKEP1z9Wqn/9MrHi778yDMGrf8HhHxGV0oidFytKET/BHg6iNVXLkqzhjX93RMqAPFWrRcIgCZFt62XJmR//rdtRGd0YNkb953FheD/HwdNcQJtkIjqOrDgeapShoQ3/gVSHGqFuDh5tQAAAABJRU5E\
+        rkJggg==
+        """
+        self.up_arrow_photo = PhotoImage( master=self.w_windows_parent, data=__app_up_arrow_base_64)
+
+        # Créer un objet app_photo_base_64 pour utiliser l'image dans le coin haut à gauche des fenetres  (256 char / line)
+        # Image file = "../Pictures/Arrow_Down_T_16x16.png"
+        # <a href="https://www.flaticon.com/free-icons/arrow" title="arrow icons">Arrow icons created by Pixelmeetup - Flaticon</a>
+        # URL :  https://onlinepngtools.com/convert-png-to-base64
+        # avec notepad++ : regler largeur fenetre a 256 caracterre et tapez Control I
+        # a la fin de chaque ligne ajouter le caracterre '\'
+        __app_down_arrow_base_64 = """
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAVBJREFUOI3Fkr9Lw0AcxT93+dEk0lqw4iCIIA7i6OIkRRwdnJykoINbJ4WCU/4Id5c66V9QHJzERRDRSUVpJS4VK9SqtE1cTGkuieDkgxvu3fu+e9/vnUCFG8gpy/OAiQgvaNQrk1OqXMQMfkwAqbA+rvBVqZ6YwPYeCRiPHgReHWZUuXoLuMI37c7sl6YV\
+        hlf2820uKWwsQfHgNS9N8znc3z+1LIC2nYeElmMGPVMIE6xB8CDp3t9a+CP+32AwlGK1syhFUAU0YDrk7xqtgdjQZZcAbMvYui4XqpEEpxvOOYjj4WIV3Z5vWBn9JCyOtbB0a+8BR2kGTkar35QLq8NcxMB1ha/3nU3gSi02dPkx0ncWENHvHBtirSTe9b5cA15CTpPSz+bMlYvdXFPVJ75CrWQ/IPx1oCcEjDr6zuX22Flaa6lYPmxX5vebqTMB\
+        +AbpC1e5YC9NiQAAAABJRU5ErkJggg==
+        """
+        self.down_arrow_photo = PhotoImage( master=self.w_windows_parent, data=__app_down_arrow_base_64)
+
     # ####################### log_size_of_photo ########################
     # def log_size_of_photo( self, a_photo):
     #     """log the size of a photo"""
@@ -554,3 +609,23 @@ class MyIconPictures:
     def get_warning_photo( self):
         """Get warning flag icon for the alert windows"""
         return self.warning_photo
+
+    # ####################### get_right_arrow_photo ########################
+    def get_right_arrow_photo( self):
+        """Get right arrow icon for the alert windows"""
+        return self.right_arrow_photo
+
+    # ####################### get_left_arrow_photo ########################
+    def get_left_arrow_photo( self):
+        """Get left arrow icon for the alert windows"""
+        return self.left_arrow_photo
+
+    # ####################### get_up_arrow_photo ########################
+    def get_up_arrow_photo( self):
+        """Get up arrow icon for the alert windows"""
+        return self.up_arrow_photo
+
+    # ####################### get_down_arrow_photo ########################
+    def get_down_arrow_photo( self):
+        """Get down arrow icon for the alert windows"""
+        return self.down_arrow_photo

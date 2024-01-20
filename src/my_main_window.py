@@ -47,7 +47,8 @@ import src.my_constants as constant
 # from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_main_window_icons_bar import MyMainWindowIconsBar
-from .my_tools import mt_get_path_separator
+from .my_alert_window import MyAlertWindow
+from .my_tools import mt_get_path_separator, mt_save_file
 
 # __name__ = "MyMainWindow"
 
@@ -85,6 +86,7 @@ class MyMainWindow:
         self.w_main_windows.background = constant.BACKGROUD_COLOR_UI
         self.c_the_icons = MyIconPictures( self.w_main_windows)
         self.s_platform = platform.system()
+        self.c_alert_windows = MyAlertWindow( w_main_windows, list_application_info)
         self.s_init_pathname = os.getcwd()
         self.c_mains_icon_bar = None
         self.a_palette_button_lst = []
@@ -100,7 +102,7 @@ class MyMainWindow:
         self.a_mouse_live_pos_y = None
         self.a_mouse_pos_x = None
         self.a_mouse_pos_y = None
-        self.a_mouse_pos_x_input_var= StringVar()
+        self.a_mouse_pos_x_input_var = StringVar()
         self.a_mouse_pos_y_input_var = StringVar()
         self.a_pos_x_true_lbl = None
         self.a_pos_y_true_lbl = None
@@ -214,17 +216,9 @@ class MyMainWindow:
             self.__mw_color_button( i_offset, "#" + s_red, s_green, s_blue)
 
             # Draw the SCB rectangle
-            i_palette_number = int( i_offset / 16) * 16
-            # print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y)+ "   i_offset= " + str( i_offset) + "   i_palette_number= " + str( i_palette_number))
+            self.mw_draw_scb_bar( i_offset)
 
-            self.a_scb_cnvs.delete( "all")
-            for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
-                i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
-                i_inter = int( i_offset / 16) * 16
-                if i_inter == i_palette_number:
-                    self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
-                else:
-                    i_inter = 0
+            i_palette_number = int( i_offset / 16) * 16
 
             # Draw bar chart for couleur in usage in a line
             self.a_bar_chart_cnvs.delete( "all")
@@ -388,7 +382,6 @@ class MyMainWindow:
     # ####################### __mw_change_scb_line ########################
     def __mw_change_scb_line( self):
         """ Change the line palette """
-        self.w_main_windows.bell()
         if self.a_original_img:
             i_line_number = int( self.a_pos_y_true_lbl.cget( "text"))
             i_current_palette_number = int( self.a_scb_lbl.cget( "text"))
@@ -411,6 +404,7 @@ class MyMainWindow:
                 # self.a_work_img = Image.open( self.s_filename)
                 s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
                 self.mw_update_main_window( s_filename , self.a_original_img)
+                self.mw_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
 
     # ####################### __mw_picture_zone ########################
     def __mw_picture_zone( self, a_pic_frame):
@@ -432,7 +426,7 @@ class MyMainWindow:
         self.a_picture_lbl.bind( '<Button>', self.__mw_click_on_picture)
         self.a_picture_lbl.bind( '<Motion>', self.__mw_print_widget_under_mouse)
 
-        # Create SCB frame to fraw rectangle to present SCB
+        # Create SCB frame to draw rectangle to present SCB
         a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_scb_frame.place( x=644, y=21, width=20, height=constant.PICTURE_HEIGHT)
 
@@ -486,14 +480,6 @@ class MyMainWindow:
         self.a_mouse_live_pos_y = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
 
-        # stupid stuff to force the number of column in the frame a_details_pic_frame
-        a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
-        a_fake_pos_y.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
-        a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
-        a_fake_pos_y.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
-        a_fake_pos_y = Label( a_details_pic_frame, text=" ", width=constant.DEFAULT_BUTTON_WIDTH-1, background=constant.BACKGROUD_COLOR_UI, foreground=constant.BACKGROUD_COLOR_UI)
-        a_fake_pos_y.grid( row=i_index_base_block, column=7, padx=4, pady=1, sticky='ew')
-
         i_index_base_block += 1
         a_pic_sep_lbl_h3 = Label( a_details_pic_frame, text="Mouse click position", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=5, padx=4, pady=1, sticky='ew')
@@ -508,12 +494,16 @@ class MyMainWindow:
 
         self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-        self.a_less_x_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_x_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
-        self.a_more_x_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_x_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+
+        self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
+        self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mw_less_x_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
+        self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mw_more_x_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_x_btn.grid( row=i_index_base_block, column=7, padx=4, pady=1, sticky='ew')
+
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
         self.a_mouse_pos_y = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mw_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
@@ -523,18 +513,15 @@ class MyMainWindow:
 
         self.a_pos_y_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-        self.a_less_y_btn = Button( a_details_pic_frame, text='-', command=self.__mw_less_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_y_btn.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
-        # self.a_less_y_btn.bind('<KeyRelease-Down>', self.__mw_less_y_value_clicked)
-        self.a_more_y_btn = Button( a_details_pic_frame, text='+', command=self.__mw_more_y_value_clicked, width=2, height=1, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_y_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
-        # self.a_more_y_btn.bind('<KeyRelease-Up>', self.__mw_more_y_value_clicked)
 
         i_index_base_block += 1
         a_pic_sep_lbl_h5 = Label( a_details_pic_frame, text="Color offset", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=1, sticky='ew')
         self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
         self.a_color_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
+
+        self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mw_more_y_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
         a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette line", background=constant.BACKGROUD_COLOR_UI)
@@ -677,7 +664,7 @@ class MyMainWindow:
 
         i_index_base_column = 1
         for i_loop in range( 0, 16, 1):
-            a_label = Label(a_palette_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label = Label( a_palette_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
 
@@ -689,7 +676,7 @@ class MyMainWindow:
         for i_loop in range( 0, 16, 1):
             i_from = i_to
             i_to = i_to + 48
-            a_label = Label(a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label = Label( a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
             for _ in range( i_from, i_to, 3):
@@ -838,7 +825,6 @@ class MyMainWindow:
         # s_key = event.char
         # if s_key == "":
         #     return
-
         if event.keysym == "Left":
             self.a_less_x_btn.invoke()
         elif event.keysym == "Right":
@@ -849,7 +835,7 @@ class MyMainWindow:
             self.a_more_y_btn.invoke()
 
     # ####################### __mw_color_button ########################
-    def __mw_color_button(self, i_number, s_red, s_green, s_blue):
+    def __mw_color_button( self, i_number, s_red, s_green, s_blue):
         """ Palette of color buttons. note: s_red start by char '#' """
         # self.w_main_windows.bell()
         self.__mv_entry_black_focus_out()
@@ -874,9 +860,11 @@ class MyMainWindow:
             self.a_btn_x_lbl.configure( text="0")                     # label under Palette Y
 
         self.a_btn_y_lbl.configure( text=str( __i_rest))               # label under Offset X
+        # Draw the SCB rectangle
+        self.mw_draw_scb_bar( i_number)
 
     # ####################### __mw_set_color_in_palette ########################
-    def __mw_set_color_in_palette(self):
+    def __mw_set_color_in_palette( self):
         """ Set a new color value in palette  """
         self.w_main_windows.bell()
         s_red = self.a_red_input_var.get()
@@ -974,6 +962,24 @@ class MyMainWindow:
             # if self.a_work_img:
             #     self.__mw_print_widget_under_mouse( self.w_main_windows)
 
+
+    # ####################### mw_draw_scb_bar ########################
+    def mw_draw_scb_bar( self, i_color_offset):
+        """ draw the bar how display all the same SCB """
+        # Draw the SCB rectangle
+        i_palette_number = int( i_color_offset / 16) * 16
+        # print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y)+ "   i_offset= " + str( i_offset) + "   i_palette_number= " + str( i_palette_number))
+
+        self.a_scb_cnvs.delete( "all")
+        for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
+            i_offset = self.a_work_img.getpixel( ( 0, i_loop))
+            # i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
+            i_inter = int( i_offset / 16) * 16
+            if i_inter == i_palette_number:
+                self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
+            else:
+                i_inter = 0
+
     # ####################### mw_update_main_window ########################
     def mw_update_main_window( self, s_filename, a_work_img):
         """ load a picture and fill the interface """
@@ -1029,8 +1035,6 @@ class MyMainWindow:
                 self.w_main_windows.update()
                 # Disabled for debug
                 # print( s_my_hex)
-                # if self.a_work_img:
-                #     self.__mw_print_widget_under_mouse( self.a_picture_lbl)
 
             self.w_main_windows.update()
         else:
@@ -1077,3 +1081,19 @@ class MyMainWindow:
     def mw_set_pathname( self, s_new_pathname):
         """ Set last used pathname """
         self.s_init_pathname = s_new_pathname
+
+    # ####################### mw_click_in_picture_center ########################
+    def mw_click_in_picture_center( self, pos_x=320, pos_y=200):
+        """ Click on the center of the picture only after loaded it """
+        self.a_picture_lbl.event_generate("<1>", x=pos_x, y=pos_y)
+
+    # ####################### mw_save_picture ########################
+    def mw_save_picture( self):
+        """ save the picture """
+        s_original_filename = self.a_filename_lbl.cget( "text")
+        s_new_file_name = mt_save_file( self.w_main_windows, self, s_original_filename)
+        if s_new_file_name:
+            s_new_file_name.lower()
+            if s_new_file_name[-4:] != ".bmp":
+                s_new_file_name = s_new_file_name + ".bmp"
+            self.a_original_img.save( s_new_file_name, 'BMP')
