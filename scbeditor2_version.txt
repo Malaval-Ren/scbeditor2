@@ -30,7 +30,7 @@ VSVersionInfo(
       StringTable(
         u'040904b0',
         [StringStruct(u'CompanyName', u'Disk Crack Band'),
-        StringStruct(u'FileDescription', u'SCB Editor II is an application to simplify modification of bmp file to prepare convertion to a AIIGS pic file.'),
+        StringStruct(u'FileDescription', u'SCB Editor II is an application to simplify modification of bmp file to prepare convertion to a Apple IIGS pic file.'),
         StringStruct(u'FileVersion', u'2.0.5'),
         StringStruct(u'InternalName', u'scbeditor2.py'),
         StringStruct(u'LegalCopyright', u'GNU GPLv3 Copyright (c) Renaud Malaval 2023,2024'),

@@ -583,10 +583,7 @@ then
         # Copy Python source code
         cp -fp "$pyInstall_Name"".py" "$targetDir"
         cp -R "src" "$targetDir""/src"
-        # copy the software of the automaton in the folder ./=SE=_M221CE 
-        cp -R "=SE=_M221CE" "$targetDir""/=SE=_M221CE"
         # Copy info files
-        cp -fp "URL_Machine_Expert_Basic.txt" "$targetDir"
         cp -fp "URL_Python_install.txt" "$targetDir"
         # Copy script for platforms
         cp -fp Delivery.sh "$targetDir"
