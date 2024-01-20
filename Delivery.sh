@@ -336,8 +336,8 @@ then
     if [[ -f "$pyInstallSpec_Windows" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Windows
-        # pyInstall_Parameter="-w -F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcons_T_512x512.ico' './""$pyInstall_Name"".py'"
-        pyInstall_Parameter="-w -y --clean --log-level DEBUG "$pyInstallSpec
+        # pyInstall_Parameter="-F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcons_T_512x512.ico' './""$pyInstall_Name"".py'"
+        pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Windows $Color_Off
         exit $ERROR_SH_OS    
