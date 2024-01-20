@@ -578,7 +578,7 @@ then
 		if [[ -f "desktop.ini" ]]
 		then
 			cp -fp desktop.ini "$targetDir"
-			cp -fp desktop_T_512x512.ico "$targetDir"
+			cp -fp ScbEditorII_T_512x512.ico "$targetDir"
 		fi
         # Copy Python source code
         cp -fp "$pyInstall_Name"".py" "$targetDir"
