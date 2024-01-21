@@ -38,7 +38,7 @@ VSVersionInfo(
         StringStruct(u'OriginalFilename', u'scbeditor2.exe'),
         StringStruct(u'ProductName', u'scbeditor2'),
         StringStruct(u'ProductVersion', u'2.0.5.19')])
-      ]), 
+      ]),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]
 )

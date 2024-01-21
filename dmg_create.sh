@@ -165,7 +165,7 @@ then
         refLineLen=$(($refLineLen - 1))
         tempNoSpace=${tempNoSpace:0:refLineLen}
     fi
-    
+
     # echo -e $IGreen "result no space     :" "$tempNoSpace" $Color_Off
     refLineLen=${#pyInstall_getVersion}
     # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off

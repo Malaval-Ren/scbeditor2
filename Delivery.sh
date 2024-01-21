@@ -284,10 +284,10 @@ echo
 
 if [[ -f "${pyInstall_fileVersion}" ]]
 then
-	# echo
+    # echo
     # echo -e $IGreen "getVersion          :" "$pyInstall_getVersion" $Color_Off
     # echo -e $IGreen "fileVersion         :" "$pyInstall_fileVersion" $Color_Off
-	# echo
+    # echo
     temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
     # echo -e $IGreen "grep result         :" "$temp" $Color_Off
     tempNoSpace=$(echo $temp | tr -d ' ')
@@ -305,14 +305,14 @@ then
         fi
     fi
 
-    #echo -e $IGreen "result no space     :" $IYellow"->"$IGreen"$tempNoSpace"$IYellow"<-" $Color_Off
+    # echo -e $IGreen "result no space     :" $IYellow"->"$IGreen"$tempNoSpace"$IYellow"<-" $Color_Off
     refLineLen=${#pyInstall_getVersion}
     # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
     refLineLen=$(($refLineLen - 1))
-	tempNoSpaceLen=${#tempNoSpace}
+    tempNoSpaceLen=${#tempNoSpace}
     # echo -e $IGreen "tempNoSpaceLen len  :" "$tempNoSpaceLen" $Color_Off
-	calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
-	calcVersionLen=$(($calcVersionLen - 4))
+    calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
+    calcVersionLen=$(($calcVersionLen - 4))
     # echo -e $IGreen "calcVersionLen len  :" "$calcVersionLen" $Color_Off
     temp=${tempNoSpace:refLineLen:calcVersionLen}
     # echo -e $IGreen "result filter       :" "$temp" $Color_Off
@@ -344,7 +344,7 @@ then
     if [[ -f "$pyInstallSpec_Windows" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Windows
-        # pyInstall_Parameter="-F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcon_T_512x512.ico' './""$pyInstall_Name"".py'"
+        # pyInstall_Parameter="-y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcon_T_512x512.ico' './""$pyInstall_Name"".py'"
         pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Windows $Color_Off
@@ -361,7 +361,7 @@ then
         pyInstallSpec_Src=$pyInstallSpec_MacOS
         # --version-file ""'$pyInstall_fileVersion'"
         # pyInstall_Parameter="-y -i appIcon_T_512x512.icns "${pyInstall_Name}".py"
-        pyInstall_Parameter="-y --clean --log-level DEBUG --target-arch x86_64 "$pyInstallSpec
+        pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_MacOS $Color_Off
         exit $ERROR_SH_OS    
