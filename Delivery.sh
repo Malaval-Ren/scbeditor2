@@ -336,7 +336,7 @@ then
     if [[ -f "$pyInstallSpec_Windows" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Windows
-        # pyInstall_Parameter="-F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcons_T_512x512.ico' './""$pyInstall_Name"".py'"
+        # pyInstall_Parameter="-F -y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcon_T_512x512.ico' './""$pyInstall_Name"".py'"
         pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Windows $Color_Off
@@ -352,8 +352,8 @@ then
     then
         pyInstallSpec_Src=$pyInstallSpec_MacOS
         # --version-file ""'$pyInstall_fileVersion'"
-        # pyInstall_Parameter="-w -F -y -i appIcon_T_512x512.icns "${pyInstall_Name}".py"
-        pyInstall_Parameter="-w -F -y --clean --log-level DEBUG --target-arch x86_64 "$pyInstallSpec
+        # pyInstall_Parameter="-y -i appIcon_T_512x512.icns "${pyInstall_Name}".py"
+        pyInstall_Parameter="-y --clean --log-level DEBUG --target-arch x86_64 "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_MacOS $Color_Off
         exit $ERROR_SH_OS    
@@ -367,7 +367,7 @@ then
     if [[ -f "$pyInstallSpec_Linux" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Linux
-        pyInstall_Parameter="--onefile -y --clean --log-level DEBUG --version-file "$pyInstall_fileVersion" -i ./appIcon_x64_T_256x256.gif "$pyInstall_Name".py"
+        pyInstall_Parameter="-y --clean --log-level DEBUG --version-file "$pyInstall_fileVersion" -i ./appIcon_x64_T_256x256.gif "$pyInstall_Name".py"
         # pyInstall_Parameter="--onefile -y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Linux $Color_Off
@@ -572,7 +572,7 @@ then
         fi
         # Copy Icon for application
         cp -fp appIcon_x64_T_256x256.gif "$targetDir"
-        cp -fp appIcons_T_512x512.ico "$targetDir"
+        cp -fp appIcon_T_512x512.ico "$targetDir"
         cp -fp appIcon_T_512x512.icns "$targetDir"
         # Copy Windows Folder icon on my personnal PC only
 		if [[ -f "desktop.ini" ]]

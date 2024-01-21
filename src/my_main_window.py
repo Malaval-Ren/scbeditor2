@@ -55,8 +55,6 @@ from .my_tools import mt_get_path_separator, mt_save_file
 # ###############################################################################################
 # #######========================= constant private =========================
 
-MAIN_WINDOWS_WIDTH = 1060
-MAIN_WINDOWS_HEIGHT = 824
 WAIT_TIME_COM = 0.05
 
 # ###############################################################################################
@@ -77,15 +75,25 @@ class MyMainWindow:
         print()
         self.w_main_windows = w_main_windows
         self.a_list_application_info = list_application_info
-        # Size of the main windows
-        self.i_main_window_width = MAIN_WINDOWS_WIDTH
-        self.i_main_window_height = MAIN_WINDOWS_HEIGHT
         # Position of the main windows
         self.i_main_window_x = 20
         self.i_main_window_y = 20
         self.w_main_windows.background = constant.BACKGROUD_COLOR_UI
         self.c_the_icons = MyIconPictures( self.w_main_windows)
         self.s_platform = platform.system()
+        # Size of the main windows
+        if self.s_platform == "Linux":
+            self.i_main_window_width = 1080
+            self.i_main_window_height = 830       
+        elif self.s_platform == "Darwin":
+            self.i_main_window_width = 1150
+            self.i_main_window_height = 834
+        elif self.s_platform == "Windows":
+            self.i_main_window_width = 1060
+            self.i_main_window_height = 824
+        else:
+            print( 'init() : H : Currently not managed')
+
         self.c_alert_windows = MyAlertWindow( w_main_windows, list_application_info)
         self.s_init_pathname = os.getcwd()
         self.c_mains_icon_bar = None

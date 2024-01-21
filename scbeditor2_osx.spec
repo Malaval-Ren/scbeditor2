@@ -30,10 +30,10 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=False,
-          icon='appIcons_T_1024x1024.icns')
+          icon='appIcon_T_1024x1024.icns')
 app = BUNDLE(exe,
          name='scbeditor2.app',
-         icon='appIcons_T_1024x1024.icns',
+         icon='appIcon_T_1024x1024.icns',
          bundle_identifier=None,
          version='2.0.5.19',
          info_plist={
@@ -42,7 +42,7 @@ app = BUNDLE(exe,
             'CFBundleDocumentTypes': [
                 {
                     'CFBundleTypeName': 'My File Format',
-                    'CFBundleTypeIconFile': 'appIcons_T_1024x1024.icns',
+                    'CFBundleTypeIconFile': 'appIcon_T_1024x1024.icns',
                     'LSItemContentTypes': ['com.example.myformat'],
                     'LSHandlerRank': 'Owner'
                     }
