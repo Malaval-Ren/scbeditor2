@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.75'
+version='1.77'
 
 # definition all colors and styles to use with an echo
 
@@ -163,12 +163,6 @@ if [[ "$OSTYPE" == "msys" ]]
 then
     python_version=$(python --version)
     pyinstaller_version=$(pyinstaller --version)
-    # if [[ "$pyinstaller_version" != "4.10" ]]
-    # then
-        # echo -e $IYellow "pyinstaller version $pyinstaller_version is wrong back to 4.10" $Color_Off     
-        # pip install pyinstaller==4.10 --user
-        # pyinstaller_version=$(pyinstaller --version)
-    # fi
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     python_version=$(python3 --version)
@@ -297,7 +291,21 @@ then
     temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
     # echo -e $IGreen "grep result         :" "$temp" $Color_Off
     tempNoSpace=$(echo $temp | tr -d ' ')
-    # echo -e $IGreen "result no space     :" "$tempNoSpace" $Color_Off
+
+    if [[ "$OSTYPE" == "darwin"* ]]
+    then
+        temp=${tempNoSpace: -1}
+        hex="$(printf '%s' "$temp" | xxd -pu)"
+        if [[ "$hex" == "0d" ]]
+        then
+            # remove this char '\r' at end of string
+            refLineLen=${#tempNoSpace}
+            refLineLen=$(($refLineLen - 1))
+            tempNoSpace=${tempNoSpace:0:refLineLen}
+        fi
+    fi
+
+    #echo -e $IGreen "result no space     :" $IYellow"->"$IGreen"$tempNoSpace"$IYellow"<-" $Color_Off
     refLineLen=${#pyInstall_getVersion}
     # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
     refLineLen=$(($refLineLen - 1))
@@ -489,14 +497,14 @@ then
             then
                 exit $ERROR_SH_SUB_ERROR
             fi
-            echo
-            echo -e $Green "Exit dmg_create.sh" $Color_Off
+            # echo
+            # echo -e $Green "Exit dmg_create.sh" $Color_Off
             cd ./dist
             rm -R ./dmgContent
             rm -R ./$pyInstall_Name.app
             cd ..
             echo
-            echo -e $BGreen "DMG file is DONE" $Color_Off
+            echo -e $BGreen "DMG file is OK" $Color_Off
             echo   
         else
             ls -alGh ./dist
@@ -584,7 +592,7 @@ then
         cp -fp "$pyInstall_Name"".py" "$targetDir"
         cp -R "src" "$targetDir""/src"
         # Copy info files
-        cp -fp "URL_Python_install.txt" "$targetDir"
+        cp -fp "../URL_Python_install.txt" "$targetDir"
         # Copy script for platforms
         cp -fp Delivery.sh "$targetDir"
         cp -fp linuxInstall.sh "$targetDir"

@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.27'
+version='1.29'
 
 # definition all colors and styles to use with an echo
 
@@ -129,6 +129,12 @@ ERROR_GIT_init=$(($ERROR_GIT+1))
 
 aError=$NO_ERROR
 
+if [[ "$OSTYPE" != "darwin"* ]]
+then
+    echo -e $BRed "Create a dmg file is only on Mac OS X" $Color_Off
+    exit $ERROR_SH_OS
+fi
+
 #Clear the terminal screen
 # printf "\033c"
 pyInstall_Name=$(basename "$PWD")
@@ -149,6 +155,17 @@ then
     temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
     # echo -e $IGreen "grep result         :" "$temp" $Color_Off
     tempNoSpace=$(echo $temp | tr -d ' ')
+
+    temp=${tempNoSpace: -1}
+    hex="$(printf '%s' "$temp" | xxd -pu)"
+    if [[ "$hex" == "0d" ]]
+    then
+        # remove this char '\r' at end of string
+        refLineLen=${#tempNoSpace}
+        refLineLen=$(($refLineLen - 1))
+        tempNoSpace=${tempNoSpace:0:refLineLen}
+    fi
+    
     # echo -e $IGreen "result no space     :" "$tempNoSpace" $Color_Off
     refLineLen=${#pyInstall_getVersion}
     # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
@@ -182,22 +199,27 @@ then
     exit $ERROR_SH_FILE
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]
+# --background "installer_background.png" \
+test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_version".dmg"
+create-dmg \
+    --volname $pyInstall_Name$pyInstall_version \
+    --volicon "dmg_icon_T_512x512.icns" \
+    --window-pos 200 120 \
+    --window-size 800 400 \
+    --icon-size 128 \
+    --icon $pyInstall_Name".app" 200 190 \
+    --hide-extension $pyInstall_Name".app" \
+    --app-drop-link 600 185 \
+    "./dist/"$pyInstall_Name$pyInstall_version".dmg" \
+    "./dist/dmgContent/"
+
+echo
+if [ $? -eq 0 ]
 then
-    # --background "installer_background.png" \
-    test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_version".dmg"
-    create-dmg \
-        --volname $pyInstall_Name$pyInstall_version \
-        --volicon "dmg_icon_T_512x512.icns" \
-        --window-pos 200 120 \
-        --window-size 800 400 \
-        --icon-size 128 \
-        --icon $pyInstall_Name".app" 200 190 \
-        --hide-extension $pyInstall_Name".app" \
-        --app-drop-link 600 185 \
-        "./dist/"$pyInstall_Name$pyInstall_version".dmg" \
-        "./dist/dmgContent/"
-    exit $NO_ERROR
+    echo -e $BGreen "create-dmg is done" $Color_Off
 else
-    echo -e $BRed "create a dmg file is only on Mac OSX." $Color_Off
+    echo -e $BRed "create-dmg failed ! error =" $?  $Color_Off
+    error= $?
 fi
+
+exit $error
