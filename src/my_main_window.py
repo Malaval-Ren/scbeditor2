@@ -395,19 +395,19 @@ class MyMainWindow:
             i_current_palette_number = int( self.a_scb_lbl.cget( "text"))
             i_new_palette_number = int( self.a_line_slider.get())
             if i_current_palette_number != i_new_palette_number:
-                print( " Convert the index." )
+                # print( " Convert the index." )
                 if i_current_palette_number > i_new_palette_number:
                     i_delta = (i_new_palette_number - i_current_palette_number) * 16
                 else:
-                    i_delta = (i_current_palette_number - i_new_palette_number) * 16
+                    i_delta = abs( (i_current_palette_number - i_new_palette_number) * 16)
 
                 for i_index in range( 0, 319, 1):
                     i_current_index = self.a_original_img.getpixel( ( i_index, i_line_number))
                     i_current_index += i_delta
                     self.a_original_img.putpixel( ( i_index, i_line_number), i_current_index)
 
-                width, height = self.a_original_img.size
-                print( "width = " + str( width) + "  height = " + str( height) )
+                # width, height = self.a_original_img.size
+                # print( "width = " + str( width) + "  height = " + str( height) )
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
                 s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
@@ -480,11 +480,11 @@ class MyMainWindow:
 
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1, sticky='ew')
         self.a_mouse_live_pos_x = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_mouse_live_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=1)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
         self.a_mouse_live_pos_y = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
 
@@ -503,13 +503,24 @@ class MyMainWindow:
         self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
         self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
-        self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        if self.s_platform == "Darwin":
+            self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        else:
+            self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+
         self.a_less_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mw_less_x_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        if self.s_platform == "Darwin":
+            self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mw_less_x_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        else:
+            self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mw_less_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_less_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
-        self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mw_more_x_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+
+        if self.s_platform == "Darwin":
+            self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mw_more_x_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        else:
+            self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mw_more_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_x_btn.grid( row=i_index_base_block, column=7, padx=4, pady=1, sticky='ew')
 
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
@@ -528,7 +539,10 @@ class MyMainWindow:
         self.a_color_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
         self.a_color_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
 
-        self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mw_more_y_value_clicked, width=44, height=20, background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        if self.s_platform == "Darwin":
+            self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mw_more_y_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        else:
+            self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mw_more_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
@@ -540,8 +554,12 @@ class MyMainWindow:
         self.a_line_slider.grid( row=i_index_base_block, rowspan=2, column=4, columnspan=6, padx=4, pady=2, sticky='ewns')
 
         i_index_base_block += 1
-        a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mw_change_scb_line, width=21, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
+        if self.s_platform == "Darwin":
+            a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mw_change_scb_line, width=21, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=2, pady=0, sticky='ew')
+        else:
+            a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mw_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -664,7 +682,10 @@ class MyMainWindow:
 
         # Create palette button left frame
         a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
+        if self.s_platform == "Darwin":
+            a_palette_bottom_frame.place( x=2, y=20, width=590, height=276 )
+        else:
+            a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
         # creating a font object with little size for color buttons to reduce their size
         a_font_label = font.Font( size=6)
@@ -685,11 +706,17 @@ class MyMainWindow:
             i_from = i_to
             i_to = i_to + 48
             a_label = Label( a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
-            a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            if self.s_platform == "Darwin":
+                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            else:
+                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
             for _ in range( i_from, i_to, 3):
                 a_button_color = Radiobutton( a_palette_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
-                a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
+                if self.s_platform == "Darwin":
+                    a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
+                else:
+                    a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 self.a_palette_button_lst.append( a_button_color)
                 i_index_base_column += 1
                 i_index += 1
@@ -700,7 +727,10 @@ class MyMainWindow:
 
         # Create color button right frame
         a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276 )
+        if self.s_platform == "Darwin":
+            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276 )
+        else:
+            a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276 )
 
         i_index_base_block = 0
         a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='red')
@@ -715,7 +745,7 @@ class MyMainWindow:
         self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='red')
         self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
         self.a_red_ntr.bind( "<FocusIn>", self.__mv_entry_red_focus_in)
-        self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH, background='light grey', foreground='red')
+        self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
         self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
         a_offset_lbl = Label( a_color_bottom_frame, text="New", background=constant.BACKGROUD_COLOR_UI)
@@ -728,14 +758,17 @@ class MyMainWindow:
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
         self.a_the_color_new_lbl = Label( a_color_bottom_frame, text="", width=8, background=constant.LIGHT_COLOR_UI, foreground='black')
         self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=4, column=2, columnspan=1, padx=4, pady=1, sticky='ewns')
-        self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mw_restore_old_color, width=7, height=1, background='light grey')
-        self.a_color_old_btn.grid( row=i_index_base_block, rowspan=4, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
-
+        if self.s_platform == "Darwin":
+            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mw_restore_old_color, width=5, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            self.a_color_old_btn.grid( row=i_index_base_block, rowspan=4, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
+        else:
+            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mw_restore_old_color, width=7, height=1, relief='raised', background='light grey')
+            self.a_color_old_btn.grid( row=i_index_base_block, rowspan=4, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
         i_index_base_block += 1
         self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='green')
         self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_green_ntr.bind( "<FocusIn>", self.__mv_entry_green_focus_in)
-        self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='green')
+        self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
         self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
         i_index_base_block += 1
         a_color_name_lbl = Label( a_color_bottom_frame, text="Blue", background=constant.BACKGROUD_COLOR_UI, foreground='blue')
@@ -744,7 +777,7 @@ class MyMainWindow:
         self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, validate="key", validatecommand=( a_color_bottom_frame.register( self.__mw_set_max_len_to_fifteen_chars_and_filter), '%d', '%s', '%S'), width=constant.DEFAULT_BUTTON_WIDTH, background=constant.LIGHT_COLOR_UI, foreground='blue')
         self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_blue_ntr.bind( "<FocusIn>", self.__mv_entry_blue_focus_in)
-        self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='blue')
+        self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
         self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
         i_index_base_block += 1
@@ -767,9 +800,14 @@ class MyMainWindow:
         self.a_btn_x_lbl.grid( row=i_index_base_block, column=2, padx=4, sticky='ew')
         self.a_btn_y_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='black')
         self.a_btn_y_lbl.grid( row=i_index_base_block, column=3, padx=4, sticky='ew')
+
         i_index_base_block += 1
-        a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, background=constant.BACKGROUD_COLOR_UI)
-        a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=6, sticky='ew')
+        if self.s_platform == "Darwin":
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=4, padx=2, pady=0, sticky='ew')
+        else:
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=6, sticky='ew')
 
         # self.w_main_windows.update()
         # i_col, i_row = self.a_red_ntr_dec_lbl.grid_size()
@@ -949,17 +987,23 @@ class MyMainWindow:
         a_top_bar_frame.place(x=2, y=0, width=self.i_main_window_width-4, height=98 )   # fill :  must be 'none', 'x', 'y', or 'both'
         self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_main_windows, self.a_list_application_info, a_top_bar_frame)
         self.c_mains_icon_bar.mwib_create_top_bar_icons( 1)
+        self.w_main_windows.update()
+        # print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
 
         # Create picture frame
         a_pic_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
         self.__mw_picture_zone( a_pic_frame)
+        self.w_main_windows.update()
+        # print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
 
         # Create palette frame
         a_palette_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=294 )
+        a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height()) )
         self.__mw_palette_zone( a_palette_frame)
         self.w_main_windows.update()
+        # print( "a_palette_frame     : width= " + str( a_palette_frame.winfo_width()) + " height= ", str( a_palette_frame.winfo_height()))
+        # print( "Calcul height       : " + str( self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height())))
 
         self.w_main_windows.bind( '<Button>', self.__mw_change_focus)
         self.w_main_windows.bind( "<Key>" , self.__on_single_key)

@@ -28,6 +28,8 @@
 # pylint: disable=line-too-long
 # ###############################################################################################
 
+import platform
+
 import tkinter as tk_gui
 from tkinter import Label, Button, Toplevel, font
 from tkinter.ttk import Progressbar, Style
@@ -60,6 +62,7 @@ class MyProgressBarWindow:
         self.a_list_application_info = list_application_info
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
+        self.s_platform = platform.system()
         self.w_progres_bar_window = None
         self.i_height = 0
         self.i_width = 0
@@ -134,9 +137,13 @@ class MyProgressBarWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        w_button = Button( button_frame, text='Stop', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__pbw_alert_ok_button, background=self.progres_bar_background)
-        w_button.pack( side='right', padx=4, pady=4 )
-
+        if self.s_platform == "Darwin":
+            w_button = Button( button_frame, text='Stop', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__pbw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            w_button.pack( side='right', padx=2, pady=2 )
+        else:
+            w_button = Button( button_frame, text='Stop', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__pbw_alert_ok_button, relief='raised', background=self.progres_bar_background)
+            w_button.pack( side='right', padx=4, pady=4 )
+            
         self.w_progres_bar_window.update()
 
     # ####################### __pbw_set_window_size ########################

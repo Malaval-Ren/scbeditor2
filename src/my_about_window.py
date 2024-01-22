@@ -28,6 +28,7 @@
 # pylint: disable=line-too-long
 # ###############################################################################################
 
+import platform
 import tkinter as tk_gui
 from tkinter import Label, Button, Toplevel
 
@@ -57,6 +58,7 @@ class MyAboutWindow:
         self.a_list_application_info = list_application_info
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
+        self.s_platform = platform.system()
         self.w_about_window = None
         self.i_height = 0
         self.i_width = 0
@@ -67,7 +69,6 @@ class MyAboutWindow:
     # ####################### __aw_about_ok_button ########################
     def __aw_about_ok_button( self):
         """ Button ok of the about window """
-        self.w_about_window.bell()
         self.w_about_window.grab_release()
         self.w_about_window.destroy()
         self.c_the_log.add_string_to_log( 'Do about close')
@@ -116,7 +117,7 @@ class MyAboutWindow:
             '\n' + \
             'eMail' + '\t' + self.a_list_application_info[7] + '\n'
 
-        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
+        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=18)  # , exportselection=0, takefocus=0
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
         a_middle_text.insert( 'end', self.a_list_application_info[1] + '\n', "bold-italic")
@@ -129,15 +130,29 @@ class MyAboutWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, background=self.about_background).pack( side='right', padx=4, pady=4 )
-
+        if self.s_platform == "Darwin":
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn.pack( side='right', padx=2, pady=2 )
+        else:
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, relief='raised', background=self.about_background)
+            a_ok_btn.pack( side='right', padx=4, pady=4 )
         self.w_about_window.update()
 
     # ####################### __aw_set_window_size ########################
     def __aw_set_window_size( self):
         """ Set the size of the configuration windows """
-        self.i_width = 592
-        self.i_height = 338
+        if self.s_platform == "Linux":
+            self.i_width = 592
+            self.i_height = 340
+        elif self.s_platform == "Darwin":
+            self.i_width = 552
+            self.i_height = 290
+        elif self.s_platform == "Windows":
+            self.i_width = 592
+            self.i_height = 340
+        else:
+            print( 'aw_set_window_size() : H : Currently not managed')
+
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
 

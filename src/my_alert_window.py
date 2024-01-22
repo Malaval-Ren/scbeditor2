@@ -28,6 +28,8 @@
 # pylint: disable=line-too-long
 # ###############################################################################################
 
+import platform
+
 import tkinter as tk_gui
 from tkinter import Label, Button, Toplevel, font
 
@@ -60,6 +62,7 @@ class MyAlertWindow:
         self.a_list_application_info = list_application_info
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
+        self.s_platform = platform.system()
         self.w_alert_window = None
         self.i_height = 0
         self.i_width = 0
@@ -140,8 +143,16 @@ class MyAlertWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
-        Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_cancel_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
+        if self.s_platform == "Darwin":
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn.pack( side='right', padx=2, pady=2 )
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn.pack( side='right', padx=2, pady=2 )
+        else:
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn.pack( side='right', padx=4, pady=4 )
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
 
@@ -170,7 +181,12 @@ class MyAlertWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
+        if self.s_platform == "Darwin":
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn.pack( side='right', padx=2, pady=2 )
+        else:
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
 
@@ -198,7 +214,12 @@ class MyAlertWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
+        if self.s_platform == "Darwin":
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn.pack( side='right', padx=2, pady=2 )
+        else:
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_btn.pack( side='right', padx=4, pady=4 )          
 
         self.w_alert_window.update()
 
