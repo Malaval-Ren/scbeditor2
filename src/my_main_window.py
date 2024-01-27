@@ -97,6 +97,7 @@ class MyMainWindow:
         self.c_alert_windows = MyAlertWindow( w_main_windows, list_application_info)
         self.s_init_pathname = os.getcwd()
         self.c_mains_icon_bar = None
+        self.a_palette_number_lst = []
         self.a_palette_button_lst = []
         self.a_original_img = None
         self.a_work_img = None
@@ -215,18 +216,9 @@ class MyMainWindow:
             self.a_line_slider.set( int( i_offset / 16))
 
             # Select the radio button color in the palette
-            a_color_selected = self.a_palette_button_lst[i_offset].cget( 'bg')
-            s_color_true=a_color_selected.replace( "#","")
-            s_red = s_color_true[0:0+2]
-            s_green = s_color_true[2:2+2]
-            s_blue = s_color_true[4:4+2]
             self.a_palette_button_lst[i_offset].select()
-            self.__mw_color_button( i_offset, "#" + s_red, s_green, s_blue)
-
-            # Draw the SCB rectangle
-            self.mw_draw_scb_bar( i_offset)
-
-            i_palette_number = int( i_offset / 16) * 16
+            # print( "mw_click_on_picture() i_offset = ", str( i_offset))
+            self.__mw_color_button( i_offset)
 
             # Draw bar chart for couleur in usage in a line
             self.a_bar_chart_cnvs.delete( "all")
@@ -234,6 +226,7 @@ class MyMainWindow:
             a_usage_color_rry = [1] * 16
             a_result_color_rry = array.array( 'i')
             a_result_color_rry = [0] * 16
+            i_palette_number = int( i_offset / 16) * 16
 
             for i_loop in range( 0, constant.PICTURE_WIDTH, 2):
                 i_offset = self.a_work_img.getpixel( ( i_loop, i_pos_y))
@@ -285,6 +278,7 @@ class MyMainWindow:
             i_current_val = max( i_current_val-2, 0)
             self.a_mouse_pos_x_input_var.set( str( i_current_val))
             self.a_pos_x_true_lbl.configure( text=str( int( i_current_val / 2)))
+            # goto self.__mw_click_on_picture()
             self.a_picture_lbl.event_generate("<1>", x=i_current_val, y=self.a_mouse_pos_y_input_var.get())
 
     # ####################### __mw_more_x_value_clicked ########################
@@ -295,6 +289,7 @@ class MyMainWindow:
             i_current_val = min( i_current_val+2, constant.PICTURE_WIDTH)
             self.a_mouse_pos_x_input_var.set( str( i_current_val))
             self.a_pos_x_true_lbl.configure( text=str( int( i_current_val / 2)))
+            # goto self.__mw_click_on_picture()
             self.a_picture_lbl.event_generate("<1>", x=i_current_val, y=self.a_mouse_pos_y_input_var.get())
 
     # ####################### __mw_less_y_value_clicked ########################
@@ -305,6 +300,7 @@ class MyMainWindow:
             i_current_val = max( i_current_val-2, 0)
             self.a_mouse_pos_y_input_var.set( str( i_current_val))
             self.a_pos_y_true_lbl.configure( text=str( int( i_current_val / 2)))
+            # goto self.__mw_click_on_picture()
             self.a_picture_lbl.event_generate("<1>", x=self.a_mouse_pos_x_input_var.get(), y=i_current_val)
 
     # ####################### __mw_more_y_value_clicked ########################
@@ -315,25 +311,26 @@ class MyMainWindow:
             i_current_val = min( i_current_val+2, constant.PICTURE_HEIGHT)
             self.a_mouse_pos_y_input_var.set( str( i_current_val))
             self.a_pos_y_true_lbl.configure( text=str( int( i_current_val / 2)))
+            # goto self.__mw_click_on_picture()
             self.a_picture_lbl.event_generate("<1>", x=self.a_mouse_pos_x_input_var.get(), y=i_current_val)
 
     # ####################### __mv_entry_mouse_x_focus_in ########################
     def __mv_entry_mouse_x_focus_in( self, _):
         """ entry mouse pos X take the focus """
         self.w_main_windows.unbind( "<Key>")
-        print( "__mv_entry_mouse_x_focus_in()")
+        print( "mv_entry_mouse_x_focus_in()")
 
     # ####################### __mv_entry_mouse_y_focus_in ########################
     def __mv_entry_mouse_y_focus_in( self, _):
         """ entry mouse pos Y take the focus """
         self.w_main_windows.unbind( "<Key>")
-        print( "__mv_entry_mouse_y_focus_in()")
+        print( "mv_entry_mouse_y_focus_in()")
 
     # ####################### __mv_entry_mouse_x_y_focus_out ########################
     def __mv_entry_mouse_x_y_focus_out( self, _):
         """ entry mouse pos X or Y loose the focus """
         self.w_main_windows.bind( "<Key>" , self.__on_single_key)
-        print( "__mv_entry_mouse_x_y_focus_out()")
+        print( "mv_entry_mouse_x_y_focus_out()")
 
     # ####################### __mw_set_max_len_to_four_chars_and_filter ########################
     def __mw_set_max_len_to_four_chars_and_filter( self, i_action, s_string_apres, s_insert):
@@ -362,26 +359,26 @@ class MyMainWindow:
 
         if s_insert in '0123456789ABCDEF':
         # if (s_insert != '') or (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
-            # print( '__mw_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
+            # print( 'mw_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
             if int( i_action) == 0:     # deletion
-                # print( '__mw_set_max_len_to_four_chars_and_filter() : action = deletion' )
+                # print( 'mw_set_max_len_to_four_chars_and_filter() : action = deletion' )
                 if len( s_string_apres) + 1 > 8:
                     b_result = True
                 else:
                     # self.w_main_windows.bell()
                     b_result = False
             elif int( i_action) == 1:   # insertion
-                # print( '__mw_set_max_len_to_four_chars_and_filter() : action = insertion' )
+                # print( 'mw_set_max_len_to_four_chars_and_filter() : action = insertion' )
                 if len( s_string_apres) + 1 > 15:
                     # self.w_main_windows.bell()
                     b_result = False
                 else:
                     b_result = True
             else:
-                # print( '__mw_set_max_len_to_four_chars_and_filter() : autre')
+                # print( 'mw_set_max_len_to_four_chars_and_filter() : autre')
                 b_result = True
         else:
-            # print( '__mw_set_max_len_to_four_chars_and_filter() : character not managed')
+            # print( 'mw_set_max_len_to_four_chars_and_filter() : character not managed')
             # self.w_main_windows.bell()
             b_result = False
 
@@ -495,6 +492,7 @@ class MyMainWindow:
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        # font='-weight bold'
         self.a_mouse_pos_x = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mw_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
         self.a_mouse_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1)
         self.a_mouse_pos_x.bind( "<FocusIn>", self.__mv_entry_mouse_x_focus_in)
@@ -507,7 +505,6 @@ class MyMainWindow:
             self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         else:
             self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mw_less_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-
         self.a_less_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
@@ -577,13 +574,9 @@ class MyMainWindow:
     # ####################### __mw_restore_old_color ########################
     def __mw_restore_old_color( self):
         """ This button restore the old color same as the pallette button clicked """
-        s_old_color_of_button = self.a_color_old_btn.cget( 'bg')
-        __s_color_true=s_old_color_of_button.replace( "#","")
-        s_red = __s_color_true[0:0+2]
-        s_green = __s_color_true[2:2+2]
-        s_blue = __s_color_true[4:4+2]
-        i_number = int(self.a_btn_offset_lbl.cget( "text"))
-        self.__mw_color_button( i_number, "#" + s_red, s_green, s_blue)
+        i_number = int( self.a_btn_offset_lbl.cget( "text"))
+        # print( "mw_restore_old_color() i_offset = ", str( i_number))
+        self.__mw_color_button( i_number)
 
     # ####################### __mv_update_red_entry ########################
     def __mv_update_red_entry( self, i_value):
@@ -659,7 +652,7 @@ class MyMainWindow:
 
     # ####################### __mv_entry_red_focus_out ########################
     def __mv_entry_black_focus_out( self):
-        """ no selected entry widget focus events restore color to black """
+        """ No selected entry widget focus events restore color to black """
         self.a_color_slider.config( foreground='black')
 
     # ####################### __mw_palette_zone ########################
@@ -687,17 +680,19 @@ class MyMainWindow:
         else:
             a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
-        # creating a font object with little size for color buttons to reduce their size
+        # Creating a font object with little size for color buttons to reduce their size
         a_font_label = font.Font( size=6)
         a_font_button = font.Font( size=3)
 
+        # Create a line of number for the column
         i_index_base_column = 1
         for i_loop in range( 0, 16, 1):
             a_label = Label( a_palette_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            self.a_palette_number_lst.append( a_label)
             i_index_base_column += 1
 
-        # table of color button for the palette
+        # Table of color button for the palette
         i_index_base_block += 1
         i_index_base_column = 0
         i_to = 0
@@ -705,12 +700,14 @@ class MyMainWindow:
         for i_loop in range( 0, 16, 1):
             i_from = i_to
             i_to = i_to + 48
+            # First element of the line is its number
             a_label = Label( a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             if self.s_platform == "Darwin":
                 a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             else:
                 a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
+            # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
                 a_button_color = Radiobutton( a_palette_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
                 if self.s_platform == "Darwin":
@@ -721,9 +718,10 @@ class MyMainWindow:
                 i_index_base_column += 1
                 i_index += 1
 
-            self.w_main_windows.update()
             i_index_base_column = 0
             i_index_base_block += 1
+
+        self.w_main_windows.update()
 
         # Create color button right frame
         a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
@@ -804,10 +802,14 @@ class MyMainWindow:
         i_index_base_block += 1
         if self.s_platform == "Darwin":
             a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=4, padx=2, pady=0, sticky='ew')
+            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=2, pady=0, sticky='ew')
+            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mw_set_pen_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=0, sticky='ew')
         else:
             a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=6, sticky='ew')
+            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=6, sticky='ew')
+            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mw_set_pen_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=6, sticky='ew')
 
         # self.w_main_windows.update()
         # i_col, i_row = self.a_red_ntr_dec_lbl.grid_size()
@@ -836,31 +838,36 @@ class MyMainWindow:
         print( "s_insert       %S = ", s_insert)
         # print( "a_name         %W = ", s_name)
 
-        # if 'a' <= s_insert <= 'f':
-        if s_insert >= 'a' and s_insert <= 'f':
-            s_insert.upper()
+        if s_insert != '':
+            if 'a' <= s_insert <= 'f':
+            # if s_insert >= 'a' and s_insert <= 'f':
+                s_insert.upper()
 
-        if (s_insert != '') or (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
-            # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
-            if int( i_action) == 0:     # deletion
-                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : action = deletion' )
-                if len( s_string_apres) + 1 > 8:
-                    b_result = True
+            if 'A' <= s_insert <= 'F' or '0' <= s_insert <= '9':
+            # if (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
+                # print( 'mw_set_max_len_to_fifteen_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
+                if int( i_action) == 0:     # deletion
+                    # print( 'mw_set_max_len_to_fifteen_chars_and_filter() : action = deletion' )
+                    if len( s_string_apres) + 1 > 8:
+                        b_result = True
+                    else:
+                        # self.w_main_windows.bell()
+                        b_result = False
+                elif int( i_action) == 1:   # insertion
+                    # print( 'mw_set_max_len_to_fifteen_chars_and_filter() : action = insertion' )
+                    if len( s_string_apres) + 1 > 15:
+                        # self.w_main_windows.bell()
+                        b_result = False
+                    else:
+                        b_result = True
                 else:
-                    self.w_main_windows.bell()
-                    b_result = False
-            elif int( i_action) == 1:   # insertion
-                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : action = insertion' )
-                if len( s_string_apres) + 1 > 15:
-                    self.w_main_windows.bell()
-                    b_result = False
-                else:
+                    # print( 'mw_set_max_len_to_fifteen_chars_and_filter() : autre' )
                     b_result = True
             else:
-                # print( '__mw_set_max_len_to_fifteen_chars_and_filter() : autre' )
-                b_result = True
+                print( 'mw_set_max_len_to_fifteen_chars_and_filter() : key= ' + s_insert)
+                # self.w_main_windows.bell()
+                b_result = False
         else:
-            self.w_main_windows.bell()
             b_result = False
 
         return b_result
@@ -868,9 +875,6 @@ class MyMainWindow:
     # ####################### __on_single_key ########################
     def __on_single_key( self, event):
         """ Method manage arrow key press for the main windows """
-        # s_key = event.char
-        # if s_key == "":
-        #     return
         if event.keysym == "Left":
             self.a_less_x_btn.invoke()
         elif event.keysym == "Right":
@@ -879,47 +883,87 @@ class MyMainWindow:
             self.a_less_y_btn.invoke()
         elif event.keysym == "Down":
             self.a_more_y_btn.invoke()
+        else:
+            s_key = event.char
+            print( 'on_single_key() : key= ' + s_key )
 
     # ####################### __mw_color_button ########################
-    def __mw_color_button( self, i_number, s_red, s_green, s_blue):
-        """ Palette of color buttons. note: s_red start by char '#' """
+    def __mw_color_button( self, i_number):
+        """ Palette of color buttons. i_number is a value form 0 to 255 one of the palette radio button """
         # self.w_main_windows.bell()
         self.__mv_entry_black_focus_out()
-        # if s_red == "":
-        #     s_red_true = "VIDE"
-        s_red_true=s_red.replace( "#","")
-        self.a_red_input_var.set( s_red_true)
-        self.a_red_ntr_dec_lbl.configure( text=str( int( s_red_true, 16)))
+        # print( "mw_color_button() i_number = ", str( i_number))
+        a_palette_list = self.a_original_img.getpalette()
+        i_tmp_number = i_number * 3
+        i_red = a_palette_list[i_tmp_number]
+        i_green = a_palette_list[i_tmp_number + 1]
+        i_blue = a_palette_list[i_tmp_number + 2]
+        if int( i_red) > 15:
+            s_red = f'{int( i_red):X}'
+        else:
+            s_red = f'0{int( i_red):X}'
+        if int( i_green) > 15:
+            s_green = f'{int( i_green):X}'
+        else:
+            s_green = f'0{int( i_green):X}'
+        if int( i_blue) > 15:
+            s_blue = f'{int( i_blue):X}'
+        else:
+            s_blue = f'0{int( i_blue):X}'
+
+        self.a_red_input_var.set( s_red)                            # hex string
+        self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
         self.a_green_input_var.set( s_green)
-        self.a_green_ntr_dec_lbl.configure( text=str( int( s_green, 16)))
+        self.a_green_ntr_dec_lbl.configure( text=str( i_green))
         self.a_blue_input_var.set( s_blue)
-        self.a_blue_ntr_dec_lbl.configure( text=str( int(s_blue, 16)))
-        self.a_the_color_new_lbl.configure( background= s_red + s_green + s_blue)
-        self.a_color_old_btn.configure( background= s_red + s_green + s_blue)
+        self.a_blue_ntr_dec_lbl.configure( text=str( i_blue))
+        self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
+        self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
         __i_complete = int( i_number / 16)
         __i_rest = i_number - ( __i_complete * 16)
         # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
-        self.a_btn_offset_lbl.configure( text=str( i_number))         # label under Offset
+        self.a_btn_offset_lbl.configure( text=str( i_number))       # label under Offset
         if i_number > 15:
-            self.a_btn_x_lbl.configure( text=str( __i_complete))      # label under Palette Y
+            self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Palette Y
         else:
-            self.a_btn_x_lbl.configure( text="0")                     # label under Palette Y
+            self.a_btn_x_lbl.configure( text="0")                   # label under Palette Y
 
-        self.a_btn_y_lbl.configure( text=str( __i_rest))               # label under Offset X
+        self.a_btn_y_lbl.configure( text=str( __i_rest))            # label under Offset X
+
         # Draw the SCB rectangle
         self.mw_draw_scb_bar( i_number)
 
     # ####################### __mw_set_color_in_palette ########################
     def __mw_set_color_in_palette( self):
         """ Set a new color value in palette  """
-        self.w_main_windows.bell()
         s_red = self.a_red_input_var.get()
         s_green = self.a_green_input_var.get()
         s_blue = self.a_blue_input_var.get()
         i_index = int(self.a_btn_offset_lbl.cget( "text"))
-        a_palette_button = self.a_palette_button_lst[i_index]
+        i_original_index = int( i_index/3)
+        a_palette_button = self.a_palette_button_lst[i_original_index]
         # ready when color modification will be done
         a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
+        # Update the picture palette
+        a_palette_list = self.a_original_img.getpalette()
+        a_palette_list[ i_index] = int( self.a_red_ntr_dec_lbl.cget( "text"))
+        a_palette_list[ i_index+1] = int( self.a_green_ntr_dec_lbl.cget( "text"))
+        a_palette_list[ i_index+2] = int( self.a_blue_ntr_dec_lbl.cget( "text"))
+        self.a_original_img.putpalette( a_palette_list, rawmode='RGB')
+        self.mw_update_main_window( self.c_mains_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+        self.__mw_color_button( i_index)
+
+    # ####################### __mw_set_pen_color ########################
+    def __mw_set_pen_color( self):
+        """ Set a new color value in palette  """
+        self.w_main_windows.bell()
+        # s_red = self.a_red_input_var.get()
+        # s_green = self.a_green_input_var.get()
+        # s_blue = self.a_blue_input_var.get()
+        # i_index = int(self.a_btn_offset_lbl.cget( "text"))
+        # a_palette_button = self.a_palette_button_lst[i_index]
+        # # ready when color modification will be done
+        # a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
         #
         # to do : Modify the picture palette
 
@@ -984,7 +1028,7 @@ class MyMainWindow:
 
         # Create 1 line of action icons
         a_top_bar_frame = tk_gui.Frame( self.w_main_windows, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
-        a_top_bar_frame.place(x=2, y=0, width=self.i_main_window_width-4, height=98 )   # fill :  must be 'none', 'x', 'y', or 'both'
+        a_top_bar_frame.place( x=2, y=0, width=self.i_main_window_width-4, height=98 )   # fill :  must be 'none', 'x', 'y', or 'both'
         self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_main_windows, self.a_list_application_info, a_top_bar_frame)
         self.c_mains_icon_bar.mwib_create_top_bar_icons( 1)
         self.w_main_windows.update()
@@ -1017,15 +1061,14 @@ class MyMainWindow:
 
     # ####################### mw_draw_scb_bar ########################
     def mw_draw_scb_bar( self, i_color_offset):
-        """ draw the bar how display all the same SCB """
+        """ Draw the bar how display all the same SCB """
         # Draw the SCB rectangle
         i_palette_number = int( i_color_offset / 16) * 16
-        # print( r"/  i_pos_x= " + str( i_pos_x) + "   i_pos_y= " + str( i_pos_y)+ "   i_offset= " + str( i_offset) + "   i_palette_number= " + str( i_palette_number))
+        # print( " offset= " + str( i_color_offset) + "  palette_number= " + str( i_palette_number))
 
         self.a_scb_cnvs.delete( "all")
         for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
-            # i_offset = self.a_work_img.getpixel( ( i_pos_x, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_palette_number:
                 self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
@@ -1034,7 +1077,7 @@ class MyMainWindow:
 
     # ####################### mw_update_main_window ########################
     def mw_update_main_window( self, s_filename, a_work_img):
-        """ load a picture and fill the interface """
+        """ Load a picture and fill the interface """
         if s_filename and a_work_img:
             self.a_original_img = a_work_img.copy()
             self.a_work_img = a_work_img
@@ -1076,13 +1119,15 @@ class MyMainWindow:
                     # s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
                     a_button_color = self.a_palette_button_lst[i_element]
-                    config_palette_bottom_with_arg = partial( self.__mw_color_button, int( i_index / 3), "#" + s_red, s_green, s_blue)
+                    # print( "mw_update_main_window() i_index = ", str( i_index))
+                    config_palette_bottom_with_arg = partial( self.__mw_color_button, i_index)  #  str( int( i_index / 3))
                     a_button_color.configure( command=config_palette_bottom_with_arg)
                     a_button_color.configure( background="#" + s_red + s_green + s_blue)
                     i_element += 1
 
                     if i_index == 0:
-                        self.__mw_color_button( i_index, "#" + s_red, s_green, s_blue)
+                        # print( "mw_update_main_window() i_index = ", str( i_index))
+                        self.__mw_color_button( i_index)
 
                 self.w_main_windows.update()
                 # Disabled for debug
@@ -1141,7 +1186,7 @@ class MyMainWindow:
 
     # ####################### mw_save_picture ########################
     def mw_save_picture( self):
-        """ save the picture """
+        """ Save the picture """
         s_original_filename = self.a_filename_lbl.cget( "text")
         s_new_file_name = mt_save_file( self.w_main_windows, self, s_original_filename)
         if s_new_file_name:

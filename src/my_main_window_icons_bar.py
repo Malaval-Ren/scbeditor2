@@ -296,3 +296,8 @@ class MyMainWindowIconsBar:
     def mwib_get_frame( self):
         """ Return frame to be able to add new elements """
         return self.a_top_frame_of_main_window
+
+    # ####################### mwib_get_get_path_filename ########################
+    def mwib_get_get_path_filename( self):
+        """ Return thye complete file pathname of the last image loaded """
+        return self.s_filename
