@@ -219,7 +219,7 @@ class MyAlertWindow:
             a_ok_btn.pack( side='right', padx=2, pady=2 )
         else:
             a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
-            a_ok_btn.pack( side='right', padx=4, pady=4 )          
+            a_ok_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
 
