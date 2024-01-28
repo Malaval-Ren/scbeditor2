@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
+# An application to do modification of bmp file to prepare convertion to a Apple IIGS pic file.
 #
 # Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
 #
@@ -154,14 +154,14 @@ def main():
     c_the_log.add_string_to_log( _s_dt_string)
     c_the_log.add_string_to_log( 'Starting ' + __softname__ + ' release : ' + __version__)
 
-    a_main_windows = tk_gui.Tk()
-    a_main_windows.configure(bg=constant.BACKGROUD_COLOR_UI) # 'blue'
-    a_main_windows.withdraw()
+    a_root_windows = tk_gui.Tk()
+    a_root_windows.configure( bg=constant.BACKGROUD_COLOR_UI) # 'blue'
+    a_root_windows.withdraw()
 
     # Create the application main windows
-    a_main_windows.update()
-    a_main_windows.deiconify()
-    c_my_main_window = MyMainWindow( a_main_windows, LIST_APPLICATION_INFO)
+    a_root_windows.update()
+    a_root_windows.deiconify()
+    c_my_main_window = MyMainWindow( a_root_windows, LIST_APPLICATION_INFO)
     mt_get_memory_used( c_my_main_window)
     c_my_main_window.mw_create_main_window()
     mt_get_memory_used( c_my_main_window)
@@ -171,7 +171,7 @@ def main():
 #    __print_font_info( 'TkMenuFont')
 #    __print_font_info( 'TkFixedFont')
 
-    a_main_windows.mainloop()
+    a_root_windows.mainloop()
 
     c_the_log.add_date_to_log()
     c_the_log.write_log()
