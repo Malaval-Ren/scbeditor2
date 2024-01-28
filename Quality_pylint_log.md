@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  jeu. 18 janv. 2024 23:20:41
+date :  dim. 28 janv. 2024 21:56:39
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -89,24 +89,23 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window  
 
-src\my_main_window.py:1:0: C0302: Too many lines in module (1079/1000) (too-many-lines)
-src\my_main_window.py:188:13: W0511: TODO : CHECK THIS CODE (fixme)
-src\my_main_window.py:70:4: R0915: Too many statements (62/50) (too-many-statements)
-src\my_main_window.py:176:4: R0914: Too many local variables (24/15) (too-many-locals)
-src\my_main_window.py:176:4: R0912: Too many branches (16/12) (too-many-branches)
-src\my_main_window.py:176:4: R0915: Too many statements (71/50) (too-many-statements)
-src\my_main_window.py:366:16: R1703: The if statement can be replaced with 'var = bool(test)' (simplifiable-if-statement)
-src\my_main_window.py:416:4: R0914: Too many local variables (21/15) (too-many-locals)
-src\my_main_window.py:416:4: R0915: Too many statements (105/50) (too-many-statements)
-src\my_main_window.py:653:4: R0914: Too many local variables (19/15) (too-many-locals)
-src\my_main_window.py:653:4: R0915: Too many statements (100/50) (too-many-statements)
-src\my_main_window.py:807:11: R1716: Simplify chained comparison between the operands (chained-comparison)
-src\my_main_window.py:810:32: R1716: Simplify chained comparison between the operands (chained-comparison)
-src\my_main_window.py:810:74: R1716: Simplify chained comparison between the operands (chained-comparison)
-src\my_main_window.py:893:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
+src\my_main_window.py:1:0: C0302: Too many lines in module (1392/1000) (too-many-lines)
+src\my_main_window.py:200:13: W0511: TODO : CHECK THIS CODE (fixme)
+src\my_main_window.py:69:4: R0915: Too many statements (73/50) (too-many-statements)
+src\my_main_window.py:325:16: R1703: The if statement can be replaced with 'var = bool(test)' (simplifiable-if-statement)
+src\my_main_window.py:375:4: R0914: Too many local variables (20/15) (too-many-locals)
+src\my_main_window.py:375:4: R0915: Too many statements (115/50) (too-many-statements)
+src\my_main_window.py:628:4: R0914: Too many local variables (24/15) (too-many-locals)
+src\my_main_window.py:628:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window.py:628:4: R0915: Too many statements (130/50) (too-many-statements)
+src\my_main_window.py:814:4: R0913: Too many arguments (6/5) (too-many-arguments)
+src\my_main_window.py:868:4: R0913: Too many arguments (6/5) (too-many-arguments)
+src\my_main_window.py:922:4: R0913: Too many arguments (6/5) (too-many-arguments)
+src\my_main_window.py:1273:4: R0914: Too many local variables (16/15) (too-many-locals)
+src\my_main_window.py:1108:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.77/10 (previous run: 9.77/10, -0.01)
+Your code has been rated at 9.82/10 (previous run: 9.81/10, +0.01)
 
 &nbsp;
 
@@ -154,5 +153,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.975 / 10**
+**note = 9.979 / 10**
 
