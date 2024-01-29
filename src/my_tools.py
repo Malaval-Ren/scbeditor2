@@ -137,3 +137,19 @@ def mt_save_file( w_main_windows, a_caller_class, s_original_filename):
         # return # user cancelled; stop this method
 
     return s_filename
+
+# ####################### mt_hexlify_byte_string ########################
+def mt_hexlify_byte_string( byte_string, delim="%") -> str:
+    """ Very simple way to hexlify a byte string using delimiters 
+        From :
+        https://stackoverflow.com/questions/12214801/print-a-string-as-hexadecimal-bytes
+        Big thank's to :
+        https://stackoverflow.com/users/8265823/berndschmitt
+        https://stackoverflow.com/users/63550/peter-mortensen
+    """
+    ret_val = ""
+    for int_val in byte_string:
+        ret_val += ('0123456789ABCDEF'[int( int_val / 16)])
+        ret_val += ('0123456789ABCDEF'[int( int_val % 16)])
+        ret_val += delim
+    return ret_val[:-1]

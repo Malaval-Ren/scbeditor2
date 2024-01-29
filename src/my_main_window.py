@@ -48,7 +48,7 @@ import src.my_constants as constant
 from .my_icon_pictures import MyIconPictures
 from .my_main_window_icons_bar import MyMainWindowIconsBar
 from .my_alert_window import MyAlertWindow
-from .my_tools import mt_get_path_separator, mt_save_file
+from .my_tools import mt_get_path_separator, mt_save_file, mt_hexlify_byte_string
 
 # __name__ = "MyMainWindow"
 
@@ -73,7 +73,7 @@ class MyMainWindow:
             a_list_application_info : les inforamtions de l'application
         """
         print()
-        self.w_tk_root = w_root_windows        # root
+        self.w_tk_root = w_root_windows        # root window the first window created
         self.a_list_application_info = list_application_info
         # Position of the main windows
         self.i_main_window_x = 20
@@ -94,7 +94,7 @@ class MyMainWindow:
         else:
             print( 'init() : H : Currently not managed')
 
-        self.c_alert_windows = MyAlertWindow( w_root_windows, list_application_info)
+        self.c_alert_windows = MyAlertWindow( self, list_application_info)
         self.s_init_pathname = os.getcwd()
         self.c_mains_icon_bar = None
         self.a_palette_number_lst = []
@@ -148,6 +148,7 @@ class MyMainWindow:
         self.a_arround_cursor = None
         self.a_zoom_work_img = None
         self.a_render_zoom = None
+        self.i_color_to_copy_offset = -1
 
     # ####################### __repr__ ########################
     def __repr__( self) -> str:
@@ -186,7 +187,7 @@ class MyMainWindow:
     # ####################### __mw_click_on_picture ########################
     def __mw_click_on_picture( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
-        print( "mw_click_on_picture()  ", event)
+        # print( "mw_click_on_picture()  ", event)
         self.__mv_entry_black_focus_out()
         if self.a_work_img:
             # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
@@ -541,7 +542,7 @@ class MyMainWindow:
     # ####################### __mv_update_red_entry ########################
     def __mv_update_red_entry( self, i_value):
         """" Scale is moving update red : entry in hex, label in dec and color of new color label """
-        print( "mv_update_red_entry()")
+        # print( "mv_update_red_entry()")
         if int( i_value) > 15:
             s_red = f'{int( i_value):X}'
         else:
@@ -559,7 +560,7 @@ class MyMainWindow:
     # ####################### __mv_update_green_entry ########################
     def __mv_update_green_entry( self, i_value):
         """" Scale is moving update green : entry in hex, label in dec and color of new color label """
-        print( "mv_update_green_entry()")
+        # print( "mv_update_green_entry()")
         if int( i_value) > 15:
             s_green = f'{ int(i_value):X}'
         else:
@@ -577,7 +578,7 @@ class MyMainWindow:
     # ####################### __mv_update_blue_entry ########################
     def __mv_update_blue_entry( self, i_value):
         """" Scale is moving update blue : entry in hex, label in dec and color of new color label """
-        print( "mv_update_blue_entry()")
+        # print( "mv_update_blue_entry()")
         if int( i_value) > 15:
             s_blue= f'{int( i_value):X}'
         else:
@@ -623,6 +624,21 @@ class MyMainWindow:
     def __mv_entry_black_focus_out( self):
         """ No selected entry widget focus events restore color to black """
         self.a_color_slider.config( troughcolor='light grey')
+
+    # ####################### __mw_click_on_picture_zoom ########################
+    def __mw_click_on_picture_zoom( self, event):
+        """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
+        # print( "mw_click_on_picture()  ", event)
+        self.__mv_entry_black_focus_out()
+        if self.a_work_img:
+            print( "/mw_click_on_picture_zoom:  i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
+            print( "\\mw_click_on_picture_zoom:  i_pos_x= " + str( int( event.x / 8)) + "   i_pos_y= " + str( int( event.y / 8)))
+            # i_pos_x = max( event.x, 0)
+            # i_pos_x = min( event.x, constant.PICTURE_WIDTH - 1)
+            # i_pos_y = max( event.y, 0)
+            # i_pos_y = min( event.y, constant.PICTURE_HEIGHT - 1)
+
+            # i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
 
     # ####################### __mw_palette_zone ########################
     def __mw_palette_zone( self, a_bottom_frame):
@@ -707,6 +723,7 @@ class MyMainWindow:
         # the text is the cursor style on the middle of the label
         self.a_zoom_lbl = Label( a_color_bottom_frame, image=None, text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
         self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=10, column=4, columnspan=4, padx=4, pady=1, sticky='ewns')
+        self.a_zoom_lbl.bind( '<Button>', self.__mw_click_on_picture_zoom)
 
         i_index_base_block += 1
         red_okay_command = self.w_tk_root.register( self.mw_red_max_of_two_chars_and_filter)
@@ -749,12 +766,14 @@ class MyMainWindow:
 
         # move declaration of old button to be able to focus color entry in a loop with the key 'tab'
         if self.s_platform == "Darwin":
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            set_color_in_palette_with_arg = partial( self.__mw_set_color_in_palette, -1)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_palette_with_arg, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=1, sticky='ew')
             self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mw_restore_old_color, width=5, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
         else:
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=self.__mw_set_color_in_palette, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            set_color_in_palette_with_arg = partial( self.__mw_set_color_in_palette, -1)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_palette_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
             self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mw_restore_old_color, width=7, height=1, relief='raised', background='light grey')
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
@@ -782,33 +801,17 @@ class MyMainWindow:
 
         i_index_base_block += 1
         if self.s_platform == "Darwin":
-            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=None, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=self.__mw_copy_a_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=2, pady=0, sticky='ew')
-            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=None, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mw_set_pen_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=0, sticky='ew')
         else:
-            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=None, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=self.__mw_copy_a_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=6, sticky='ew')
             a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mw_set_pen_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=6, sticky='ew')
 
         # self.w_tk_root.update()
-
-    # ####################### hexlify_byte_string ########################
-    def hexlify_byte_string( self, byte_string, delim="%") -> str:
-        """ Very simple way to hexlify a byte string using delimiters 
-            From :
-            https://stackoverflow.com/questions/12214801/print-a-string-as-hexadecimal-bytes
-            Big thank's to :
-            https://stackoverflow.com/users/8265823/berndschmitt
-            https://stackoverflow.com/users/63550/peter-mortensen
-        """
-        ret_val = ""
-        for int_val in byte_string:
-            ret_val += ('0123456789ABCDEF'[int( int_val / 16)])
-            ret_val += ('0123456789ABCDEF'[int( int_val % 16)])
-            ret_val += delim
-        return ret_val[:-1]
 
     # ####################### mw_red_max_of_two_chars_and_filter ########################
     def mw_red_max_of_two_chars_and_filter( self, s_before, s_after, s_call, s_value, s_reason) -> bool:
@@ -825,13 +828,13 @@ class MyMainWindow:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        print( "mw_red_max_of_two_chars_and_filter() ")
+        # print( "mw_red_max_of_two_chars_and_filter() ")
         # print( f"i_action  d : {i_action}")
-        print( f"s_before  P : {s_before}")
-        print( f"s_after   s : {s_after}")
-        print( f"s_call    S : {s_call}")
-        print( f"s_value   v : {s_value}")
-        print( f"s_reason  V : {s_reason}")
+        # print( f"s_before  P : {s_before}")
+        # print( f"s_after   s : {s_after}")
+        # print( f"s_call    S : {s_call}")
+        # print( f"s_value   v : {s_value}")
+        # print( f"s_reason  V : {s_reason}")
         # print( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
         # print( "widget      = ", a_widget)
@@ -847,7 +850,7 @@ class MyMainWindow:
         elif s_reason == "key":
             # print( "key")
             if 'a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9':
-                if len( s_call) > 2:
+                if len( s_before) > 2:
                     b_result = False
                 else:
                     b_result = True
@@ -856,7 +859,7 @@ class MyMainWindow:
                 if s_call.isprintable() or s_call.isspace():
                     b_result = False
                 else:
-                    print( self.hexlify_byte_string( b's_call', ":"))
+                    print( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
             # print( "does nothing")
@@ -879,13 +882,13 @@ class MyMainWindow:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        print( "mw_green_max_of_two_chars_and_filter() ")
+        # print( "mw_green_max_of_two_chars_and_filter() ")
         # print( f"i_action  d : {i_action}")
-        print( f"s_before  P : {s_before}")
-        print( f"s_after   s : {s_after}")
-        print( f"s_call    S : {s_call}")
-        print( f"s_value   v : {s_value}")
-        print( f"s_reason  V : {s_reason}")
+        # print( f"s_before  P : {s_before}")
+        # print( f"s_after   s : {s_after}")
+        # print( f"s_call    S : {s_call}")
+        # print( f"s_value   v : {s_value}")
+        # print( f"s_reason  V : {s_reason}")
         # print( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
         # print( "widget      = ", a_widget)
@@ -901,7 +904,7 @@ class MyMainWindow:
         elif s_reason == "key":
             # print( "key")
             if 'a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9':
-                if len( s_call) > 2:
+                if len( s_before) > 2:
                     b_result = False
                 else:
                     b_result = True
@@ -910,7 +913,7 @@ class MyMainWindow:
                 if s_call.isprintable() or s_call.isspace():
                     b_result = False
                 else:
-                    print( self.hexlify_byte_string( b's_call', ":"))
+                    print( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
             # print( "does nothing")
@@ -933,13 +936,13 @@ class MyMainWindow:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        print( "mw_blue_max_of_two_chars_and_filter() ")
+        # print( "mw_blue_max_of_two_chars_and_filter() ")
         # print( f"i_action  d : {i_action}")
-        print( f"s_before  P : {s_before}")
-        print( f"s_after   s : {s_after}")
-        print( f"s_call    S : {s_call}")
-        print( f"s_value   v : {s_value}")
-        print( f"s_reason  V : {s_reason}")
+        # print( f"s_before  P : {s_before}")
+        # print( f"s_after   s : {s_after}")
+        # print( f"s_call    S : {s_call}")
+        # print( f"s_value   v : {s_value}")
+        # print( f"s_reason  V : {s_reason}")
         # print( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
         # print( "widget      = ", a_widget)
@@ -964,7 +967,7 @@ class MyMainWindow:
                 if s_call.isprintable() or s_call.isspace():
                     b_result = False
                 else:
-                    print( self.hexlify_byte_string( b's_call', ":"))
+                    print( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
             # print( "does nothing")
@@ -1001,61 +1004,71 @@ class MyMainWindow:
     # ####################### __mw_color_btn_rad ########################
     def __mw_color_btn_rad( self, i_number):
         """ Palette of color buttons. i_number is a value form 0 to 255 one of the palette radio button """
-        self.__mv_entry_black_focus_out()
-        #print( "mw_color_btn_rad() i_number       = ", str( i_number))
-        a_palette_list = self.a_original_img.getpalette()
-        #print( "mw_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
-        if (i_number * 3) > len( a_palette_list):
-            print( "mw_color_btn_rad() i_number       = ", str( i_number))
-            print( "mw_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
-            print( "mw_color_btn_rad() FAILED")
-
-        i_tmp_number = i_number * 3
-        i_red = a_palette_list[i_tmp_number]
-        i_green = a_palette_list[i_tmp_number + 1]
-        i_blue = a_palette_list[i_tmp_number + 2]
-        if int( i_red) > 15:
-            s_red = f'{int( i_red):X}'
+        if self.i_color_to_copy_offset != -1:
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
+                "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
+            self.i_color_to_copy_offset = -1
+            if i_result == 1:
+                self.__mw_set_color_in_palette( i_number)
         else:
-            s_red = f'0{int( i_red):X}'
-        if int( i_green) > 15:
-            s_green = f'{int( i_green):X}'
-        else:
-            s_green = f'0{int( i_green):X}'
-        if int( i_blue) > 15:
-            s_blue = f'{int( i_blue):X}'
-        else:
-            s_blue = f'0{int( i_blue):X}'
+            self.__mv_entry_black_focus_out()
+            #print( "mw_color_btn_rad() i_number       = ", str( i_number))
+            a_palette_list = self.a_original_img.getpalette()
+            #print( "mw_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
+            if (i_number * 3) > len( a_palette_list):
+                print( "mw_color_btn_rad() i_number       = ", str( i_number))
+                print( "mw_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
+                print( "mw_color_btn_rad() FAILED")
 
-        self.a_red_input_var.set( s_red)                            # hex string
-        self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
-        self.a_green_input_var.set( s_green)
-        self.a_green_ntr_dec_lbl.configure( text=str( i_green))
-        self.a_blue_input_var.set( s_blue)
-        self.a_blue_ntr_dec_lbl.configure( text=str( i_blue))
-        self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
-        self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
-        __i_complete = int( i_number / 16)
-        __i_rest = i_number - ( __i_complete * 16)
-        # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
-        self.a_btn_offset_lbl.configure( text=str( i_number))       # label under Offset
-        if i_number > 15:
-            self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Palette Y
-        else:
-            self.a_btn_x_lbl.configure( text="0")                   # label under Palette Y
+            i_tmp_number = i_number * 3
+            i_red = a_palette_list[i_tmp_number]
+            i_green = a_palette_list[i_tmp_number + 1]
+            i_blue = a_palette_list[i_tmp_number + 2]
+            if int( i_red) > 15:
+                s_red = f'{int( i_red):X}'
+            else:
+                s_red = f'0{int( i_red):X}'
+            if int( i_green) > 15:
+                s_green = f'{int( i_green):X}'
+            else:
+                s_green = f'0{int( i_green):X}'
+            if int( i_blue) > 15:
+                s_blue = f'{int( i_blue):X}'
+            else:
+                s_blue = f'0{int( i_blue):X}'
 
-        self.a_btn_y_lbl.configure( text=str( __i_rest))            # label under Offset X
+            self.a_red_input_var.set( s_red)                            # hex string
+            self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
+            self.a_green_input_var.set( s_green)
+            self.a_green_ntr_dec_lbl.configure( text=str( i_green))
+            self.a_blue_input_var.set( s_blue)
+            self.a_blue_ntr_dec_lbl.configure( text=str( i_blue))
+            self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
+            self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
+            __i_complete = int( i_number / 16)
+            __i_rest = i_number - ( __i_complete * 16)
+            # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
+            self.a_btn_offset_lbl.configure( text=str( i_number))       # label under Offset
+            if i_number > 15:
+                self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Palette Y
+            else:
+                self.a_btn_x_lbl.configure( text="0")                   # label under Palette Y
 
-        # Draw the SCB rectangle
-        self.mw_draw_scb_bar( i_number)
+            self.a_btn_y_lbl.configure( text=str( __i_rest))            # label under Offset X
+
+            # Draw the SCB rectangle
+            self.mw_draw_scb_bar( i_number)
 
     # ####################### __mw_set_color_in_palette ########################
-    def __mw_set_color_in_palette( self):
+    def __mw_set_color_in_palette( self, i_new_index):
         """ Set a new color value in palette  """
         s_red   = self.a_red_input_var.get().upper()
         s_green = self.a_green_input_var.get().upper()
         s_blue  = self.a_blue_input_var.get().upper()
-        i_index = int(self.a_btn_offset_lbl.cget( "text"))
+        if i_new_index == -1:
+            i_index = int(self.a_btn_offset_lbl.cget( "text"))
+        else:
+            i_index = i_new_index
         # print( "i_index    = ", str( i_index))
         a_palette_button = self.a_palette_button_lst[i_index]
         # ready when color modification will be done
@@ -1080,7 +1093,7 @@ class MyMainWindow:
 
         i_click_pos_x = int( self.a_mouse_pos_x_input_var.get())
         i_click_pos_y = int( self.a_mouse_pos_y_input_var.get())
-        i_offset = self.a_work_img.getpixel( ( i_click_pos_x, i_click_pos_y))
+        i_offset = self.a_work_img.getpixel( (i_click_pos_x, i_click_pos_y))
 
         # Draw bar chart for colors in usage in a line
         self.mw_draw_bar_chart( i_offset, i_click_pos_y)
@@ -1103,6 +1116,12 @@ class MyMainWindow:
         # a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
         #
         # to do : Modify the picture palette
+
+    # ####################### __mw_copy_a_color ########################
+    def __mw_copy_a_color( self):
+        """ copy the selected color to the next click on a palette color """
+        if self.i_color_to_copy_offset == -1:
+            self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
 
     # ####################### __mw_clock_in_window_bar ########################
     def __mw_clock_in_window_bar( self):
@@ -1218,7 +1237,7 @@ class MyMainWindow:
     # ####################### mw_draw_zoom_square ########################
     def mw_draw_zoom_square( self, i_position_x, i_position_y):
         """ Draw the zoom squate part * 8 of the picture """
-        print( "mw_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
+        # print( "mw_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
         i_contour = 26
         i_top_x = i_position_x-i_contour
         if i_position_x < i_contour:
@@ -1238,7 +1257,7 @@ class MyMainWindow:
     # ####################### mw_draw_bar_chart ########################
     def mw_draw_bar_chart( self, i_offset, i_position_y):
         """ Draw bar chart for colors in usage in a line """
-        print( "mw_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
+        # print( "mw_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
         self.a_bar_chart_cnvs.delete( "all")
         a_usage_color_rry = array.array( 'i')
         a_usage_color_rry = [1] * 16

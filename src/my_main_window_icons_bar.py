@@ -75,6 +75,7 @@ class MyMainWindowIconsBar:
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
+        self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)        
         self.s_filename = None
         self.a_work_img = None
 
@@ -104,9 +105,7 @@ class MyMainWindowIconsBar:
             self.a_work_img = Image.open( self.s_filename)
             print( 'Upgraded to 8 bpp : ' + self.s_filename)
         else:
-            self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
-            self.w_front_window.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
-            self.w_front_window = None
+            self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
             self.a_work_img = None
             self.s_filename = None
 
@@ -123,26 +122,20 @@ class MyMainWindowIconsBar:
             if width != 320 or height != 200:
                 self.a_work_img = None
                 # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
-                self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
-                self.w_front_window.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
-                self.w_front_window = None
+                self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
                 self.a_work_img = None
                 self.s_filename = None
             else:
                 a_palette_list = self.a_work_img.getpalette()
                 if len( a_palette_list) < 768:      # Less than 256 colors 2, 4 bpp
-                    self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
-                    i_result = self.w_front_window.aw_create_alert_window( 2, "Question", "This bmp file don't have 256 colors (4 bpp).\nDo you agree improvement to 256 colors (8 bpp) and replace it?")
-                    self.w_front_window = None
+                    i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "This bmp file don't have 256 colors (4 bpp).\nDo you agree improvement to 256 colors (8 bpp) and replace it?")
                     if i_result == 1:
                         self.__mwib_convert_bmp()
                     else:
                         self.a_work_img = None
                         self.s_filename = None
                 elif len( a_palette_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
-                    self.w_front_window = MyAlertWindow( self.c_main_class, self.a_list_application_info)
-                    i_result = self.w_front_window.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
-                    self.w_front_window = None
+                    self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
                     self.a_work_img = None
                     self.s_filename = None
 
