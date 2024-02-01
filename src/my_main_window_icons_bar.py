@@ -75,7 +75,7 @@ class MyMainWindowIconsBar:
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
-        self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)        
+        self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)
         self.s_filename = None
         self.a_work_img = None
 
@@ -270,17 +270,24 @@ class MyMainWindowIconsBar:
 
         i_column += 1
         if self.s_platform == "Darwin":
-            a_button_preference = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_preference = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_preference.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_column += 1
         if self.s_platform == "Darwin":
-            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_config = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_config.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_column += 1
+        if self.s_platform == "Darwin":
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_row_line += 1
         return i_row_line
