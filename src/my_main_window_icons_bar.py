@@ -222,7 +222,7 @@ class MyMainWindowIconsBar:
 
     # ####################### __mwib_open_box ########################
     def __mwib_open_box( self):
-        """ Button preference of the main window """
+        """ Button load of the main window """
         self.c_the_log.add_string_to_log( 'Do load picture')
         self.__mwib_load_and_check_bmp()
         if self.s_filename and self.a_work_img:
@@ -239,8 +239,10 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_save_box ########################
     def __mwib_save_box( self):
         """ Button save the picture modified """
-        self.c_the_log.add_string_to_log( 'Do save picture')
-        self.c_main_class.mw_save_picture()
+        a_main_picture = self.c_main_class.mw_get_picture()
+        if a_main_picture:
+            self.c_the_log.add_string_to_log( 'Do save picture')
+            self.c_main_class.mw_save_picture()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
