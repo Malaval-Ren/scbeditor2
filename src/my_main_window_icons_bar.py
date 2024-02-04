@@ -139,28 +139,28 @@ class MyMainWindowIconsBar:
                     self.a_work_img = None
                     self.s_filename = None
 
-    # ####################### __dump_palette_bmp ########################
-    def __dump_palette_bmp( self):
-        """ dump the palette of the current image a_work_img """
-        if self.a_work_img:
-            a_palette_list = self.a_work_img.getpalette()
-            print( 'Palette :')
-            i_to = 0
-            for i_loop in range( 0, 16, 1):
-                i_from = i_to
-                i_to = i_to + 48
-                if i_loop < 10:
-                    s_my_hex = "0" + str( i_loop) + " "
-                else:
-                    s_my_hex = str( i_loop) + " "
+    # ####################### __mwib_dump_palette_bmp ########################
+    # def __mwib_dump_palette_bmp( self):
+    #     """ dump the palette of the current image a_work_img """
+    #     if self.a_work_img:
+    #         a_palette_list = self.a_work_img.getpalette()
+    #         print( 'Palette :')
+    #         i_to = 0
+    #         for i_loop in range( 0, 16, 1):
+    #             i_from = i_to
+    #             i_to = i_to + 48
+    #             if i_loop < 10:
+    #                 s_my_hex = "0" + str( i_loop) + " "
+    #             else:
+    #                 s_my_hex = str( i_loop) + " "
 
-                for i_index in range( i_from, i_to, 3):
-                    s_red = f'{a_palette_list[ i_index]:02X}'
-                    s_green = f'{a_palette_list[ i_index + 1]:02X}'
-                    s_blue = f'{a_palette_list[ i_index + 2]:02X}'
-                    s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
+    #             for i_index in range( i_from, i_to, 3):
+    #                 s_red = f'{a_palette_list[ i_index]:02X}'
+    #                 s_green = f'{a_palette_list[ i_index + 1]:02X}'
+    #                 s_blue = f'{a_palette_list[ i_index + 2]:02X}'
+    #                 s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
-                print( s_my_hex)
+    #             print( s_my_hex)
 
     # ####################### __validate_scb_in_bmp ########################
     def __validate_scb_in_bmp( self):
