@@ -145,7 +145,7 @@ class MyMainWindow:
         self.a_color_old_btn = None
         self.a_color_slider = None
         self.a_zoom_lbl = None
-        self.a_arround_cursor = None
+        self.i_around_cursor = -1
         self.a_zoom_work_img = None
         self.a_render_zoom = None
         self.i_color_to_copy_offset = -1
@@ -184,6 +184,61 @@ class MyMainWindow:
     #
     # ##########################################################################################
 
+    # ####################### __mw_replace_color ########################
+    def __mw_paint_left_and_right( self, i_offset, i_true_x, i_true_y):
+        """  Replace color from middle point to left and right """
+        # same line for origin to left
+        i_run_to_left = i_true_x
+        i_run_offset = i_offset
+        while i_run_to_left >= 0:
+            if (i_offset == i_run_offset) and (i_offset != self.i_around_cursor):
+                self.a_original_img.putpixel( (i_run_to_left, i_true_y), self.i_around_cursor)
+                i_run_to_left -= 1
+                i_run_offset = self.a_original_img.getpixel( ( i_run_to_left, i_true_y))
+            else:
+                break
+
+        # same line for origin to right
+        i_run_to_rigth = i_true_x
+        i_run_offset = i_offset
+        while i_run_to_rigth <= 320:
+            if (i_offset == i_run_offset) and (i_offset != self.i_around_cursor):
+                self.a_original_img.putpixel( (i_run_to_rigth, i_true_y), self.i_around_cursor)
+                i_run_to_rigth += 1
+                i_run_offset = self.a_original_img.getpixel( ( i_run_to_rigth, i_true_y))
+            else:
+                break
+
+    # ####################### __mw_replace_color ########################
+    def __mw_replace_color( self, i_true_x, i_true_y):
+        """ Replace a color for line with the same SCB """
+        if self.a_original_img:
+            i_offset = self.a_original_img.getpixel( ( i_true_x, i_true_y))
+            print( "offset to change = " + str( i_offset) + " by = " + str( self.i_around_cursor))
+
+            i_run_offset = i_offset
+            i_up = i_true_y
+            while (i_offset == i_run_offset) and (i_offset != self.i_around_cursor):
+                if i_up >= 0:
+                    self.__mw_paint_left_and_right( i_offset, i_true_x, i_up)
+                    i_up -= 1
+                    i_run_offset = self.a_original_img.getpixel( ( i_true_x, i_up))
+                else:
+                    break
+
+            i_down = i_true_y + 1
+            if i_down <= 199:
+                i_run_offset = self.a_original_img.getpixel( ( i_true_x, i_down))
+                while (i_offset == i_run_offset) and (i_offset != self.i_around_cursor):
+                    if i_down <= 199:
+                        self.__mw_paint_left_and_right( i_offset, i_true_x, i_down)
+                        i_down += 1
+                        i_run_offset = self.a_original_img.getpixel( ( i_true_x, i_down))
+                    else:
+                        break
+
+            self.i_around_cursor = -1
+
     # ####################### __mw_click_on_picture ########################
     def __mw_click_on_picture( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
@@ -207,6 +262,9 @@ class MyMainWindow:
                 i_pos_y -= 1
             if i_pos_x & 1:
                 i_pos_x -= 1
+
+            if self.i_around_cursor != -1:
+                self.i_around_cursor = - 1
 
             self.a_mouse_pos_x_input_var.set( str( i_pos_x))
             self.a_mouse_pos_y_input_var.set( str( i_pos_y))
@@ -368,8 +426,8 @@ class MyMainWindow:
                 # print( "width = " + str( width) + "  height = " + str( height) )
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
-                s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
-                self.mw_update_main_window( s_filename , self.a_original_img)
+                # s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
+                self.mw_update_main_window( self.c_mains_icon_bar.mwib_get_get_path_filename() , self.a_original_img)
                 self.mw_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
 
     # ####################### __mw_picture_zone ########################
@@ -626,19 +684,18 @@ class MyMainWindow:
         self.a_color_slider.config( troughcolor='light grey')
 
     # ####################### __mw_click_on_picture_zoom ########################
-    def __mw_click_on_picture_zoom( self, event):
+    def __mw_click_on_picture_zoom( self, _):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
         # print( "mw_click_on_picture()  ", event)
         self.__mv_entry_black_focus_out()
         if self.a_work_img:
-            print( "/mw_click_on_picture_zoom:  i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
-            print( "\\mw_click_on_picture_zoom:  i_pos_x= " + str( int( event.x / 8)) + "   i_pos_y= " + str( int( event.y / 8)))
-            # i_pos_x = max( event.x, 0)
-            # i_pos_x = min( event.x, constant.PICTURE_WIDTH - 1)
-            # i_pos_y = max( event.y, 0)
-            # i_pos_y = min( event.y, constant.PICTURE_HEIGHT - 1)
-
-            # i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
+            if self.i_around_cursor != -1:
+                i_true_x = int( (( int( self.a_mouse_pos_x_input_var.get()) & 1022) / 2))
+                i_true_y = int( (( int( self.a_mouse_pos_y_input_var.get()) & 1022) / 2))
+                self.__mw_replace_color( i_true_x, i_true_y)
+                self.mw_update_main_window( self.c_mains_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+                # Display zoom of a part of the picture
+                self.mw_draw_zoom_square( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
 
     # ####################### __mw_palette_zone ########################
     def __mw_palette_zone( self, a_bottom_frame):
@@ -1106,7 +1163,8 @@ class MyMainWindow:
     # ####################### __mw_set_pen_color ########################
     def __mw_set_pen_color( self):
         """ Set a new color value in palette  """
-        self.w_tk_root.bell()
+
+        self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
         # s_red = self.a_red_input_var.get()
         # s_green = self.a_green_input_var.get()
         # s_blue = self.a_blue_input_var.get()
@@ -1388,6 +1446,11 @@ class MyMainWindow:
     def mw_get_pathname( self) -> str:
         """ Return default pathname """
         return self.s_init_pathname
+
+    # ####################### mw_get_picture ########################
+    def mw_get_picture( self):
+        """ return the picture loaded """
+        return self.a_original_img
 
     # ####################### mw_set_pathname ########################
     def mw_set_pathname( self, s_new_pathname) -> str:
