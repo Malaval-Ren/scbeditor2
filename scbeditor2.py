@@ -101,11 +101,11 @@ def __print_application_info():
     print()
 
     s_platform = platform.system()
-    if s_platform == 'Linux':
+    if s_platform == "Linux":
         print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
-    elif s_platform == 'Windows':
+    elif s_platform == "Windows":
         print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
-    elif s_platform == 'Darwin':
+    elif s_platform == "Darwin":
         print( ' ' + __softname__ + '\t\t\t: ' + s_platform)
     else:
         print( ' ' + __softname__ + '\t\t\t: ' + s_platform + ' not supported.')
