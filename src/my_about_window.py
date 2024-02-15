@@ -143,7 +143,7 @@ class MyAboutWindow:
         """ Set the size of the configuration windows """
         if self.s_platform == "Linux":
             self.i_width = 592
-            self.i_height = 340
+            self.i_height = 358
         elif self.s_platform == "Darwin":
             self.i_width = 552
             self.i_height = 290

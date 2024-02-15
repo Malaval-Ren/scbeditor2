@@ -185,6 +185,17 @@ then
     temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
     # echo -e $Green "grep result         :" "$temp" $Color_Off
     tempNoSpace=$(echo $temp | tr -d ' ')
+
+    temp=${tempNoSpace: -1}
+    hex="$(printf '%s' "$temp" | xxd -pu)"
+    if [[ "$hex" == "0d" ]]
+    then
+        # remove this char '\r' at end of string
+        refLineLen=${#tempNoSpace}
+        refLineLen=$(($refLineLen - 1))
+        tempNoSpace=${tempNoSpace:0:refLineLen}
+    fi
+
     # echo -e $Green "result no space     :" "$tempNoSpace" $Color_Off
     refLineLen=${#pyInstall_getVersion}
     # echo -e $Green "getVersion len      :" "$refLineLen" $Color_Off
@@ -260,9 +271,18 @@ then
 	echo -e $BGreen "Generating .deb file" $Color_Off
 	# set name to lower case
 	appName=$(echo "${pyInstall_Name,,}")
+    # display $appName
+    echo -e $Green "appName             :" "$appName" $Color_Off
+    refLineLen=${#appName}
+    echo -e $Green "len (appName)       :" "$refLineLen" $Color_Off
     # Replace character _ by -
-    pkgAppName="${appName:0:8-1}-${appName:8}"
-    pkgAppName="${pkgAppName:0:13-1}-${pkgAppName:13}"
+    if [[ "$appName" == *" "* ]]
+    then
+        pkgAppName="${appName:0:8-1}-${appName:8}"
+        pkgAppName="${pkgAppName:0:13-1}-${pkgAppName:13}"
+    else
+        pkgAppName="$appName"
+    fi
 	# Naming : Use the package-name_VersionNumber-RevisionNumber_DebianArchitecture
 	packageSrcBase="./""$pkgAppName""_""$versionTemp""_""$arch"
 	echo -e $Green "packageSrcBase      :" "$packageSrcBase" $Color_Off
@@ -282,9 +302,9 @@ then
 	destopSize=$(stat -c %s $srcName)
 	cp -fp $srcName $packageSrcBase/usr/share/applications/
 	echo -e $Green "desktop             :" "$srcName" $Color_Off
-	srcName="../""$appName"".png"
+	srcName="../""$appName""_T_256x256.png"
 	iconSize=$(stat -c %s $srcName)
-	cp -fp $srcName $packageSrcBase/usr/share/icons/
+	cp -fp $srcName $packageSrcBase/usr/share/icons/$appName".png"
 	echo -e $Green "icon                :" "$srcName" $Color_Off
 
 	# echo
@@ -295,7 +315,7 @@ then
 	echo -e $Green "srcName             :" "$srcName" $Color_Off
 	echo -e $Green "dstName             :" $packageSrcBase"/usr/bin/" $Color_Off
 
-	cp -fp $srcName $packageSrcBase/usr/bin/
+	cp -fpr $srcName $packageSrcBase/usr/bin/
     if [ $? -ne 0 ]
     then
         echo -e $BRed "ERROR Failed to do copy of" "$srcName" "to" "$packageSrcBase""/usr/bin/" $Color_Off
@@ -322,7 +342,7 @@ then
 	originStyle=$(uname -o)
 	originName=$(lsb_release -d -s)
 	OSOrigin="$originStyle"" ""$originName"
-	echo -e $Green "OSOrigin            :" "$OSOrigin" $Color_Off	
+	echo -e $Green "OS Origin           :" "$OSOrigin" $Color_Off	
 
 	TargetControlFile="$packageSrcBase""/DEBIAN/control"
 	echo -e "Package: ""$appName" > "$TargetControlFile"
@@ -333,9 +353,9 @@ then
 	echo -e "Origin: ""$OSOrigin" >> "$TargetControlFile"
 	echo -e "Architecture: ""$arch" >> "$TargetControlFile"
 	echo -e "Depends: bash" >> "$TargetControlFile"
-	echo -e "Maintainer: Renaud Malaval <renaud.malaval@se.com>" >> "$TargetControlFile"
-	echo -e "Description: This application manages the outputs and inputs of devices Schneider Electric, Modicon M221 familly." >> "$TargetControlFile"
-	echo -e "Homepage: https://dev.azure.com/EnergyAutomation/11%20-%20Release%20Engineering/_wiki/wikis/11---Release-Engineering.wiki/475/Remote-control-of-product-power-supply" >> "$TargetControlFile"
+	echo -e "Maintainer: Renaud Malaval <renaud.malaval@free.fr>" >> "$TargetControlFile"
+	echo -e "Description: This application prepare .bmp file to be converted to .pic file for Apple IIGS." >> "$TargetControlFile"
+	echo -e "Homepage: http://renaud.malaval.free.fr/index.html" >> "$TargetControlFile"
 
 	# Create preinst file
 	TargetPreinstFile="$packageSrcBase""/DEBIAN/preinst"

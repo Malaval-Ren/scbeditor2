@@ -78,6 +78,7 @@ class MyMainWindowIconsBar:
         self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)
         self.s_filename = None
         self.a_work_img = None
+        self.c_mains_image = None
 
     # ####################### __mwib_convert_bmp ########################
     def __mwib_convert_bmp( self):
@@ -162,8 +163,8 @@ class MyMainWindowIconsBar:
 
     #             print( s_my_hex)
 
-    # ####################### __validate_scb_in_bmp ########################
-    def __validate_scb_in_bmp( self):
+    # ####################### __mwib_validate_scb_in_bmp ########################
+    def __mwib_validate_scb_in_bmp( self):
         """ Check bitmap to synchronize all lines to use right scb """
 
         self.w_front_window = MyProgressBarWindow( self.c_main_class, self.a_list_application_info)
@@ -229,17 +230,17 @@ class MyMainWindowIconsBar:
             # Display image already in 8 bpp or a converted to 8 bpp
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
             self.w_main_windows.update()
-            self.c_main_class.mw_click_in_picture_center()
-            # increase valueur index to use the right line to be SCB ready
-            self.__validate_scb_in_bmp()
+            self.c_mains_image.mwi_click_in_picture_center()
+            # increase valeur index to use the right line to be SCB ready
+            self.__mwib_validate_scb_in_bmp()
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
             self.w_main_windows.update()
-            self.c_main_class.mw_click_in_picture_center()
+            self.c_mains_image.mwi_click_in_picture_center()
 
     # ####################### __mwib_save_box ########################
     def __mwib_save_box( self):
         """ Button save the picture modified """
-        a_main_picture = self.c_main_class.mw_get_picture()
+        a_main_picture = self.c_mains_image.mwi_get_original_image()
         if a_main_picture:
             self.c_the_log.add_string_to_log( 'Do save picture')
             self.c_main_class.mw_save_picture()
@@ -260,7 +261,7 @@ class MyMainWindowIconsBar:
     # ####################### mwib_create_top_bar_icons ########################
     def mwib_create_top_bar_icons( self, i_row_line):
         """ Design the top row for the main windows """
-        # print( "mw_top_bar_icons_cmd() color : " + self.w_main_windows['background'])
+        # print( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
 
         s_button_style = 'flat'
         i_column = 0
@@ -303,3 +304,8 @@ class MyMainWindowIconsBar:
     def mwib_get_get_path_filename( self):
         """ Return thye complete file pathname of the last image loaded """
         return self.s_filename
+
+    # ####################### mwib_get_get_path_filename ########################
+    def mwib_set_main_image( self, c_mains_image):
+        """ Return thye complete file pathname of the last image loaded """
+        self.c_mains_image = c_mains_image

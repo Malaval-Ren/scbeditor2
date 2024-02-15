@@ -7,5 +7,7 @@
             "path": "./src"
         }
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "/bin/python3"
+	}
 }

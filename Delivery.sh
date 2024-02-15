@@ -292,7 +292,7 @@ then
     # echo -e $IGreen "grep result         :" "$temp" $Color_Off
     tempNoSpace=$(echo $temp | tr -d ' ')
 
-    if [[ "$OSTYPE" == "darwin"* ]]
+    if [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "linux-gnu"* ]]
     then
         temp=${tempNoSpace: -1}
         hex="$(printf '%s' "$temp" | xxd -pu)"
@@ -433,7 +433,7 @@ echo
 #echo -e $BCyan "Don't do the call to pyinstaller" $Color_Off 
 echo -e $IGreen "pyinstaller "$pyInstall_Parameter $Color_Off
 echo
-pyinstaller ${pyInstall_Parameter}
+PYTHONOPTIMIZE=1 pyinstaller ${pyInstall_Parameter}
 echo
 if [ $? -eq 0 ]
 then
@@ -459,9 +459,9 @@ then
             # ls -alg ./dist
             echo -e $Green "Rename application   : " $pyInstall_dist"/"$pyInstall_Name " to " $pyInstall_dist"/"$pyInstall_Name$pyInstall_version  $Color_Off
             # Application (application/x-shellscript)
-            if [ ! -f $pyInstall_dist"/"$pyInstall_Name ]  
+            if [[ ! -d $pyInstall_dist"/"$pyInstall_Name ]]
             then
-                echo
+                echo -e $Yellow "Not found" $pyInstall_dist"/"$pyInstall_Name $Color_Off
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
