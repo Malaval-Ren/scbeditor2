@@ -267,6 +267,8 @@ class MyMainWindowIconsBar:
         i_column = 0
         if self.s_platform == "Darwin":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, highlightbackground='light grey')
+        elif self.s_platform == "Linux":
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, borderwidth=0, highlightbackground='light grey')
         else:
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
@@ -286,6 +288,44 @@ class MyMainWindowIconsBar:
         a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_column += 1
+        if self.s_platform == "Darwin":
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_row_line += 1
+        return i_row_line
+
+    # ####################### mwib_create_left_bar_icons ########################
+    def mwib_create_left_bar_icons( self, i_row_line):
+        """ Design the left row for the main windows """
+        # print( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
+
+        s_button_style = 'flat'
+        i_column = 0
+        i_row_line = 0
+        if self.s_platform == "Darwin":
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
+
+        i_row_line += 1
+        if self.s_platform == "Darwin":
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_row_line += 1
+        if self.s_platform == "Darwin":
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_row_line += 1
         if self.s_platform == "Darwin":
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
         else:

@@ -89,7 +89,7 @@ class MyMainWindow:
             self.i_main_window_width = 1150
             self.i_main_window_height = 834
         elif self.s_platform == "Windows":
-            self.i_main_window_width = 1060
+            self.i_main_window_width = 1070
             self.i_main_window_height = 824
         else:
             print( 'init() : H : Currently not managed')
@@ -351,18 +351,24 @@ class MyMainWindow:
         """ Frame with the palette button to left, and details to right """
 
         i_index_base_block = 0
-        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h1.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
-        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
+        a_palette_sep_h0 = Separator( a_bottom_frame, orient='horizontal')
+        a_palette_sep_h0.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
+        a_palette_sep_lbl_h0 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
+        a_palette_sep_lbl_h0.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
         a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
         a_palette_sep_h1.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
         a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
-        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h1.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
-        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=13, columnspan=4, padx=90)
+        if self.s_platform in [ "Darwin", "Linux" ]:
+            a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=130)
+        else:
+            a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
+        a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
+        a_palette_sep_h2.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
+        a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
+        if self.s_platform in [ "Darwin", "Linux" ]:
+            a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=120)
+        else:
+            a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=100)
 
         # Create palette button left frame
         a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
@@ -428,7 +434,10 @@ class MyMainWindow:
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1)
         # the text is the cursor style on the middle of the label
         self.a_zoom_lbl = Label( a_color_bottom_frame, image=None, text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
-        self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=10, column=4, columnspan=4, padx=4, pady=1, sticky='ewns')
+        if self.s_platform in [ "Darwin", "Linux" ]:
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=4, padx=4, pady=1, sticky='ewns')
+        else:
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=4, padx=8, pady=1, sticky='ewns')
         self.a_zoom_lbl.bind( '<Button>', self.__mw_click_on_picture_zoom)
 
         i_index_base_block += 1
@@ -843,6 +852,25 @@ class MyMainWindow:
     # ####################### mw_create_main_window ########################
     def mw_create_main_window( self):
         """ Design the main windows """
+        bvertical = True        # False
+        if bvertical is True:
+            self.i_main_window_width += 100
+            if self.s_platform == "Linux":
+                self.i_main_window_height -= 100
+            elif self.s_platform == "Darwin":
+                self.i_main_window_height -= 100
+            elif self.s_platform == "Windows":
+                self.i_main_window_height -= 98
+            i_rect_x = 2
+            i_rect_y = 0
+            i_rect_width = 98
+            i_rect_height = self.i_main_window_height-4
+        else:
+            i_rect_x = 2
+            i_rect_y = 0
+            i_rect_width = self.i_main_window_width-4
+            i_rect_height = 98
+
         # set windows attribute
         __s_windows_size_and_position = ( str( self.i_main_window_width) + 'x' + str( self.i_main_window_height) + '+' + str( self.i_main_window_x) + '+' + str( self.i_main_window_y) )
         self.w_tk_root.geometry( __s_windows_size_and_position)  # dimension + position x/y a l'ouverture
@@ -853,32 +881,40 @@ class MyMainWindow:
         # no resize for both directions
         self.w_tk_root.resizable( False, False)
         self.w_tk_root.iconphoto( True, self.c_the_icons.get_app_photo())
-
         self.w_tk_root.title( self.a_list_application_info[0])
-
-        # Create 1 line of action icons
-        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
-        a_top_bar_frame.place( x=2, y=0, width=self.i_main_window_width-4, height=98 )   # fill :  must be 'none', 'x', 'y', or 'both'
-        self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_tk_root, self.a_list_application_info, a_top_bar_frame)
-        self.c_mains_icon_bar.mwib_create_top_bar_icons( 1)
         self.w_tk_root.update()
-        # print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
 
+        # Create icons frame
+        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
+        a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
         # Create picture frame
         a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
-        self.c_mains_image = MyMainWindowPicture( self.w_tk_root, self)
-        self.c_mains_image.mwi_picture_zone( a_pic_frame, self.c_mains_icon_bar)
-        self.w_tk_root.update()
-        # print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
-        self.c_mains_icon_bar.mwib_set_main_image( self.c_mains_image)
-
+        if bvertical is True:
+            a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+        else:
+            a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
         # Create palette frame
         a_palette_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height()) )
-        self.__mw_palette_zone( a_palette_frame)
+        if bvertical is True:
+            a_palette_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+        else:
+            a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         self.w_tk_root.update()
-        # print( "a_palette_frame     : width= " + str( a_palette_frame.winfo_width()) + " height= ", str( a_palette_frame.winfo_height()))
+
+        # Create line 1 for action icons
+        self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_tk_root, self.a_list_application_info, a_top_bar_frame)
+        if bvertical is True:
+            self.c_mains_icon_bar.mwib_create_left_bar_icons( 1)
+        else:
+            self.c_mains_icon_bar.mwib_create_top_bar_icons( 1)
+        # Create line 2 for picture
+        self.c_mains_image = MyMainWindowPicture( self.w_tk_root, self)
+        self.c_mains_image.mwi_picture_zone( a_pic_frame, a_pic_frame.winfo_width(), self.c_mains_icon_bar)
+        self.c_mains_icon_bar.mwib_set_main_image( self.c_mains_image)
+        # Create line 3 for palette
+        self.__mw_palette_zone( a_palette_frame)
+
+        self.w_tk_root.update()
         # print( "Calcul height       : " + str( self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height())))
 
         self.w_tk_root.bind( '<Button>', self.__mw_change_focus)
@@ -966,7 +1002,6 @@ class MyMainWindow:
         else:
             b_return = False
 
-        print()
         return b_return
 
     # ####################### mw_get_main_window ########################

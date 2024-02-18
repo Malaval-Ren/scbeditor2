@@ -447,7 +447,7 @@ class MyMainWindowPicture:
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_palette_number:
-                self.a_scb_cnvs.create_rectangle( 0, i_loop, 20, i_loop+1, fill='blue', outline='blue')
+                self.a_scb_cnvs.create_rectangle( 0, i_loop, 24, i_loop+1, fill='blue', outline='blue')
             else:
                 i_inter = 0
 
@@ -472,20 +472,24 @@ class MyMainWindowPicture:
             self.a_filename_lbl.config( text=os.path.basename( s_filename))
 
     # ####################### mw_picture_zone ########################
-    def mwi_picture_zone( self, a_pic_frame, c_icon_bar):
+    def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
         """ Frame with the picture to left, and details to right """
         s_platform = platform.system()
         self.c_mains_icon_bar = c_icon_bar
         i_index_base_block = 0
+        # print( a_pic_frame.get())
         a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
         a_pic_sep_h0.grid(row=i_index_base_block, column=0, columnspan=1, sticky='ew')
-        a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Picture", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=0, padx=15)
-
-        a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
-        a_pic_sep_h0.grid( row=i_index_base_block, column=1, columnspan=9, sticky='ew')
-        a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Details", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=1, columnspan=9, padx=170, sticky='ew')
+        a_pic_sep_lbl_h0 = Label( a_pic_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h0.grid( row=i_index_base_block, column=0, columnspan=1)
+        a_pic_sep_h1 = Separator( a_pic_frame, orient='horizontal')
+        a_pic_sep_h1.grid( row=i_index_base_block, column=2, columnspan=1, sticky='ew')
+        a_pic_sep_lbl_h1 = Label( a_pic_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h1.grid( row=i_index_base_block, column=2, columnspan=1)
+        a_pic_sep_h2 = Separator( a_pic_frame, orient='horizontal')
+        a_pic_sep_h2.grid( row=i_index_base_block, column=4, columnspan=5, sticky='ew')
+        a_pic_sep_lbl_h2 = Label( a_pic_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h2.grid( row=i_index_base_block, column=4, columnspan=5, padx=200)
 
         i_index_base_block += 1
         if s_platform == "Linux":
@@ -498,21 +502,24 @@ class MyMainWindowPicture:
 
         # Create SCB frame to draw rectangle to present SCB
         a_scb_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_scb_frame.place( x=644, y=21, width=20, height=constant.PICTURE_HEIGHT)
+        a_scb_frame.place( x=644, y=21, width=24, height=constant.PICTURE_HEIGHT)
 
-        self.a_scb_cnvs = Canvas( a_scb_frame, width=20, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+        self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
 
+        self.w_tk_root.update()
         # Create details frame
+        i_width = i_pic_frame_width
+        i_width = i_width - ( 640 + 24 + 10)
         a_details_pic_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background=constant.BACKGROUD_COLOR_UI or'darkgray' or 'light grey'
-        a_details_pic_frame.place( x=664, y=30, width=self.i_main_window_width - 664, height=constant.PICTURE_HEIGHT)
+        a_details_pic_frame.place( x=668, y=21, width=i_width, height=constant.PICTURE_HEIGHT)
 
         a_bar_chart_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_bar_chart_frame.place( x=664, y=30+(constant.PICTURE_HEIGHT-104), width=self.i_main_window_width - 442, height=104)
+        a_bar_chart_frame.place( x=668, y=21+(constant.PICTURE_HEIGHT-104), width=i_width, height=104)
 
         i_index_base_block = 0
-        self.a_bar_chart_cnvs = Canvas( a_bar_chart_frame, width=self.i_main_window_width - (438+40), height=84, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0) # constant.BACKGROUD_COLOR_UI
-        self.a_bar_chart_cnvs.grid( row=i_index_base_block, column=0, padx=4, sticky='ewns')
+        self.a_bar_chart_cnvs = Canvas( a_bar_chart_frame, width=i_width - 10, height=84, background=constant.BACKGROUD_COLOR_UI, highlightthickness=0) # constant.BACKGROUD_COLOR_UI
+        self.a_bar_chart_cnvs.grid( row=i_index_base_block, column=0, padx=4, pady=2, sticky='ewns')
         i_index_base_block += 1
         i_index_base_column = 0
         a_font_label = font.Font( size=6)
@@ -547,11 +554,11 @@ class MyMainWindowPicture:
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1, sticky='ew')
-        self.a_mouse_live_pos_x = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
+        self.a_mouse_live_pos_x = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_mouse_live_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1, sticky='ew')
         a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
-        self.a_mouse_live_pos_y = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
+        self.a_mouse_live_pos_y = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
@@ -559,15 +566,15 @@ class MyMainWindowPicture:
         a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=5, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h4 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=1)
+        a_pic_sep_lbl_h5 = Label( a_details_pic_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, padx=4, pady=1)
         # font='-weight bold'
         self.a_mouse_pos_x = Entry( a_details_pic_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
         self.a_mouse_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=1)
         self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
         self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
 
-        self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
+        self.a_pos_x_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
         if self.s_platform == "Darwin":
@@ -596,7 +603,7 @@ class MyMainWindowPicture:
         self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
         self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
 
-        self.a_pos_y_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-1, background='light grey', foreground='black')
+        self.a_pos_y_true_lbl = Label( a_details_pic_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=3, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
