@@ -936,15 +936,15 @@ class MyMainWindow:
             # if self.a_work_img:
             #     self.__mw_print_widget_under_mouse( self.w_tk_root)
 
-    # ####################### mw_draw_zoom_square ########################
-    def mw_get_rainbow_img( self, width, height):
-        """ Do a rainbow image min is 256 x 256 """
-        data = np.arange(width * height, dtype=np.int64).reshape((height, width))
-        img_data = np.empty( (height, width, 3), dtype=np.uint8)
-        img_data[:, :, 0] = data // height
-        img_data[:, :, 1] = data % width
-        img_data[:, :, 2] = 100
-        return Image.fromarray( img_data, mode="RGB")
+    # ####################### mw_get_rainbow_img ########################
+    # def mw_get_rainbow_img( self, width, height):
+    #     """ Do a rainbow image min is 256 x 256 """
+    #     data = np.arange(width * height, dtype=np.int64).reshape((height, width))
+    #     img_data = np.empty( (height, width, 3), dtype=np.uint8)
+    #     img_data[:, :, 0] = data // height
+    #     img_data[:, :, 1] = data % width
+    #     img_data[:, :, 2] = 100
+    #     return Image.fromarray( img_data, mode="RGB")
 
     # ####################### mw_draw_zoom_square ########################
     def mw_draw_zoom_square( self, i_position_x, i_position_y):
@@ -973,6 +973,22 @@ class MyMainWindow:
         self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
         self.a_zoom_lbl.config( image=self.a_render_zoom)
         self.a_zoom_lbl.photo = self.a_render_zoom
+
+        # Adapt color of the text "   _     _"
+        i_result = 0
+        i_red   = int( self.a_red_ntr_dec_lbl.cget( "text"))
+        i_green = int( self.a_green_ntr_dec_lbl.cget( "text"))
+        i_blue  = int( self.a_blue_ntr_dec_lbl.cget( "text"))
+        if i_red > 128:
+            i_result +=1
+        if i_green > 128:
+            i_result +=1
+        if i_blue > 128:
+            i_result +=1
+        if i_result >= 2:
+            self.a_zoom_lbl.config( fg='black')
+        else:
+            self.a_zoom_lbl.config( fg='white')
 
     # ####################### mw_update_main_window ########################
     def mw_update_main_window( self, s_filename, a_work_img) -> bool:
