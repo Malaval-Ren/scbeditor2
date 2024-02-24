@@ -41,6 +41,8 @@ from functools import partial
 
 # from ttkthemes              import ThemedTk, THEMES, ThemedStyle
 from PIL import ImageTk
+from PIL import Image
+
 
 import src.my_constants as constant
 # from .my_log_an_usage import MyLogAnUsage
@@ -900,6 +902,10 @@ class MyMainWindow:
         else:
             a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         self.w_tk_root.update()
+        print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
+        print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
+        print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
+        print( "a_palette_frame     : width= " + str( a_palette_frame.winfo_width()) + " height= ", str( a_palette_frame.winfo_height()))
 
         # Create line 1 for action icons
         self.c_mains_icon_bar = MyMainWindowIconsBar( self, self.w_tk_root, self.a_list_application_info, a_top_bar_frame)
@@ -931,22 +937,39 @@ class MyMainWindow:
             #     self.__mw_print_widget_under_mouse( self.w_tk_root)
 
     # ####################### mw_draw_zoom_square ########################
+    def mw_get_rainbow_img( self, width, height):
+        """ Do a rainbow image min is 256 x 256 """
+        data = np.arange(width * height, dtype=np.int64).reshape((height, width))
+        img_data = np.empty( (height, width, 3), dtype=np.uint8)
+        img_data[:, :, 0] = data // height
+        img_data[:, :, 1] = data % width
+        img_data[:, :, 2] = 100
+        return Image.fromarray( img_data, mode="RGB")
+
+    # ####################### mw_draw_zoom_square ########################
     def mw_draw_zoom_square( self, i_position_x, i_position_y):
-        """ Draw the zoom squate part * 8 of the picture """
+        """ Draw the zoom square part * 8 of the picture """
         # print( "mw_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
         i_contour = 26
-        i_top_x = i_position_x-i_contour
-        if i_position_x < i_contour:
-            i_top_x = 0
-        i_top_y = i_position_y-i_contour
-        if i_position_y < i_contour:
-            i_top_y = 0
+        i_top_x = i_position_x - i_contour
+        i_top_y = i_position_y - i_contour
+        i_low_x = i_position_x + i_contour
+        i_low_y = i_position_y + i_contour
 
-        i_box_top = (i_top_x, i_top_y, i_position_x+i_contour, i_position_y+i_contour)
+        # print( "i_top_x = " + str( i_top_x) + "  i_top_y = " + str( i_top_y),
+        #     "  width = " + str( i_low_x) + "  height = " + str( i_low_y),
+        #     "  dif x = " + str( i_low_x - i_top_x) + "  dif y = " + str( i_low_y - i_top_y))
+
+        i_box_top = (i_top_x, i_top_y, i_low_x, i_low_y)
         a_work_img = self.c_mains_image.mwi_get_working_image()
-        a_zoom_work_tmp = a_work_img.crop( i_box_top)
-        width, height = a_zoom_work_tmp.size
-        self.a_zoom_work_img = a_zoom_work_tmp.resize( (width*4, height*4))     # Total of zoom is x 8
+        a_part_image = a_work_img.crop( i_box_top)
+        width, height = a_part_image.size
+        # a_part_image.show()
+
+        # a_backgroud_image = self.mw_get_rainbow_img( 256, 256)
+        # a_backgroud_image.show()
+
+        self.a_zoom_work_img = a_part_image.resize( (width * 4, height * 4))     # Total of zoom is x 8
         self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
         self.a_zoom_lbl.config( image=self.a_render_zoom)
         self.a_zoom_lbl.photo = self.a_render_zoom
