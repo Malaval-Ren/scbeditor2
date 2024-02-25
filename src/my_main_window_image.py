@@ -44,18 +44,17 @@ import src.my_constants as constant
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 # from .my_main_window  import mv_entry_black_focus_out, mv_on_single_key, mw_print_widget_under_mouse
+# from .my_main_window_palette import mwp_entry_black_focus_out, mwp_select_color_rad_btn
 
-# __name__ = "MyMainWindowPicture"
+# __name__ = "MyMainWindowImage"
 
 # ###############################################################################################
 # #######========================= constant private =========================
 
-WAIT_TIME_COM = 0.05
-
 # ###############################################################################################
 # #######=========================     GUI     =========================
 # ####################### MyMainWindow ########################
-class MyMainWindowPicture:
+class MyMainWindowImage:
     """ Create the main Windows Picture part of the application. """
     # Optimizing memory usage with slots
     # __slots__ = ["w_root_windows", "a_list_application_info" ]
@@ -65,9 +64,8 @@ class MyMainWindowPicture:
         """
             All this parameter are created in main()
             w_root_windows : the windows created by tk
-            a_list_application_info : les inforamtions de l'application
+            c_main_window : the main window
         """
-        print()
         self.w_tk_root = w_root_windows        # root window the first window created
         self.c_main_windows = c_main_window
         # Position of the main windows
@@ -77,21 +75,12 @@ class MyMainWindowPicture:
         self.c_the_icons = MyIconPictures( self.w_tk_root)
         self.s_platform = platform.system()
         # Size of the main windows
-        if self.s_platform == "Linux":
-            self.i_main_window_width = 1120
-            self.i_main_window_height = 830
-        elif self.s_platform == "Darwin":
-            self.i_main_window_width = 1150
-            self.i_main_window_height = 834
-        elif self.s_platform == "Windows":
-            self.i_main_window_width = 1060
-            self.i_main_window_height = 824
-        else:
-            print( 'init() : H : Currently not managed')
-
+        self.i_main_window_width = c_main_window.mw_get_main_window_width()
+        self.i_main_window_height = c_main_window.mw_get_main_window_height()
         self.c_alert_windows = MyAlertWindow( self, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
-        self.c_mains_icon_bar = None            # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_palette = None                 # top icon menu bar : MyMainWindowPalette
 
         self.a_original_img = None
         self.a_work_img = None
@@ -141,7 +130,7 @@ class MyMainWindowPicture:
     def __mwi_click_on_picture( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
         # print( "mw_click_on_picture()  ", event)
-        self.c_main_windows.mv_entry_black_focus_out()
+        self.c_main_palette.mwp_entry_black_focus_out()
         if self.a_work_img:
             # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
             i_pos_x = max( event.x, 0)
@@ -150,10 +139,6 @@ class MyMainWindowPicture:
             i_pos_y = min( event.y, constant.PICTURE_HEIGHT - 1)
 
             i_offset = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
-
-            # TODO : CHECK THIS CODE
-            # Define r, g, b for the rgb colour space and fetch the RGB colour for each pixel
-            # r, g, b = self.a_work_img.getpixel( ( i_pos_x, i_pos_y))
 
             # Use only the pair values, click is done in the picture zoom x 2
             if i_pos_y & 1:
@@ -174,16 +159,16 @@ class MyMainWindowPicture:
             self.a_line_slider.set( int( i_offset / 16))
 
             # Select the radio button color in the palette
-            self.c_main_windows.mw_select_color_rad_btn( i_offset)
+            self.c_main_palette.mwp_select_color_rad_btn( i_offset)
 
             # print( "mw_click_on_picture() i_offset = ", str( i_offset))
-            self.c_main_windows.mw_color_btn_rad( i_offset)
+            self.c_main_palette.mwp_color_btn_rad( i_offset)
 
             # Draw bar chart for colors in usage in a line
             self.mwi_draw_bar_chart( i_offset, i_pos_y)
 
             # Display zoom of a part of the picture
-            self.c_main_windows.mw_draw_zoom_square( i_pos_x, i_pos_y)
+            self.c_main_palette.mwp_draw_zoom_square( i_pos_x, i_pos_y)
 
             self.w_tk_root.update()
             print()
@@ -275,30 +260,22 @@ class MyMainWindowPicture:
         # if s_insert >= 'a' and s_insert <= 'f':
             s_insert.upper()
 
+        b_result = False
         if s_insert in '0123456789ABCDEF':
-        # if (s_insert != '') or (s_insert >= 'A' and s_insert <= 'F') or ( s_insert >= '0' and s_insert <= '9'):
-            # print( 'mw_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
+            # print( '__mwi_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
             if int( i_action) == 0:     # deletion
-                # print( 'mw_set_max_len_to_four_chars_and_filter() : action = deletion' )
+                # print( '__mwi_set_max_len_to_four_chars_and_filter() : action = deletion' )
                 if len( s_string_apres) + 1 > 8:
                     b_result = True
-                else:
-                    # self.w_tk_root.bell()
-                    b_result = False
             elif int( i_action) == 1:   # insertion
-                # print( 'mw_set_max_len_to_four_chars_and_filter() : action = insertion' )
-                if len( s_string_apres) + 1 > 15:
-                    # self.w_tk_root.bell()
-                    b_result = False
-                else:
+                # print( '__mwi_set_max_len_to_four_chars_and_filter() : action = insertion' )
+                if len( s_string_apres) + 1 < 16:
                     b_result = True
             else:
-                # print( 'mw_set_max_len_to_four_chars_and_filter() : autre')
+                # print( '__mwi_set_max_len_to_four_chars_and_filter() : autre')
                 b_result = True
         else:
-            # self.w_tk_root.bell()
-            print( 'mw_set_max_len_to_four_chars_and_filter() : key= ' + str( s_insert) )
-            b_result = False
+            print( '__mwi_set_max_len_to_four_chars_and_filter() : key= ' + str( s_insert) )
 
         return b_result
 
@@ -326,8 +303,21 @@ class MyMainWindowPicture:
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
                 # s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
-                self.c_main_windows.mw_update_main_window( self.c_mains_icon_bar.mwib_get_get_path_filename() , self.a_original_img)
+                self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename() , self.a_original_img)
                 self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
+
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   ######  #     # ######  #       ###  #####
+    #   #     # #     # #     # #        #  #     #
+    #   #     # #     # #     # #        #  #
+    #   ######  #     # ######  #        #  #
+    #   #       #     # #     # #        #  #
+    #   #       #     # #     # #        #  #     #
+    #   #        #####  ######  ####### ###  #####
+    #
+    # ##########################################################################################
 
     # ####################### mw_click_in_picture_center ########################
     def mwi_click_in_picture_center( self, pos_x=320, pos_y=200):
@@ -401,10 +391,10 @@ class MyMainWindowPicture:
         """ set value of the latest position of the mouse Y """
         self.a_mouse_live_pos_y.configure( text=str( i_pos_y))
 
-    # ####################### mw_draw_bar_chart ########################
+    # ####################### mwi_draw_bar_chart ########################
     def mwi_draw_bar_chart( self, i_offset, i_position_y):
         """ Draw bar chart for colors in usage in a line """
-        # print( "mw_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
+        # print( "mwi_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
         self.a_bar_chart_cnvs.delete( "all")
         a_usage_color_rry = array.array( 'i')
         a_usage_color_rry = [1] * 16
@@ -430,7 +420,7 @@ class MyMainWindowPicture:
         for i_loop in range( 0, 16, 1):
             i_hauteur = a_result_color_rry[i_loop]
             if a_result_color_rry[i_loop] > 0:
-                self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.c_main_windows.get_from_pal_btn_lst_color(i_palette_number+i_loop), outline='white')
+                self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.c_main_palette.get_from_pal_btn_lst_color(i_palette_number+i_loop), outline='white')
                 if a_usage_color_rry[i_loop] > 0 and a_usage_color_rry[i_loop] < 10:
                     self.a_bar_chart_cnvs.create_text( i_colmun_x+8, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
             i_colmun_x += 24
@@ -471,11 +461,16 @@ class MyMainWindowPicture:
 
             self.a_filename_lbl.config( text=os.path.basename( s_filename))
 
+    # ####################### mwi_set_palette ########################
+    def mwi_set_palette( self, c_palette):
+        """ Give access to method of c_palette """
+        self.c_main_palette = c_palette
+
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
         """ Frame with the picture to left, and details to right """
         s_platform = platform.system()
-        self.c_mains_icon_bar = c_icon_bar
+        self.c_main_icon_bar = c_icon_bar
         i_index_base_block = 0
         # print( a_pic_frame.get())
         a_pic_sep_h0 = Separator( a_pic_frame, orient='horizontal')
