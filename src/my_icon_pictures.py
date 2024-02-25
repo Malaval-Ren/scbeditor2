@@ -39,9 +39,7 @@ from tkinter import PhotoImage
 # ###############################################################################################
 # ####################### MyIconPictures ########################
 class MyIconPictures:
-    """
-    Classe définissant le stockage des images utiliser dans l'interface graphique de l'application
-    """
+    """ Content the pictures for human interface graphic """
     # pylint: disable=too-many-instance-attributes
     # nine is reasonable in this case these are all the icons of the main windows and the application icons
 

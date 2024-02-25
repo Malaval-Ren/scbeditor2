@@ -150,8 +150,6 @@ class MyAboutWindow:
         elif self.s_platform == "Windows":
             self.i_width = 592
             self.i_height = 340
-        else:
-            print( 'aw_set_window_size() : H : Currently not managed')
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
