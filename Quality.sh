@@ -273,6 +273,10 @@ notetotal=0.0
 tempval=0.0
 for i in $(find . -type f \( -iname "*.py" ! -iname "__*.py" \) ); 
 do
+	if [[ $i = *'./images/'* ]]
+	then
+		continue
+	fi
 	echo -e $BGreen " ""$i" $Color_Off
 	# pylint --rcfile=pylint_config -E $i
 	echo -e "&nbsp;\n" >> "$pylint_log"
