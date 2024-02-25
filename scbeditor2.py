@@ -68,9 +68,9 @@ __credits__ = ["Frédéric Mure","Patrice Afflatet","Reion: https://www.flaticon
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.0.5-19"
+    __version__ = "2.0.7-21"
 else:
-    __version__ = "2.0.5.19"
+    __version__ = "2.0.7.21"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"

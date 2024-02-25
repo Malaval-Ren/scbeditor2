@@ -12,7 +12,7 @@ date :  dim. 25 févr. 2024 15:48:52
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | *Project* |  |
-| scbeditor2 | 2.0.5.19 |
+| scbeditor2 | 2.0.7.21 |
 
 &nbsp;
 
