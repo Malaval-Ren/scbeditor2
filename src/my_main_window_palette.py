@@ -270,9 +270,10 @@ class MyMainWindowPalette:
         return self.a_palette_button_lst[i_offset].cget( 'bg')
 
     # ####################### mwp_palette_zone ########################
-    def mwp_palette_zone( self, a_bottom_frame, c_main_image):
+    def mwp_palette_zone( self, a_bottom_frame, c_main_image, c_main_icon_bar):
         """ Frame with the palette button to left, and details to right """
         self.c_main_image = c_main_image
+        self.c_main_icon_bar = c_main_icon_bar
         i_index_base_block = 0
         a_palette_sep_h0 = Separator( a_bottom_frame, orient='horizontal')
         a_palette_sep_h0.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')

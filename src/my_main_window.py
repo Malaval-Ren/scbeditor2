@@ -296,7 +296,7 @@ class MyMainWindow:
         self.c_main_icon_bar.mwib_set_main_image( self.c_main_image)
         # Create line 3 for palette
         self.c_main_palette = MyMainWindowPalette( self.w_tk_root, self)
-        self.c_main_palette.mwp_palette_zone( a_palette_frame, self.c_main_image)
+        self.c_main_palette.mwp_palette_zone( a_palette_frame, self.c_main_image, self.c_main_icon_bar)
         self.c_main_image.mwi_set_palette( self.c_main_palette)
 
         self.w_tk_root.update()
