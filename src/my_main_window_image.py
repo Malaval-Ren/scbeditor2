@@ -77,7 +77,7 @@ class MyMainWindowImage:
         # Size of the main windows
         self.i_main_window_width = c_main_window.mw_get_main_window_width()
         self.i_main_window_height = c_main_window.mw_get_main_window_height()
-        self.c_alert_windows = MyAlertWindow( self, c_main_window.mw_get_application_info())
+        self.c_alert_windows = MyAlertWindow( c_main_window, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
         self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
         self.c_main_palette = None                 # top icon menu bar : MyMainWindowPalette

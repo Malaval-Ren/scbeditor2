@@ -3,11 +3,8 @@
 		{
 			"path": "."
 		},
-        {
-            "path": "./src"
-        }
-	],
-	"settings": {
-		"python.pythonPath": "/bin/python3"
-	}
+		{
+			"path": "src"
+		}
+	]
 }
