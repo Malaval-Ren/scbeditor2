@@ -8,7 +8,7 @@
  This is an help for cross-dev
 
 > note : My first release was on Apple IIGS **S.C.B. Editor** version 1.5a
-> You could found it in the image scbeditor.po
+> You could found it in the image scbeditor.img
 
 &nbsp;
 

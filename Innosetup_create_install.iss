@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "scbeditor2"
-#define MyAppVersion "2.0.0.03"
+#define MyAppVersion "2.0.7.21"
 #define MyAppPublisher "Disk Crack band"
-#define MyAppExeName "scbeditor2_v2.0.0.03.exe"
+#define MyAppExeName "scbeditor2_v2.0.7.21.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -35,7 +35,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\DEV\GIT\Renaud\Control_M221_Di-Do\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "G:\DEV\Python\scbeditorII\scbeditor2\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -1,7 +1,3 @@
-The application manages the outputs and inputs of a M221.
-Outputs are able to remote control to be able to turn On / Off power of products in your cubicle.
-
-And in parallel, the inputs are used if you are in front of your cubicle being able to turn On / Off power of products.
-
-To help, the working from home, I have created a basic solution to be able to use my laptop to connect to my working PC desktop in my office.
-Base on device Modicon M221CE family connected through port Ethernet.
+ This is an application to do modification of bmp file to prepare convertion to an Apple IIGS pic file.
+ 
+ This is an help for cross-dev.
