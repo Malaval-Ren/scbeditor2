@@ -2,9 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 #
-# Create a xxxx.dmg file for project application installation
-#
-# from : https://github.com/create-dmg/create-dmg
+# set the right for all the file in this folder
 #
 # Copyright (C) 2020-2024 Renaud Malaval <renaud.malaval@free.fr>
 # 
@@ -21,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.29'
+version='1.01'
 
 # definition all colors and styles to use with an echo
 
@@ -124,103 +122,42 @@ ERROR_SH_reorg=$(($ERROR_SH+3))
 ERROR_SH_folder=$(($ERROR_SH+4))
 ERROR_SH_OS=$(($ERROR_SH+5))
 ERROR_SH_FILE=$(($ERROR_SH+6))
+ERROR_SH_FAILED=$(($ERROR_SH+7))
+ERROR_SH_SUB_ERROR=$(($ERROR_SH+8))
+ERROR_SH_INC_VERSION=$(($ERROR_SH+9))
 
 ERROR_GIT_init=$(($ERROR_GIT+1))
 
 aError=$NO_ERROR
 
-if [[ "$OSTYPE" != "darwin"* ]]
-then
-    echo -e $BRed "Create a dmg file is only on Mac OS X" $Color_Off
-    exit $ERROR_SH_OS
-fi
-
 #Clear the terminal screen
-# printf "\033c"
-pyInstall_Name=$(basename "$PWD")
-pyInstall_getVersion="StringStruct(u'ProductVersion', u'"
-pyInstall_version=""
+printf "\033c"
 
-echo
-echo -e $BGreen "Get version from    :" "./""$pyInstall_Name""_version.txt" $Color_Off
-echo
+sevenZipPath='/c/Program Files/7-Zip/7z.exe'
+sevenZrPath='/usr/bin/7zr'
+zipPath='/usr/bin/zip'
 
-pyInstall_fileVersion="./"$pyInstall_Name"_version.txt"
-if [ -f "$pyInstall_fileVersion" ]
-then
-	# echo
-    # echo -e $IGreen "getVersion          :" "$pyInstall_getVersion" $Color_Off
-    # echo -e $IGreen "fileVersion         :" "$pyInstall_fileVersion" $Color_Off
-	# echo
-    temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
-    # echo -e $IGreen "grep result         :" "$temp" $Color_Off
-    tempNoSpace=$(echo $temp | tr -d ' ')
+currentFolder=$(pwd)
 
-    temp=${tempNoSpace: -1}
-    hex="$(printf '%s' "$temp" | xxd -pu)"
-    if [[ "$hex" == "0d" ]]
-    then
-        # remove this char '\r' at end of string
-        refLineLen=${#tempNoSpace}
-        refLineLen=$(($refLineLen - 1))
-        tempNoSpace=${tempNoSpace:0:refLineLen}
-    fi
+chmod a-x *.txt
+chmod a-x *.md
+chmod a-x *.ico
+chmod a-x *.icns
+chmod a-x *.gif
+chmod a-x *.iss
+chmod a-x *.xls
+chmod a-x *.ini
+chmod a-x *.img
+chmod a-x *.code-workspace
+chmod a-x *.desktop
+chmod a-x *.py
+chmod a-x *.png
+chmod a-x *.spec
+chmod a-x .gitattributes
+chmod a-x .gitignore
 
-    # echo -e $IGreen "result no space     :" "$tempNoSpace" $Color_Off
-    refLineLen=${#pyInstall_getVersion}
-    # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
-    refLineLen=$(($refLineLen - 1))
-	tempNoSpaceLen=${#tempNoSpace}
-    # echo -e $IGreen "tempNoSpaceLen len  :" "$tempNoSpaceLen" $Color_Off
-	calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
-	calcVersionLen=$(($calcVersionLen - 4))
-    # echo -e $IGreen "calcVersionLen len  :" "$calcVersionLen" $Color_Off
-    temp=${tempNoSpace:refLineLen:calcVersionLen}
-    # echo -e $IGreen "result filter       :" "$temp" $Color_Off
-    versionLen=${#temp}
-    # echo -e $IGreen "len result filter   :" "$versionLen" $Color_Off
-    if [ $versionLen -eq $calcVersionLen ]
-    then
-        pyInstall_version="_v""$temp"
-        echo -e $BGreen "Version found is    :" "$pyInstall_version" $Color_Off
-    else
-        pyInstall_version=""
-        echo -e $BYellow "Version is no available" $Color_Off 
-    fi
-    echo
-else
-    echo -e $BRed "File version not found    : " "$pyInstall_fileVersion" $Color_Off
-    exit $ERROR_SH_FILE
-fi
+dos2unix *.sh
 
-if [[ "$pyInstall_version" == "" ]]
-then
-    echo -e $BRed "Version not found in file : " "$pyInstall_fileVersion" $Color_Off
-    exit $ERROR_SH_FILE
-fi
+sleep 1  #Wait 1 seconds
 
-# --background "installer_background.png" \
-test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_version".dmg"
-create-dmg \
-    --volname $pyInstall_Name$pyInstall_version \
-    --volicon "./dmg_icon_T_512x512.icns" \
-    --window-pos 200 120 \
-    --window-size 800 400 \
-    --icon-size 128 \
-    --eula "./GNU_GPLv3.txt" \
-    --icon $pyInstall_Name".app" 200 190 \
-    --hide-extension $pyInstall_Name".app" \
-    --app-drop-link 600 185 \
-    "./dist/"$pyInstall_Name$pyInstall_version".dmg" \
-    "./dist/dmgContent/"
-
-echo
-if [ $? -eq 0 ]
-then
-    echo -e $BGreen "create-dmg is done" $Color_Off
-else
-    echo -e $BRed "create-dmg failed ! error =" $?  $Color_Off
-    error= $?
-fi
-
-exit $error
+exit $NO_ERROR
