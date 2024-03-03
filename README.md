@@ -3,119 +3,41 @@
 
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
- This is an application to do modification of bmp file to prepare convertion to an Apple IIGS pic file.
+_Creation: December 31th, 2023..2024, by Renaud Malaval_
+_Last review: March 3rd, 2024, by Renaud Malaval_
+
+## Features
+
+  This is an application to do modification of bmp file to prepare convertion to Apple IIGS pic format file.
+  The goal is to increase the number of color used in your pic files with usage of **SCB**.
+  This is an help for cross-dev on Linux, MAC OS Catalina, Windows 10.
+  BMP file supported are 4 (converted to 8) and 8 bits / per pixels.
  
- This is an help for cross-dev
+  :warning: Before usage of **SCB Editor II**, make a backup of your bmp files!
 
 > note : My first release was on Apple IIGS **S.C.B. Editor** version 1.5a
-> You could found it in the image scbeditor.img
-
-&nbsp;
-
-## **Versions**
-
-- [Release](Evolution_Release.md) **NOT CREATED**
-- [Quality](Quality_pylint_log.md)
-
-&nbsp;
+> You could found it in the image scbeditor.img.
+> Pascal source is loosed.
 
 ## **Documentations**
 
-- [Software overview](Documents/scbeditor2.md)
+- [Software overview](Documents/manual.md)
 - [Files overview](Documents/Catalog_Files.md)
 
-&nbsp;
+## **Versions**
 
-## **Usage is done from a bash script**
-
-```bash
-currentFolder=$(pwd)
-pyInstall_Name=$(basename "$PWD")
-pyInstall_fileVersion="./"$pyInstall_Name"_version.txt"
-
-echo
-# store arguments in a special array 
-args=("$@") 
-# get number of elements 
-ELEMENTS=${#args[@]}
-borne=$((ELEMENTS-1))
-# echo each element in array  
-# echo "Parameter(s) :"
-oldparameter=""
-release_num=""
-for (( i=0; i<$ELEMENTS; i++));
-do
-    parameter=${args[${i}]}
-    # echo " #"$i" : "$parameter
-    if [ "$parameter" == "-ev" ] && [ $i -eq $borne ]
-    then
-        release_num="justBuild"
-    else
-        if [ "$parameter" != "-ev" ]
-        then
-            release_num=$release_num" "$parameter
-        fi
-    fi
-done
-# echo
-
-if [ "$release_num" == "" ];
-then
-    echo -e $BGreen "Don't increase release version" $Color_Off
-else
-    increase_build_number_path=""
-    cd ..
-    upfolderis=$(pwd)
-    if [ ! -d "$upfolderis""/scbeditor2""/" ]
-    then
-        cd ..
-        upfolderis=$(pwd)
-        increase_build_number_path=$upfolderis"/scbeditor2/scbeditor2/scbeditor2.py"
-    else
-        increase_build_number_path=$upfolderis"/scbeditor2/scbeditor2/scbeditor2.py"
-    fi
-    cd $currentFolder
-    echo -e $Green "UP Folder           :" "$upfolderis" $Color_Off
-    echo -e $Green "Release_num         :" "$release_num" $Color_Off
-    echo -e $Green "Inc build part with :" "$increase_build_number_path" $Color_Off
-
-    if [ -f "${increase_build_number_path}" ]
-    then
-        echo
-        echo -e $Green "in file             :" $currentFolder"/"$pyInstall_Name"_version.txt" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name".py" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name".desktop" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name"_osx.spec" $Color_Off
-        echo
-        if [ "$release_num" == "justBuild" ]
-        then
-            cmd_content="${increase_build_number_path}"" ""${pyInstall_fileVersion}"
-        else
-            cmd_content="${increase_build_number_path}"" ""${pyInstall_fileVersion}"" ""$release_num"
-        fi
-        echo -e $Green "Call                :" "$cmd_content" $Color_Off
-        temp=$(python $cmd_content)
-        if [ $? -eq 0 ]
-        then
-            echo -e $Green "$temp" $Color_Off
-        else
-            exit $ERROR_SH_INC_VERSION
-        fi
-    else
-        exit $ERROR_SH_INC_VERSION
-    fi
-fi
-echo
-```
-
-&nbsp;
+- [Quality repport](Quality_pylint_log.md)
 
 ## **Tools Mandatory**
 
 - [Python](https://www.python.org/) with Tcl/Tk
   - Windows 10 : 3.12.1
-  - [Linux Mint](https://linuxmint.com/) : default release installed with your distribution (min 3.12.1)  
-    This package is mandatory : 'sudo apt-get install python3-tk'
-  - Mac OSx 10.15.7 : 3.12.1
+  - [Linux Mint](https://linuxmint.com/) : default release installed with your distribution (min 3.12.2)  
+  - Mac OSx 10.15.7 : 3.12.2
 - Modules
   - pyinstaller
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [GIT](https://git-scm.com/)
+- [GIMP](https://www.gimp.org/) : to edit picture
+- [Image Magick Display]https://imagemagick.org/) : to convert .png to .icns
+- [XnView](https://www.xnview.com/) : to view .icns Mac Os icon file
