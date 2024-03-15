@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "scbeditor2"
-#define MyAppVersion "2.0.7.21"
+#define MyAppVersion "2.0.8.23"
 #define MyAppPublisher "Disk Crack band"
-#define MyAppExeName "scbeditor2_v2.0.7.21.exe"
+#define MyAppExeName "scbeditor2_v2.0.8.23.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.

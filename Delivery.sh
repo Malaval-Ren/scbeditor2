@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.77'
+version='1.79'
 
 # definition all colors and styles to use with an echo
 
@@ -375,14 +375,14 @@ then
     if [[ -f "$pyInstallSpec_Linux" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Linux
-        pyInstall_Parameter="-y --clean --log-level DEBUG --version-file "$pyInstall_fileVersion" -i ./appIcon_x64_T_256x256.gif "$pyInstall_Name".py"
+        pyInstall_Parameter="-y --clean --log-level DEBUG --onefile --version-file "$pyInstall_fileVersion" -i ./appIcon_x64_T_256x256.gif "$pyInstall_Name".py"
         # pyInstall_Parameter="--onefile -y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Linux $Color_Off
         exit $ERROR_SH_OS    
     fi
 else
-    echo -e $IRed "Unknown OS" $Color_Off
+    echo -e $IRed "Unknown OS :" "$OSTYPE" $Color_Off
     exit $ERROR_SH_OS
 fi
 
@@ -457,15 +457,15 @@ then
         if [ -d ${pyInstall_dist} ] && [ ${pyInstall_version} != "" ]
         then
             # ls -alg ./dist
-            echo -e $Green "Rename application   : " $pyInstall_dist"/"$pyInstall_Name " to " $pyInstall_dist"/"$pyInstall_Name$pyInstall_version  $Color_Off
+            echo -e $Green "Rename application   : " "./"$pyInstall_dist"/"$pyInstall_Name " to " "./"$pyInstall_dist"/"$pyInstall_Name$pyInstall_version  $Color_Off
             # Application (application/x-shellscript)
-            if [[ ! -d $pyInstall_dist"/"$pyInstall_Name ]]
+            if [[ ! -f "./"$pyInstall_dist"/"$pyInstall_Name ]]
             then
-                echo -e $Yellow "Not found" $pyInstall_dist"/"$pyInstall_Name $Color_Off
+                echo -e $Yellow "Not found" "./"$pyInstall_dist"/"$pyInstall_Name $Color_Off
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
-            mv $pyInstall_dist"/"$pyInstall_Name $pyInstall_dist"/"$pyInstall_Name$pyInstall_version
+            mv "./"$pyInstall_dist"/"$pyInstall_Name "./"$pyInstall_dist"/"$pyInstall_Name$pyInstall_version
 
             echo -e $BGreen "Generate .DEB file" $Color_Off
             dos2unix ./deb_create.sh

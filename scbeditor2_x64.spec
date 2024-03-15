@@ -87,7 +87,6 @@ a = Analysis(
                 'pandas',
                 'pefile',
                 'pexpect',
-                'pillow',
                 'pip',
                 'pipenv',
                 'platformdirs',

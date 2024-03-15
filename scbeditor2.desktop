@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=scbeditor2
-Version=2.0.3-15
+Version=2.0.8-23
 Exec=/usr/bin/scbeditor2
 Comment=This application manages bmp image to be converted to Apple II GS pic format.
 Icon=/usr/share/icons/scbeditor2.png
@@ -8,4 +8,4 @@ Type=Application
 Terminal=false
 StartupNotify=true
 Encoding=UTF-8
-Categories=Development;
+Categories=Graphics;

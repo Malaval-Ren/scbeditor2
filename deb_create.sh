@@ -33,7 +33,7 @@
 #		Problem not solved to convert script 'preinst'
 #		https://stackoverflow.com/questions/54480244/how-to-easily-convert-debian-script-to-rpm-script
 
-version='1.43'
+version='1.45'
 
 # definition all colors and styles to use with an echo
 
@@ -143,10 +143,10 @@ ERROR_GIT_init=$(($ERROR_GIT+1))
 aError=$NO_ERROR
 
 # How to install package 
-# sudo apt-get install ./scbeditor2_2.0.7-21_amd64.deb
+# sudo apt-get install ./scbeditor2_2.0.8-23_amd64.deb
 #
 # How to uninstall package
-# sudo apt-get remove ./scbeditor2_2.0.7-21_amd64.deb
+# sudo apt-get remove ./scbeditor2_2.0.8-23_amd64.deb
 
 # How to uninstall package manualy
 # sudo rm -r /usr/bin/scbeditor2
@@ -154,7 +154,7 @@ aError=$NO_ERROR
 # sudo rm -r /usr/share/icons/scbeditor2.png
 
 # if problem
-# sudo dpkg -i ./scbeditor2_2.0.7-21_amd64.deb
+# sudo dpkg -i ./scbeditor2_2.0.8-23_amd64.deb
 # sudo dpkg -r scbeditor2
 
 #Clear the terminal screen
@@ -398,10 +398,11 @@ then
 	echo
 	echo -e $BGreen "Package name        :" "$packageSrcBase"".deb" $Color_Off
 	echo
-	dpkg-deb --build --nocheck $packageSrcBase
+	dpkg-deb -v --nocheck --build $packageSrcBase
     aError=$?
 	if [ $aError -ne 0 ] || [ ! -f "$packageSrcBase"".deb" ]  
 	then
+		sudo chown renaud:renaud -R "$packageSrcBase"
 		echo
 		echo -e $BRed "dpkg-deb failed ! error =" "$aError"  $Color_Off
 		exit $ERROR_SH_FAILED
@@ -416,9 +417,13 @@ then
 	sudo alien -r -k $packageSrcBase".deb" 
     if [ $? -ne 0 ]
     then
+		sudo chown renaud:renaud -R "$packageSrcBase"
         echo -e $BRed "Failed to do convert .deb to .rpm ! error =" $? $Color_Off
         exit $ERROR_SH_FILE
     fi
+	sudo chown renaud:renaud -R "$packageSrcBase"
+	sudo chown renaud:renaud ./scbeditor2_2.0.8-23_amd64.deb
+	sudo chown renaud:renaud ./scbeditor2-2.0.8-23.x86_64.rpm
 	echo
 	echo -e $BGreen "Convert is done with success." $Color_Off
 	cd ..

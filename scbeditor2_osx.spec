@@ -70,7 +70,7 @@ app = BUNDLE(
     name='scbeditor2.app',
     icon='appIcon_T_1024x1024.icns',
     bundle_identifier=None,
-    version='2.0.7.21',
+    version='2.0.8.23',
     info_plist={
         'NSPrincipalClass': 'NSApplication',
         'NSAppleScriptEnabled': False,
