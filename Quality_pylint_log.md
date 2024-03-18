@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  ven. 15 mars 2024 19:10:55
+date :  lun. 18 mars 2024 21:27:02
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -12,7 +12,7 @@ date :  ven. 15 mars 2024 19:10:55
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | *Project* |  |
-| scbeditor2 | 2.0.8.23 |
+| scbeditor2 | 2.1.8.25 |
 
 &nbsp;
 
@@ -57,8 +57,27 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+*** Module src.my_icon_pictures  
+
+src\my_icon_pictures.py:73:4: R0914: Too many local variables (16/15) (too-many-locals)
+
+------------------------------------------------------------------
+Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
+
+&nbsp;
+
+## *./src/my_import_window.py*
+
+> pylint: disable=line-too-long  
+> pylint: disable=too-many-instance-attributes  
+  
+*** Module src.my_import_window  
+
+src\my_import_window.py:133:4: R0914: Too many local variables (24/15) (too-many-locals)
+src\my_import_window.py:133:4: R0915: Too many statements (69/50) (too-many-statements)
+
+------------------------------------------------------------------
+Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
 
 &nbsp;
 
@@ -89,11 +108,10 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window  
 
-src\my_main_window.py:232:4: R0915: Too many statements (62/50) (too-many-statements)
-src\my_main_window.py:204:4: W0238: Unused private member `MyMainWindow.__mw_clock_in_window_bar(self)` (unused-private-member)
+src\my_main_window.py:232:4: R0915: Too many statements (64/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
+Your code has been rated at 9.95/10 (previous run: 9.91/10, +0.05)
 
 &nbsp;
 
@@ -123,21 +141,21 @@ Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
 
 &nbsp;
 
-## *./src/my_main_window_palette.py*
+## *./src/my_main_window_pallet.py*
 
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
-*** Module src.my_main_window_palette  
+*** Module src.my_main_window_pallet  
 
-src\my_main_window_palette.py:280:4: R0914: Too many local variables (32/15) (too-many-locals)
-src\my_main_window_palette.py:280:4: R0912: Too many branches (21/12) (too-many-branches)
-src\my_main_window_palette.py:280:4: R0915: Too many statements (148/50) (too-many-statements)
-src\my_main_window_palette.py:643:4: R0912: Too many branches (14/12) (too-many-branches)
-src\my_main_window_palette.py:643:4: R0915: Too many statements (53/50) (too-many-statements)
+src\my_main_window_pallet.py:280:4: R0914: Too many local variables (32/15) (too-many-locals)
+src\my_main_window_pallet.py:280:4: R0912: Too many branches (21/12) (too-many-branches)
+src\my_main_window_pallet.py:280:4: R0915: Too many statements (148/50) (too-many-statements)
+src\my_main_window_pallet.py:643:4: R0912: Too many branches (14/12) (too-many-branches)
+src\my_main_window_pallet.py:643:4: R0915: Too many statements (54/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.89/10 (previous run: 9.93/10, -0.04)
+Your code has been rated at 9.89/10 (previous run: 9.89/10, +0.00)
 
 &nbsp;
 
@@ -171,5 +189,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.979 / 10**
+**note = 9.967 / 10**
 
