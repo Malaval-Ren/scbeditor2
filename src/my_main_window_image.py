@@ -44,7 +44,7 @@ import src.my_constants as constant
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 # from .my_main_window  import mv_entry_black_focus_out, mv_on_single_key, mw_print_widget_under_mouse
-# from .my_main_window_palette import mwp_entry_black_focus_out, mwp_select_color_rad_btn
+# from .my_main_window_pallet import mwp_entry_black_focus_out, mwp_select_color_rad_btn
 
 # __name__ = "MyMainWindowImage"
 
@@ -80,7 +80,7 @@ class MyMainWindowImage:
         self.c_alert_windows = MyAlertWindow( c_main_window, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
         self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
-        self.c_main_palette = None                 # top icon menu bar : MyMainWindowPalette
+        self.c_main_pallet = None                 # top icon menu bar : MyMainWindowPallet
 
         self.a_original_img = None
         self.a_work_img = None
@@ -130,7 +130,7 @@ class MyMainWindowImage:
     def __mwi_click_on_picture( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
         # print( "mw_click_on_picture()  ", event)
-        self.c_main_palette.mwp_entry_black_focus_out()
+        self.c_main_pallet.mwp_entry_black_focus_out()
         if self.a_work_img:
             # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
             i_pos_x = max( event.x, 0)
@@ -158,17 +158,17 @@ class MyMainWindowImage:
             self.a_scb_lbl.configure( text=str( int( i_offset / 16)))
             self.a_line_slider.set( int( i_offset / 16))
 
-            # Select the radio button color in the palette
-            self.c_main_palette.mwp_select_color_rad_btn( i_offset)
+            # Select the radio button color in the pallet
+            self.c_main_pallet.mwp_select_color_rad_btn( i_offset)
 
             # print( "mw_click_on_picture() i_offset = ", str( i_offset))
-            self.c_main_palette.mwp_color_btn_rad( i_offset)
+            self.c_main_pallet.mwp_color_btn_rad( i_offset)
 
             # Draw bar chart for colors in usage in a line
             self.mwi_draw_bar_chart( i_offset, i_pos_y)
 
             # Display zoom of a part of the picture
-            self.c_main_palette.mwp_draw_zoom_square( i_pos_x, i_pos_y)
+            self.c_main_pallet.mwp_draw_zoom_square( i_pos_x, i_pos_y)
 
             self.w_tk_root.update()
             print()
@@ -281,17 +281,17 @@ class MyMainWindowImage:
 
     # ####################### __mwi_change_scb_line ########################
     def __mwi_change_scb_line( self):
-        """ Change the line palette """
+        """ Change the line pallet """
         if self.a_original_img:
             i_line_number = int( self.a_pos_y_true_lbl.cget( "text"))
-            i_current_palette_number = int( self.a_scb_lbl.cget( "text"))
-            i_new_palette_number = int( self.a_line_slider.get())
-            if i_current_palette_number != i_new_palette_number:
+            i_current_pallet_number = int( self.a_scb_lbl.cget( "text"))
+            i_new_pallet_number = int( self.a_line_slider.get())
+            if i_current_pallet_number != i_new_pallet_number:
                 # print( " Convert the index." )
-                if i_current_palette_number > i_new_palette_number:
-                    i_delta = (i_new_palette_number - i_current_palette_number) * 16
+                if i_current_pallet_number > i_new_pallet_number:
+                    i_delta = (i_new_pallet_number - i_current_pallet_number) * 16
                 else:
-                    i_delta = abs( (i_current_palette_number - i_new_palette_number) * 16)
+                    i_delta = abs( (i_current_pallet_number - i_new_pallet_number) * 16)
 
                 for i_index in range( 0, 319, 1):
                     i_current_index = self.a_original_img.getpixel( ( i_index, i_line_number))
@@ -400,7 +400,7 @@ class MyMainWindowImage:
         a_usage_color_rry = [1] * 16
         a_result_color_rry = array.array( 'i')
         a_result_color_rry = [0] * 16
-        i_palette_number = int( i_offset / 16) * 16
+        i_pallet_number = int( i_offset / 16) * 16
 
         for i_loop in range( 0, constant.PICTURE_WIDTH, 2):
             i_offset = self.a_work_img.getpixel( ( i_loop, i_position_y))
@@ -420,7 +420,7 @@ class MyMainWindowImage:
         for i_loop in range( 0, 16, 1):
             i_hauteur = a_result_color_rry[i_loop]
             if a_result_color_rry[i_loop] > 0:
-                self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.c_main_palette.get_from_pal_btn_lst_color(i_palette_number+i_loop), outline='white')
+                self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.c_main_pallet.get_from_pal_btn_lst_color(i_pallet_number+i_loop), outline='white')
                 if a_usage_color_rry[i_loop] > 0 and a_usage_color_rry[i_loop] < 10:
                     self.a_bar_chart_cnvs.create_text( i_colmun_x+8, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
             i_colmun_x += 24
@@ -429,20 +429,20 @@ class MyMainWindowImage:
     def mwi_draw_scb_bar( self, i_color_offset):
         """ Draw the bar how display all the same SCB """
         # Draw the SCB rectangle
-        i_palette_number = int( i_color_offset / 16) * 16
-        # print( " offset= " + str( i_color_offset) + "  palette_number= " + str( i_palette_number))
+        i_pallet_number = int( i_color_offset / 16) * 16
+        # print( " offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
 
         self.a_scb_cnvs.delete( "all")
         for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
-            if i_inter == i_palette_number:
+            if i_inter == i_pallet_number:
                 self.a_scb_cnvs.create_rectangle( 0, i_loop, 24, i_loop+1, fill='blue', outline='blue')
             else:
                 i_inter = 0
 
     # ####################### mw_update_main_window ########################
-    def mwi_update_main_window_image( self, s_filename, a_work_img) -> bool:
+    def mwi_update_main_window_image( self, s_filename, a_work_img):
         """ Load a picture and fill the interface """
         if s_filename and a_work_img:
             self.a_original_img = a_work_img.copy()
@@ -452,8 +452,8 @@ class MyMainWindowImage:
 
             # disabled its for debug
             # for i_loop in range( 0, 60, 1):
-            #     i_palette_offset = self.a_work_img.getpixel( (0,i_loop))
-            #     print( str(i_loop) + " i_palette_Offset = " + str(i_palette_offset) + "  pal= " + str(int(i_palette_offset/16)) + " ndx= " + str( i_palette_offset - (int(i_palette_offset/16)) * 16))
+            #     i_pallet_offset = self.a_work_img.getpixel( (0,i_loop))
+            #     print( str(i_loop) + " i_pallet_Offset = " + str(i_pallet_offset) + "  pal= " + str(int(i_pallet_offset/16)) + " ndx= " + str( i_pallet_offset - (int(i_pallet_offset/16)) * 16))
 
             self.a_render = ImageTk.PhotoImage( self.a_work_img)
             self.a_picture_lbl.config( image=self.a_render)
@@ -461,10 +461,10 @@ class MyMainWindowImage:
 
             self.a_filename_lbl.config( text=os.path.basename( s_filename))
 
-    # ####################### mwi_set_palette ########################
-    def mwi_set_palette( self, c_palette):
-        """ Give access to method of c_palette """
-        self.c_main_palette = c_palette
+    # ####################### mwi_set_pallet ########################
+    def mwi_set_pallet( self, c_pallet):
+        """ Give access to method of c_pallet """
+        self.c_main_pallet = c_pallet
 
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
@@ -614,7 +614,7 @@ class MyMainWindowImage:
         self.a_more_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
 
         i_index_base_block += 1
-        a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Palette line", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h6 = Label( a_details_pic_frame, text="Pallet line", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h6.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=1, sticky='ew')
         self.a_scb_lbl = Label( a_details_pic_frame, text="   ", background='light grey', foreground='black')
         self.a_scb_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
@@ -623,8 +623,8 @@ class MyMainWindowImage:
 
         i_index_base_block += 1
         if self.s_platform == "Darwin":
-            a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_scb_btn = Button( a_details_pic_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=2, pady=0, sticky='ew')
         else:
-            a_change_scb_btn = Button( a_details_pic_frame, text='Change palette line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_change_scb_btn = Button( a_details_pic_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')

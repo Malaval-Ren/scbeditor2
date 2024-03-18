@@ -4,7 +4,7 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
 _Creation: December 31th, 2023..2024, by Renaud Malaval_
-_Last review: March 3rd, 2024, by Renaud Malaval_
+_Last review: March 18th, 2024, by Renaud Malaval_
 
 ## Features
 
@@ -17,7 +17,7 @@ _Last review: March 3rd, 2024, by Renaud Malaval_
 
 > note : My first release was on Apple IIGS **S.C.B. Editor** version 1.5a
 > You could found it in the image scbeditor.img.
-> Pascal source is loosed.
+> Pascal source code is loozed.
 
 ## **Documentations**
 
@@ -40,4 +40,5 @@ _Last review: March 3rd, 2024, by Renaud Malaval_
 - [GIT](https://git-scm.com/)
 - [GIMP](https://www.gimp.org/) : to edit picture
 - [Image Magick Display]https://imagemagick.org/) : to convert .png to .icns
-- [XnView](https://www.xnview.com/) : to view .icns Mac Os icon file
+- [XnView](https://www.xnview.com/) : to view .icns Mac Os icon file on Windows 10
+- [FlatIcon](https://www.flaticon.com) : source for wonderfull free picture

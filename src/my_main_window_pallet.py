@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-""" Module de creation pour la fenetre principale de la partie palette. """
+""" Module de creation pour la fenetre principale de la partie pallet. """
 
 # ###############################################################################################
 #                                   PYLINT
@@ -48,16 +48,16 @@ from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 from .my_tools import mt_hexlify_byte_string
 
-# __name__ = "MyMainWindowPalette"
+# __name__ = "MyMainWindowPallet"
 
 # ###############################################################################################
 # #######========================= constant private =========================
 
 # ###############################################################################################
 # #######=========================     GUI     =========================
-# ####################### MyMainWindow ########################
-class MyMainWindowPalette:
-    """ Create the main Windows Palette part of the application. """
+# ####################### MyMainWindowPallet ########################
+class MyMainWindowPallet:
+    """ Create the main Windows Pallet part of the application. """
     # Optimizing memory usage with slots
     # __slots__ = ["w_root_windows", "a_list_application_info" ]
 
@@ -83,10 +83,10 @@ class MyMainWindowPalette:
         self.s_init_pathname = os.getcwd()
         self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
         self.c_main_image = None                   # top icon menu bar : MyMainWindowPicture
-        self.c_main_palette = None                 # top icon menu bar : MyMainWindowPalette
+        self.c_main_pallet = None                  # top icon menu bar : MyMainWindowPallet
 
-        self.a_palette_number_lst = []
-        self.a_palette_button_lst = []
+        self.a_pallet_number_lst = []
+        self.a_pallet_button_lst = []
 
         self.color_radio_button = IntVar()
         self.a_red_ntr = None
@@ -115,12 +115,12 @@ class MyMainWindowPalette:
     # https://manytools.org/hacker-tools/ascii-banner/
     #
     # ######
-    # #     #  ####  ##### #####  ####  #    #    #####    ##   #      ###### ##### ##### ######    #####    ##   #####  #####
-    # #     # #    #   #     #   #    # ##  ##    #    #  #  #  #      #        #     #   #         #    #  #  #  #    #   #
-    # ######  #    #   #     #   #    # # ## #    #    # #    # #      #####    #     #   #####     #    # #    # #    #   #
-    # #     # #    #   #     #   #    # #    #    #####  ###### #      #        #     #   #         #####  ###### #####    #
-    # #     # #    #   #     #   #    # #    #    #      #    # #      #        #     #   #         #      #    # #   #    #
-    # ######   ####    #     #    ####  #    #    #      #    # ###### ######   #     #   ######    #      #    # #    #   #
+    # #     #  ####  ##### #####  ####  #    #    #####    ##   #       #      ###### #####    #####    ##   #####  #####
+    # #     # #    #   #     #   #    # ##  ##    #    #  #  #  #       #      #        #      #    #  #  #  #    #   #
+    # ######  #    #   #     #   #    # # ## #    #    # #    # #       #      #####    #      #    # #    # #    #   #
+    # #     # #    #   #     #   #    # #    #    #####  ###### #       #      #        #      #####  ###### #####    #
+    # #     # #    #   #     #   #    # #    #    #      #    # #       #      #        #      #      #    # #   #    #
+    # ######   ####    #     #    ####  #    #    #      #    # ######  ###### ######   #      #      #    # #    #   #
     #
     # ##########################################################################################
 
@@ -233,28 +233,28 @@ class MyMainWindowPalette:
 
     # ####################### __mwp_set_pen_color ########################
     def __mwp_set_pen_color( self):
-        """ Set a new color value in palette  """
+        """ Set a new color value in pallet  """
 
         self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
         # s_red = self.a_red_input_var.get()
         # s_green = self.a_green_input_var.get()
         # s_blue = self.a_blue_input_var.get()
         # i_index = int(self.a_btn_offset_lbl.cget( "text"))
-        # a_palette_button = self.a_palette_button_lst[i_index]
+        # a_pallet_button = self.a_pallet_button_lst[i_index]
         # # ready when color modification will be done
-        # a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
+        # a_pallet_button.configure( background= "#" + s_red + s_green + s_blue)
         #
-        # to do : Modify the picture palette
+        # to do : Modify the picture pallet
 
     # ####################### __mwp_copy_a_color ########################
     def __mwp_copy_a_color( self):
-        """ copy the selected color to the next click on a palette color """
+        """ copy the selected color to the next click on a pallet color """
         if self.i_color_to_copy_offset == -1:
             self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
 
     # ####################### __mwp_copy_line_color ########################
     def __mwp_copy_line_color( self):
-        """ copy the line selected color to the next click on a palette color """
+        """ copy the line selected color to the next click on a pallet color """
         if self.i_color_line_to_copy_offset == -1:
             self.i_color_line_to_copy_offset = int( self.a_btn_x_lbl.cget( "text"))
 
@@ -273,40 +273,40 @@ class MyMainWindowPalette:
 
     # ####################### get_from_pal_btn_lst_color ########################
     def get_from_pal_btn_lst_color(self, i_offset):
-        """ Frame with the palette button to left, and details to right """
-        return self.a_palette_button_lst[i_offset].cget( 'bg')
+        """ Frame with the pallet button to left, and details to right """
+        return self.a_pallet_button_lst[i_offset].cget( 'bg')
 
-    # ####################### mwp_palette_zone ########################
-    def mwp_palette_zone( self, a_bottom_frame, c_main_image, c_main_icon_bar):
-        """ Frame with the palette button to left, and details to right """
+    # ####################### mwp_pallet_zone ########################
+    def mwp_pallet_zone( self, a_bottom_frame, c_main_image, c_main_icon_bar):
+        """ Frame with the pallet button to left, and details to right """
         self.c_main_image = c_main_image
         self.c_main_icon_bar = c_main_icon_bar
         i_index_base_block = 0
-        a_palette_sep_h0 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h0.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
-        a_palette_sep_lbl_h0 = Label( a_bottom_frame, text="Palette", background=constant.BACKGROUD_COLOR_UI)
-        a_palette_sep_lbl_h0.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
-        a_palette_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h1.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
-        a_palette_sep_lbl_h1 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
+        a_pallet_sep_h0 = Separator( a_bottom_frame, orient='horizontal')
+        a_pallet_sep_h0.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
+        a_pallet_sep_lbl_h0 = Label( a_bottom_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI)
+        a_pallet_sep_lbl_h0.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
+        a_pallet_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
+        a_pallet_sep_h1.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
+        a_pallet_sep_lbl_h1 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
         if self.s_platform in [ "Darwin", "Linux" ]:
-            a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=130)
+            a_pallet_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=130)
         else:
-            a_palette_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
-        a_palette_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
-        a_palette_sep_h2.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
-        a_palette_sep_lbl_h2 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
+            a_pallet_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
+        a_pallet_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
+        a_pallet_sep_h2.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
+        a_pallet_sep_lbl_h2 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
         if self.s_platform in [ "Darwin", "Linux" ]:
-            a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=120)
+            a_pallet_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=120)
         else:
-            a_palette_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=100)
+            a_pallet_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=100)
 
-        # Create palette button left frame
-        a_palette_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        # Create pallet button left frame
+        a_pallet_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_palette_bottom_frame.place( x=2, y=20, width=590, height=276 )
+            a_pallet_bottom_frame.place( x=2, y=20, width=590, height=276 )
         else:
-            a_palette_bottom_frame.place( x=2, y=20, width=570, height=276 )
+            a_pallet_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
         # Creating a font object with little size for color buttons to reduce their size
         a_font_label = font.Font( size=6)
@@ -315,12 +315,12 @@ class MyMainWindowPalette:
         # Create a line of number for the column
         i_index_base_column = 1
         for i_loop in range( 0, 16, 1):
-            a_label = Label( a_palette_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label = Label( a_pallet_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-            self.a_palette_number_lst.append( a_label)
+            self.a_pallet_number_lst.append( a_label)
             i_index_base_column += 1
 
-        # Table of color button for the palette
+        # Table of color button for the pallet
         i_index_base_block += 1
         i_index_base_column = 0
         i_to = 0
@@ -329,7 +329,7 @@ class MyMainWindowPalette:
             i_from = i_to
             i_to = i_to + 48
             # First element of the line is its number
-            a_label = Label( a_palette_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
+            a_label = Label( a_pallet_bottom_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             if self.s_platform == "Darwin":
                 a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             else:
@@ -337,12 +337,12 @@ class MyMainWindowPalette:
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
-                a_button_color = Radiobutton( a_palette_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
+                a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
                 if self.s_platform in [ "Darwin", "Linux" ]:
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
-                self.a_palette_button_lst.append( a_button_color)
+                self.a_pallet_button_lst.append( a_button_color)
                 i_index_base_column += 1
                 i_index += 1
 
@@ -415,14 +415,14 @@ class MyMainWindowPalette:
 
         # move declaration of old button to be able to focus color entry in a loop with the key 'tab'
         if self.s_platform == "Darwin":
-            set_color_in_palette_with_arg = partial( self.__mwp_set_color_in_palette, -1)
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_palette_with_arg, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            set_color_in_pallet_with_arg = partial( self.__mwp_set_color_in_pallet, -1)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=1, sticky='ew')
             self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=5, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
         else:
-            set_color_in_palette_with_arg = partial( self.__mwp_set_color_in_palette, -1)
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_palette_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            set_color_in_pallet_with_arg = partial( self.__mwp_set_color_in_pallet, -1)
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
             self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=7, height=1, relief='raised', background='light grey')
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
@@ -435,7 +435,7 @@ class MyMainWindowPalette:
         i_index_base_block += 1
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1, sticky='ew')
-        a_offset_lbl = Label( a_color_bottom_frame, text="Palette Y", background=constant.BACKGROUD_COLOR_UI)
+        a_offset_lbl = Label( a_color_bottom_frame, text="Pallet Y", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=1, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset X", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
@@ -634,42 +634,42 @@ class MyMainWindowPalette:
 
         return b_result
 
-    # ####################### select_color_rad_btn ########################
+    # ####################### mwp_select_color_rad_btn ########################
     def mwp_select_color_rad_btn( self, i_offset):
-        """ Select the radio button color in the palette """
-        self.a_palette_button_lst[i_offset].select()
+        """ Select the radio button color in the pallet """
+        self.a_pallet_button_lst[i_offset].select()
 
     # ####################### mwp_color_btn_rad ########################
     def mwp_color_btn_rad( self, i_number):
-        """ Palette of color buttons. i_number is a value form 0 to 255 one of the palette radio button """
+        """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
         if self.i_color_to_copy_offset != -1:
             i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
                 "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
             self.i_color_to_copy_offset = -1
             if i_result == 1:
-                self.__mwp_set_color_in_palette( i_number)
+                self.__mwp_set_color_in_pallet( i_number)
         elif self.i_color_line_to_copy_offset != -1:
             __i_complete = int( i_number / 16)
             i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
                 "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( __i_complete) + " ?")
             self.i_color_line_to_copy_offset = -1
             if i_result == 1:
-                self.__mwp_set_line_in_palette( i_number, __i_complete)
+                self.__mwp_set_line_in_pallet( i_number, __i_complete)
         else:
             self.mwp_entry_black_focus_out()
             #print( "mwp_color_btn_rad() i_number       = ", str( i_number))
             a_original_img = self.c_main_image.mwi_get_original_image()
-            a_palette_list = a_original_img.getpalette()
-            #print( "mwp_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
-            if (i_number * 3) > len( a_palette_list):
+            a_pallet_list = a_original_img.getpalette()
+            #print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
+            if (i_number * 3) > len( a_pallet_list):
                 print( "mwp_color_btn_rad() i_number       = ", str( i_number))
-                print( "mwp_color_btn_rad() a_palette_list = ", str( len( a_palette_list)))
+                print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
                 print( "mwp_color_btn_rad() FAILED")
 
             i_tmp_number = i_number * 3
-            i_red = a_palette_list[i_tmp_number]
-            i_green = a_palette_list[i_tmp_number + 1]
-            i_blue = a_palette_list[i_tmp_number + 2]
+            i_red = a_pallet_list[i_tmp_number]
+            i_green = a_pallet_list[i_tmp_number + 1]
+            i_blue = a_pallet_list[i_tmp_number + 2]
             if int( i_red) > 15:
                 s_red = f'{int( i_red):X}'
             else:
@@ -696,18 +696,21 @@ class MyMainWindowPalette:
             # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
             self.a_btn_offset_lbl.configure( text=str( i_number))       # label under Offset
             if i_number > 15:
-                self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Palette Y
+                self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Pallet Y
             else:
-                self.a_btn_x_lbl.configure( text="0")                   # label under Palette Y
+                self.a_btn_x_lbl.configure( text="0")                   # label under Pallet Y
 
             self.a_btn_y_lbl.configure( text=str( __i_rest))            # label under Offset X
 
             # Draw the SCB rectangle
             self.c_main_image.mwi_draw_scb_bar( i_number)
 
-    # ####################### __mwp_set_color_in_palette ########################
-    def __mwp_set_color_in_palette( self, i_new_index):
-        """ Set a new color value in palette  """
+             #set value for import a pallet from an another windows
+            self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
+
+    # ####################### __mwp_set_color_in_pallet ########################
+    def __mwp_set_color_in_pallet( self, i_new_index):
+        """ Set a new color value in pallet  """
         s_red   = self.a_red_input_var.get().upper()
         s_green = self.a_green_input_var.get().upper()
         s_blue  = self.a_blue_input_var.get().upper()
@@ -716,25 +719,25 @@ class MyMainWindowPalette:
         else:
             i_index = i_new_index
         # print( "i_index    = ", str( i_index))
-        a_palette_button = self.a_palette_button_lst[i_index]
+        a_pallet_button = self.a_pallet_button_lst[i_index]
         # ready when color modification will be done
         # print( "btn: red   = ", s_red, "  green = ", s_green, "  blue  = ", s_blue)
-        a_palette_button.configure( background= "#" + s_red + s_green + s_blue)
-        # Update the picture palette
+        a_pallet_button.configure( background= "#" + s_red + s_green + s_blue)
+        # Update the picture pallet
         a_original_img = self.c_main_image.mwi_get_original_image()
-        a_palette_list = a_original_img.getpalette()
+        a_pallet_list = a_original_img.getpalette()
         # s_red   = self.a_red_ntr_dec_lbl.cget( "text")
         # s_green = self.a_green_ntr_dec_lbl.cget( "text")
         # s_blue  = self.a_blue_ntr_dec_lbl.cget( "text")
         # print( "btn: red   = ", s_red, "  green = ", s_green, "  blue  = ", s_blue)
         # i_index is a number of radio button and the pallete is 3 int for RGB so I do a * 3
-        i_palette_index = i_index * 3
-        # print( "pal: red   = ", str( a_palette_list[ i_palette_index]), "  green = ", str( a_palette_list[ i_palette_index+1]), "  blue  = ", str( a_palette_list[ i_palette_index+2]))
-        a_palette_list[ i_palette_index] = int( self.a_red_ntr_dec_lbl.cget( "text"))
-        a_palette_list[ i_palette_index+1] = int( self.a_green_ntr_dec_lbl.cget( "text"))
-        a_palette_list[ i_palette_index+2] = int( self.a_blue_ntr_dec_lbl.cget( "text"))
-        # print( "pal: red   = ", str( a_palette_list[ i_palette_index]), "  green = ", str( a_palette_list[ i_palette_index]+1), "  blue  = ", str( a_palette_list[ i_palette_index+2]))
-        a_original_img.putpalette( a_palette_list, rawmode='RGB')
+        i_pallet_index = i_index * 3
+        # print( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index+1]), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
+        a_pallet_list[ i_pallet_index] = int( self.a_red_ntr_dec_lbl.cget( "text"))
+        a_pallet_list[ i_pallet_index+1] = int( self.a_green_ntr_dec_lbl.cget( "text"))
+        a_pallet_list[ i_pallet_index+2] = int( self.a_blue_ntr_dec_lbl.cget( "text"))
+        # print( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index]+1), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
+        a_original_img.putpalette( a_pallet_list, rawmode='RGB')
         self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
         self.mwp_color_btn_rad( i_index)
 
@@ -751,25 +754,25 @@ class MyMainWindowPalette:
 
         self.w_tk_root.update()
 
-    # ####################### __mwp_set_line_in_palette ########################
-    def __mwp_set_line_in_palette( self, i_new_index, i_line_number):
-        """ Set a new color value in palette  """
-        # Update the picture palette
+    # ####################### __mwp_set_line_in_pallet ########################
+    def __mwp_set_line_in_pallet( self, i_new_index, i_line_number):
+        """ Set a new color value in pallet  """
+        # Update the picture pallet
         a_original_img = self.c_main_image.mwi_get_original_image()
-        a_palette_list = a_original_img.getpalette()
+        a_pallet_list = a_original_img.getpalette()
 
         i_destination = (i_line_number - 1) * 16 * 3
         for i_loop in range( self.i_color_line_to_copy_offset * 16 * 3, 16*3, 1):
-            a_palette_list[i_destination] = a_palette_list[ i_loop]
+            a_pallet_list[i_destination] = a_pallet_list[ i_loop]
             i_destination += 1
 
-        a_original_img.putpalette( a_palette_list, rawmode='RGB')
+        a_original_img.putpalette( a_pallet_list, rawmode='RGB')
 
-        self.__mwp_set_color_in_palette( i_new_index)
+        self.__mwp_set_color_in_pallet( i_new_index)
 
     # ####################### mwp_change_focus ########################
     def mwp_change_focus( self, event):
-        """ De selected an entry widget, when a button is clicked ie the palette button """
+        """ De selected an entry widget, when a button is clicked ie the pallet button """
         event.widget.focus_set()
 
     # ####################### mwp_draw_zoom_square ########################
@@ -810,15 +813,15 @@ class MyMainWindowPalette:
         """ the state for cursor """
         return self.i_around_cursor
 
+    # ####################### mwp_get_pallet_btn ########################
+    def mwp_get_pallet_btn( self, i_element) -> Radiobutton:
+        """ Return the color of the button radio """
+        return self.a_pallet_button_lst[i_element]
+
     # ####################### mwp_reset_around_cursor ########################
     def mwp_reset_around_cursor( self):
         """ the state for cursor """
         self.i_around_cursor = -1
-
-    # ####################### mwp_get_palette_btn ########################
-    def mwp_get_palette_btn( self, i_element) -> Radiobutton:
-        """ Return the color of the button radio """
-        return self.a_palette_button_lst[i_element]
 
     # ####################### __mv_entry_red_focus_out ########################
     def mwp_entry_black_focus_out( self):

@@ -52,7 +52,8 @@ class MyAboutWindow:
     def __init__( self, c_the_main_window, list_application_info):
         """
             all this parameter are created in main()
-            w_parent_windows : the parent windows
+            c_the_main_window : the parent windows
+            list_application_info : all information about application
         """
         self.c_the_main_window = c_the_main_window
         self.a_list_application_info = list_application_info
@@ -111,13 +112,14 @@ class MyAboutWindow:
         __s_4_part = \
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
             '  ' + self.a_list_application_info[3][2] + '\n' + \
-            '  ' + self.a_list_application_info[3][3] + '\n'
+            '  ' + self.a_list_application_info[3][3] + '\n' + \
+            '  ' + self.a_list_application_info[3][4] + '\n'            
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
         __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved' + '\n' + \
             '\n' + \
             'eMail' + '\t' + self.a_list_application_info[7] + '\n'
 
-        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=18)  # , exportselection=0, takefocus=0
+        a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
         a_middle_text.insert( 'end', self.a_list_application_info[1] + '\n', "bold-italic")
@@ -140,16 +142,16 @@ class MyAboutWindow:
 
     # ####################### __aw_set_window_size ########################
     def __aw_set_window_size( self):
-        """ Set the size of the configuration windows """
+        """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
         if self.s_platform == "Linux":
             self.i_width = 592
-            self.i_height = 358
+            self.i_height = 374
         elif self.s_platform == "Darwin":
             self.i_width = 552
-            self.i_height = 290
+            self.i_height = 306
         elif self.s_platform == "Windows":
             self.i_width = 592
-            self.i_height = 340
+            self.i_height = 356
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)

@@ -42,7 +42,7 @@ import src.my_constants as constant
 from .my_icon_pictures import MyIconPictures
 from .my_main_window_icons_bar import MyMainWindowIconsBar
 from .my_main_window_image import MyMainWindowImage
-from .my_main_window_palette import MyMainWindowPalette
+from .my_main_window_pallet import MyMainWindowPallet
 from .my_alert_window import MyAlertWindow
 from .my_tools import mt_save_file
 
@@ -92,7 +92,7 @@ class MyMainWindow:
         self.s_init_pathname = os.getcwd()
         self.c_main_icon_bar = None             # top icon menu bar : MyMainWindowIconsBar
         self.c_main_image = None                # top icon menu bar : MyMainWindowImage
-        self.c_main_palette = None              # top icon menu bar : MyMainWindowPalette
+        self.c_main_pallet = None              # top icon menu bar : MyMainWindowPallet
 
     # ####################### __repr__ ########################
     def __repr__( self) -> str:
@@ -135,7 +135,7 @@ class MyMainWindow:
         # same line for origin to left
         i_run_to_left = i_true_x
         i_run_offset = i_offset
-        i_around_cursor = self.c_main_palette.mwp_get_around_cursor()
+        i_around_cursor = self.c_main_pallet.mwp_get_around_cursor()
         while i_run_to_left >= 0:
             if (i_offset == i_run_offset) and (i_offset != i_around_cursor):
                 a_original_img.putpixel( (i_run_to_left, i_true_y), i_around_cursor)
@@ -160,7 +160,7 @@ class MyMainWindow:
         """ Replace a color for line with the same SCB """
         a_original_img = self.c_main_image.mwi_get_original_image()
         if a_original_img:
-            i_around_cursor = self.c_main_palette.mwp_get_around_cursor()
+            i_around_cursor = self.c_main_pallet.mwp_get_around_cursor()
             i_offset = a_original_img.getpixel( ( i_true_x, i_true_y))
             print( "offset to change = " + str( i_offset) + " by = " + str( i_around_cursor))
 
@@ -185,7 +185,7 @@ class MyMainWindow:
                     else:
                         break
 
-            self.c_main_palette.mwp_reset_around_cursor()
+            self.c_main_pallet.mwp_reset_around_cursor()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -212,7 +212,7 @@ class MyMainWindow:
 
     # ####################### __mw_change_focus ########################
     def __mw_change_focus( self, event):
-        """ De selected an entry widget, when a button is clicked ie the palette button """
+        """ De selected an entry widget, when a button is clicked ie the pallet button """
         event.widget.focus_set()
 
     # ##########################################################################################
@@ -231,8 +231,8 @@ class MyMainWindow:
     # ####################### mw_create_main_window ########################
     def mw_create_main_window( self):
         """ Design the main windows """
-        bvertical = True        # False
-        if bvertical is True:
+        b_vertical = True        # or False for futur feature with a preference dialog to chose the prefered mode
+        if b_vertical is True:
             self.i_main_window_width += 100
             if self.s_platform == "Linux":
                 self.i_main_window_height -= 100
@@ -268,36 +268,36 @@ class MyMainWindow:
         a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
         # Create picture frame
         a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if bvertical is True:
+        if b_vertical is True:
             a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
         else:
             a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
-        # Create palette frame
-        a_palette_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if bvertical is True:
-            a_palette_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+        # Create pallet frame
+        a_pallet_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if b_vertical is True:
+            a_pallet_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         else:
-            a_palette_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+            a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         self.w_tk_root.update()
         print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
         print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
         print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
-        print( "a_palette_frame     : width= " + str( a_palette_frame.winfo_width()) + " height= ", str( a_palette_frame.winfo_height()))
+        print( "a_pallet_frame      : width= " + str( a_pallet_frame.winfo_width()) + " height= ", str( a_pallet_frame.winfo_height()))
 
         # Create line or column 1 for action icons
         self.c_main_icon_bar = MyMainWindowIconsBar( self, self.w_tk_root, self.a_list_application_info, a_top_bar_frame)
-        if bvertical is True:
-            self.c_main_icon_bar.mwib_create_left_bar_icons( 1)
+        if b_vertical is True:
+            self.c_main_icon_bar.mwib_create_left_bar_icons( 1)     # vertical on left
         else:
-            self.c_main_icon_bar.mwib_create_top_bar_icons( 1)
+            self.c_main_icon_bar.mwib_create_top_bar_icons( 1)      # horizontal on top
         # Create line 2 for picture
         self.c_main_image = MyMainWindowImage( self.w_tk_root, self)
         self.c_main_image.mwi_picture_zone( a_pic_frame, a_pic_frame.winfo_width(), self.c_main_icon_bar)
         self.c_main_icon_bar.mwib_set_main_image( self.c_main_image)
-        # Create line 3 for palette
-        self.c_main_palette = MyMainWindowPalette( self.w_tk_root, self)
-        self.c_main_palette.mwp_palette_zone( a_palette_frame, self.c_main_image, self.c_main_icon_bar)
-        self.c_main_image.mwi_set_palette( self.c_main_palette)
+        # Create line 3 for pallet
+        self.c_main_pallet = MyMainWindowPallet( self.w_tk_root, self)
+        self.c_main_pallet.mwp_pallet_zone( a_pallet_frame, self.c_main_image, self.c_main_icon_bar)
+        self.c_main_image.mwi_set_pallet( self.c_main_pallet)
 
         self.w_tk_root.update()
         # print( "Calcul height       : " + str( self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height())))
@@ -310,8 +310,8 @@ class MyMainWindow:
         self.w_tk_root.bind( "<Right>" , self.c_main_image.mwi_on_single_key)
 
         # disabled during debug
-        # if self.s_platform == "Windows":
-        #     self.__mw_clock_in_window_bar()
+        if self.s_platform == "Windows":
+            self.__mw_clock_in_window_bar()
             # if self.a_work_img:
             #     self.__mw_print_widget_under_mouse( self.w_tk_root)
 
@@ -323,9 +323,9 @@ class MyMainWindow:
             self.c_main_image.mwi_update_main_window_image( s_filename, a_work_img)
 
             a_work_img = self.c_main_image.mwi_get_working_image()
-            a_palette_list = a_work_img.getpalette()
+            a_pallet_list = a_work_img.getpalette()
             # Disabled for debug
-            # print( 'Palette :')
+            # print( 'Pallet :')
             i_element = 0
             i_to = 0
             # Disabled for debug
@@ -340,16 +340,16 @@ class MyMainWindow:
                 #     s_my_hex = str( i_loop) + " "
 
                 for i_index in range( i_from, i_to, 3):
-                    s_red = f'{a_palette_list[ i_index]:02X}'
-                    s_green = f'{a_palette_list[ i_index + 1]:02X}'
-                    s_blue = f'{a_palette_list[ i_index + 2]:02X}'
+                    s_red = f'{a_pallet_list[ i_index]:02X}'
+                    s_green = f'{a_pallet_list[ i_index + 1]:02X}'
+                    s_blue = f'{a_pallet_list[ i_index + 2]:02X}'
                     # Disabled for debug
                     # s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
-                    a_color_btn_rad = self.c_main_palette.mwp_get_palette_btn( i_element)
+                    a_color_btn_rad = self.c_main_pallet.mwp_get_pallet_btn( i_element)
                     # print( "mw_update_main_window() i_index = ", str( i_index))
-                    config_palette_bottom_with_arg = partial( self.c_main_palette.mwp_color_btn_rad, int( i_index / 3))
-                    a_color_btn_rad.configure( command=config_palette_bottom_with_arg)
+                    config_pallet_bottom_with_arg = partial( self.c_main_pallet.mwp_color_btn_rad, int( i_index / 3))
+                    a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
                     a_color_btn_rad.configure( background="#" + s_red + s_green + s_blue)
                     i_element += 1
 
@@ -424,8 +424,8 @@ class MyMainWindow:
     def mw_print_widget_under_mouse( self, event):
         """ Show position of the mouse in the loaded picture """
         a_original_img = self.c_main_image.mwi_get_original_image()
-        if a_original_img:              #  and self.c_main_palette:
-            self.c_main_palette.mwp_entry_black_focus_out()
+        if a_original_img:              #  and self.c_main_pallet:
+            self.c_main_pallet.mwp_entry_black_focus_out()
             i_pos_x = event.x
             i_pos_y = event.y
             # Use only the pair values, click is done in the picture zoomed x 2

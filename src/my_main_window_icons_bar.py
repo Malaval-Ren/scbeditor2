@@ -39,6 +39,7 @@ import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_about_window import MyAboutWindow
+from .my_import_window import MyImportPalletWindow
 from .my_alert_window import MyAlertWindow
 from .my_progress_bar_window import MyProgressBarWindow
 
@@ -79,17 +80,19 @@ class MyMainWindowIconsBar:
         self.s_filename = None
         self.a_work_img = None
         self.c_mains_image = None
+        self.imported_pallet_lst = []
+        self.i_selected_pallet_in_main_windows = -1
 
     # ####################### __mwib_convert_bmp ########################
-    def __mwib_convert_bmp( self):
+    def __mwib_convert_bmp( self, s_filename, a_image):
         """ Convert bmp 4 bpp to 8 bpp """
         # converted_bmp = Image.new( 'P', (320, 200), color=0)
-        a_org_pal_list = self.a_work_img.getpalette()
+        a_org_pal_list = a_image.getpalette()
         if a_org_pal_list and len( a_org_pal_list) == 48:
-            converted_bmp = self.a_work_img.copy()
+            converted_bmp = a_image.copy()
             a_conv_pal_list = converted_bmp.getpalette()
 
-            # Copy the 1st palette at index 0 to all 1 .. 16
+            # Copy the 1st pallet at index 0 to all 1 .. 16
             for _ in range( 1, 16, 1):
                 for i_index in range( 0, 48, 1):
                     a_conv_pal_list.append( a_org_pal_list[i_index])
@@ -99,53 +102,54 @@ class MyMainWindowIconsBar:
             # print( "\na_org_pal_list= " + str( len( a_org_pal_list)) + "   a_conv_pal_list= " + str( len( a_conv_pal_list)))
 
             # Debug : use an another name to save it and using it
-            # s_path = os.path.dirname( self.s_filename)
-            # self.s_filename = s_path + mt_get_path_separator( self.s_platform) + "beach1.bmp"
+            # s_path = os.path.dirname( s_filename)
+            # s_filename = s_path + mt_get_path_separator( self.s_platform) + "beach1.bmp"
 
-            converted_bmp.save( self.s_filename, 'BMP')
-            self.a_work_img = Image.open( self.s_filename)
-            print( 'Upgraded to 8 bpp : ' + self.s_filename)
+            converted_bmp.save( s_filename, 'BMP')
+            a_image = Image.open( s_filename)
+            print( 'Upgraded to 8 bpp : ' + s_filename)
         else:
             self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
-            self.a_work_img = None
-            self.s_filename = None
+
+        return a_image
 
     # ####################### __mwib_load_and_check_bmp ########################
     def __mwib_load_and_check_bmp( self):
         """ Check size and number of color in bmp """
-
-        self.s_filename = mt_open_file( self.w_main_windows, self.c_main_class)
-        if self.s_filename:
-            print( '\nLoading : ' + self.s_filename)
+        a_image = None
+        s_filename = mt_open_file( self.w_main_windows, self.c_main_class)
+        if s_filename:
+            print( '\nLoading : ' + s_filename)
             # resize the original bmp from 320x200 to 640x400
-            self.a_work_img = Image.open( self.s_filename)
-            width, height = self.a_work_img.size
+            a_image = Image.open( s_filename)
+            width, height = a_image.size
             if width != 320 or height != 200:
-                self.a_work_img = None
                 # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
                 self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
-                self.a_work_img = None
-                self.s_filename = None
+                a_image = None
+                s_filename = None
             else:
-                a_palette_list = self.a_work_img.getpalette()
-                if len( a_palette_list) < 768:      # Less than 256 colors 2, 4 bpp
+                a_pallet_list = a_image.getpalette()
+                if len( a_pallet_list) < 768:      # Less than 256 colors 2, 4 bpp
                     i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "This bmp file don't have 256 colors (4 bpp).\nDo you agree improvement to 256 colors (8 bpp) and replace it?")
                     if i_result == 1:
-                        self.__mwib_convert_bmp()
+                        a_image = self.__mwib_convert_bmp( s_filename, a_image)
                     else:
-                        self.a_work_img = None
-                        self.s_filename = None
-                elif len( a_palette_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
+                        a_image = None
+                        s_filename = None
+                elif len( a_pallet_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
                     self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
-                    self.a_work_img = None
-                    self.s_filename = None
+                    a_image = None
+                    s_filename = None
 
-    # ####################### __mwib_dump_palette_bmp ########################
-    # def __mwib_dump_palette_bmp( self):
-    #     """ dump the palette of the current image a_work_img """
+        return s_filename, a_image
+
+    # ####################### __mwib_dump_pallet_bmp ########################
+    # def __mwib_dump_pallet_bmp( self):
+    #     """ dump the pallet of the current image a_work_img """
     #     if self.a_work_img:
-    #         a_palette_list = self.a_work_img.getpalette()
-    #         print( 'Palette :')
+    #         a_pallet_list = self.a_work_img.getpalette()
+    #         print( 'Pallet :')
     #         i_to = 0
     #         for i_loop in range( 0, 16, 1):
     #             i_from = i_to
@@ -156,9 +160,9 @@ class MyMainWindowIconsBar:
     #                 s_my_hex = str( i_loop) + " "
 
     #             for i_index in range( i_from, i_to, 3):
-    #                 s_red = f'{a_palette_list[ i_index]:02X}'
-    #                 s_green = f'{a_palette_list[ i_index + 1]:02X}'
-    #                 s_blue = f'{a_palette_list[ i_index + 2]:02X}'
+    #                 s_red = f'{a_pallet_list[ i_index]:02X}'
+    #                 s_green = f'{a_pallet_list[ i_index + 1]:02X}'
+    #                 s_blue = f'{a_pallet_list[ i_index + 2]:02X}'
     #                 s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
     #             print( s_my_hex)
@@ -168,11 +172,11 @@ class MyMainWindowIconsBar:
         """ Check bitmap to synchronize all lines to use right scb """
 
         self.w_front_window = MyProgressBarWindow( self.c_main_class, self.a_list_application_info)
-        self.w_front_window.pbw_create_progres_bar_window( 200, "BMP palette checking", "Check bitmap to synchronize all lines to use right SCB.")
+        self.w_front_window.pbw_create_progres_bar_window( 200, "BMP pallet checking", "Check bitmap to synchronize all lines to use right SCB.")
         # print()
-        # self.__dump_palette_bmp()
+        # self.__dump_pallet_bmp()
         # print()
-        # a_palette_list = self.a_work_img.getpalette()
+        # a_pallet_list = self.a_work_img.getpalette()
 
         self.w_front_window.pbw_progress_bar_start()
         for i_picture_line_y in range( 0, 199, 1):
@@ -181,7 +185,7 @@ class MyMainWindowIconsBar:
             i_big_index = 0
             # i_big_pos_x = 0
             self.w_front_window.pbw_progress_bar_step()
-            # - parse a line to get the bigger index of a palette to compute the right line of color to use (SCB)
+            # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
             for i_loop in range( 0, 319, 1):
                 i_first_color_offset = self.a_work_img.getpixel( ( i_loop, i_picture_line_y))
                 if i_first_color_offset > i_big_index:
@@ -225,13 +229,13 @@ class MyMainWindowIconsBar:
     def __mwib_open_box( self):
         """ Button load of the main window """
         self.c_the_log.add_string_to_log( 'Do load picture')
-        self.__mwib_load_and_check_bmp()
+        self.s_filename, self.a_work_img = self.__mwib_load_and_check_bmp()
         if self.s_filename and self.a_work_img:
             # Display image already in 8 bpp or a converted to 8 bpp
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
             self.w_main_windows.update()
             self.c_mains_image.mwi_click_in_picture_center()
-            # increase valeur index to use the right line to be SCB ready
+            # Increase valeur index to use the right line to be SCB ready
             self.__mwib_validate_scb_in_bmp()
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
             self.w_main_windows.update()
@@ -244,6 +248,20 @@ class MyMainWindowIconsBar:
         if a_main_picture:
             self.c_the_log.add_string_to_log( 'Do save picture')
             self.c_main_class.mw_save_picture()
+
+    # ####################### __mwib_import_pallet_box ########################
+    def __mwib_import_pallet_box( self):
+        """ Button import pallet from an another picture """
+        if self.s_filename and self.a_work_img:
+            self.c_the_log.add_string_to_log( 'Do import pallet of picture')
+            s_filename, a_image = self.__mwib_load_and_check_bmp()
+            if s_filename and a_image:
+                self.w_front_window = MyImportPalletWindow( self.c_main_class)
+                self.w_front_window.ipw_create_import_window( a_image, self.a_work_img, self.i_selected_pallet_in_main_windows)
+                self.w_front_window = None
+                self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
+                self.w_main_windows.update()
+                self.c_mains_image.mwi_click_in_picture_center()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -289,6 +307,13 @@ class MyMainWindowIconsBar:
 
         i_column += 1
         if self.s_platform == "Darwin":
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_column += 1
+        if self.s_platform == "Darwin":
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
         else:
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
@@ -327,6 +352,13 @@ class MyMainWindowIconsBar:
 
         i_row_line += 1
         if self.s_platform == "Darwin":
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
+        else:
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+
+        i_row_line += 1
+        if self.s_platform == "Darwin":
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground='light grey')
         else:
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
@@ -349,3 +381,8 @@ class MyMainWindowIconsBar:
     def mwib_set_main_image( self, c_mains_image):
         """ Return thye complete file pathname of the last image loaded """
         self.c_mains_image = c_mains_image
+
+    # ####################### mwib_set_selected_pallet_line ########################
+    def mwib_set_selected_pallet_line( self, i_selected_pallet):
+        """ Return thye complete file pathname of the last image loaded """
+        self.i_selected_pallet_in_main_windows = i_selected_pallet
