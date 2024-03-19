@@ -1,0 +1,14 @@
+ScbEditorII_T_16x16.png
+ScbEditorII_b_T_81x81.png
+openfile_b_T_81x81.png
+savefile_b_T_81x81.png
+color-pallet_b_T_81x81.png
+curseur_b_T_81x81.png
+fr_France_T_81x81.png
+error_T_81x81.png
+question2_T_81x81.png
+Warning_T_81x81.png
+Arrow_Right_T_16x16.png
+Arrow_Left_T_16x16.png
+Arrow_Up_T_16x16.png
+Arrow_Down_T_16x16.png
