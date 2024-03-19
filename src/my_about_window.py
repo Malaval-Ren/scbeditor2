@@ -113,7 +113,7 @@ class MyAboutWindow:
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
             '  ' + self.a_list_application_info[3][2] + '\n' + \
             '  ' + self.a_list_application_info[3][3] + '\n' + \
-            '  ' + self.a_list_application_info[3][4] + '\n'            
+            '  ' + self.a_list_application_info[3][4] + '\n'
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
         __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved' + '\n' + \
             '\n' + \

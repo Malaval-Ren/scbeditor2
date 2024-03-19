@@ -92,7 +92,7 @@ class MyMainWindow:
         self.s_init_pathname = os.getcwd()
         self.c_main_icon_bar = None             # top icon menu bar : MyMainWindowIconsBar
         self.c_main_image = None                # top icon menu bar : MyMainWindowImage
-        self.c_main_pallet = None              # top icon menu bar : MyMainWindowPallet
+        self.c_main_pallet = None               # top icon menu bar : MyMainWindowPallet
 
     # ####################### __repr__ ########################
     def __repr__( self) -> str:
