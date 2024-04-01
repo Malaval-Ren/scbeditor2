@@ -248,13 +248,13 @@ class MyMainWindowPallet:
 
     # ####################### __mwp_copy_a_color ########################
     def __mwp_copy_a_color( self):
-        """ copy the selected color to the next click on a pallet color """
+        """ copy the selected color to the next click on a pallet color, used in mwp_color_btn_rad() """
         if self.i_color_to_copy_offset == -1:
             self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
 
     # ####################### __mwp_copy_line_color ########################
     def __mwp_copy_line_color( self):
-        """ copy the line selected color to the next click on a pallet color """
+        """ copy the line selected color to the next click on a pallet color, used in mwp_color_btn_rad() """
         if self.i_color_line_to_copy_offset == -1:
             self.i_color_line_to_copy_offset = int( self.a_btn_x_lbl.cget( "text"))
 
@@ -354,9 +354,16 @@ class MyMainWindowPallet:
         # Create color button right frame
         a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276 )
+            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276-40 )
         else:
-            a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276 )
+            a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276-40 )
+
+        # Create botom button frame
+        a_pallet_bottom_btn_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if self.s_platform == "Darwin":
+            a_pallet_bottom_btn_frame.place( x=592, y=256, width=self.i_main_window_width - 592, height=40 )
+        else:
+            a_pallet_bottom_btn_frame.place( x=572, y=256, width=self.i_main_window_width - 572, height=40 )
 
         i_index_base_block = 0
         a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='black')
@@ -366,9 +373,9 @@ class MyMainWindowPallet:
         # the text is the cursor style on the middle of the label
         self.a_zoom_lbl = Label( a_color_bottom_frame, image=None, text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
         if self.s_platform in [ "Darwin", "Linux" ]:
-            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=4, padx=4, pady=1, sticky='ewns')
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=4, pady=1, sticky='ewns')
         else:
-            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=4, padx=8, pady=1, sticky='ewns')
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=1, sticky='ewns')
         self.a_zoom_lbl.bind( '<Button>', self.__mwp_click_on_picture_zoom)
 
         i_index_base_block += 1
@@ -450,19 +457,23 @@ class MyMainWindowPallet:
 
         i_index_base_block += 1
         if self.s_platform == "Darwin":
-            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=self.__mwp_copy_a_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=2, pady=0, sticky='ew')
-            a_copy_line_color_btn = Button( a_color_bottom_frame, text='Copy line color', command=self.__mwp_copy_line_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=0, sticky='ew')
-            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mwp_set_pen_color, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            a_pen_color_btn.grid( row=i_index_base_block, column=4, columnspan=2, padx=2, pady=0, sticky='ew')
+            a_change_color_btn = Button( a_color_bottom_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=None, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
+            a_copy_line_color_btn = Button( a_color_bottom_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
+            a_pen_color_btn = Button( a_color_bottom_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
         else:
-            a_change_color_btn = Button( a_color_bottom_frame, text='Copy color', command=self.__mwp_copy_a_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=6, sticky='ew')
-            a_copy_line_color_btn = Button( a_color_bottom_frame, text='Copy line color', command=self.__mwp_copy_line_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=6, sticky='ew')
-            a_pen_color_btn = Button( a_color_bottom_frame, text='Pen color', command=self.__mwp_set_pen_color, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_pen_color_btn.grid( row=i_index_base_block, column=4, columnspan=2, padx=4, pady=6, sticky='ew')
+            a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=None, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
+            a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=4, pady=4, sticky='w')
+            a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='w')
 
         # self.w_tk_root.update()
 
@@ -649,12 +660,13 @@ class MyMainWindowPallet:
             if i_result == 1:
                 self.__mwp_set_color_in_pallet( i_number)
         elif self.i_color_line_to_copy_offset != -1:
-            __i_complete = int( i_number / 16)
+            i_complete = int( i_number / 16)
             i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
-                "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( __i_complete) + " ?")
+                "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
+            i_color_line_to_copy_offset = self.i_color_line_to_copy_offset
             self.i_color_line_to_copy_offset = -1
             if i_result == 1:
-                self.__mwp_set_line_in_pallet( i_number, __i_complete)
+                self.__mwp_set_line_in_pallet( i_complete, i_color_line_to_copy_offset)
         else:
             self.mwp_entry_black_focus_out()
             #print( "mwp_color_btn_rad() i_number       = ", str( i_number))
@@ -755,20 +767,40 @@ class MyMainWindowPallet:
         self.w_tk_root.update()
 
     # ####################### __mwp_set_line_in_pallet ########################
-    def __mwp_set_line_in_pallet( self, i_new_index, i_line_number):
-        """ Set a new color value in pallet  """
-        # Update the picture pallet
+    def __mwp_set_line_in_pallet( self, i_line_number_to, i_color_line_to_copy_offset_from):
+        """ Copy a pallet (16 colors) to an another line """
         a_original_img = self.c_main_image.mwi_get_original_image()
         a_pallet_list = a_original_img.getpalette()
 
-        i_destination = (i_line_number - 1) * 16 * 3
-        for i_loop in range( self.i_color_line_to_copy_offset * 16 * 3, 16*3, 1):
+        # print( "pallet From " + str(i_color_line_to_copy_offset_from) + " To " + str(i_line_number_to))
+        i_destination = i_line_number_to * 16 * 3
+        i_source = i_color_line_to_copy_offset_from * 16 * 3
+        i_target = i_source + (16 * 3)
+        # print( "i_destination " + str(i_destination) + " : i_source " + str(i_source) + " i_target " + str(i_target) + " diff= " + str(i_target-i_source))
+
+        i_element = i_line_number_to * 16
+        i_from = 0
+        for i_loop in range( i_source, i_target, 1):
             a_pallet_list[i_destination] = a_pallet_list[ i_loop]
             i_destination += 1
+            if i_from == 0:
+                s_red = f'{a_pallet_list[ i_loop]:02X}'
+                i_from +=1
+            elif i_from == 1:
+                s_green = f'{a_pallet_list[ i_loop]:02X}'
+                i_from +=1
+            elif i_from == 2:
+                s_blue = f'{a_pallet_list[ i_loop]:02X}'
+                a_color_btn_rad = self.a_pallet_button_lst[i_element]
+                config_pallet_bottom_with_arg = partial( self.mwp_color_btn_rad, i_element)
+                a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
+                a_color_btn_rad.configure( background="#" + s_red + s_green + s_blue)
+                i_element +=1
+                i_from = 0
 
         a_original_img.putpalette( a_pallet_list, rawmode='RGB')
 
-        self.__mwp_set_color_in_pallet( i_new_index)
+        self.w_tk_root.update()
 
     # ####################### mwp_change_focus ########################
     def mwp_change_focus( self, event):
