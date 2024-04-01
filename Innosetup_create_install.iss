@@ -24,7 +24,7 @@ InfoAfterFile=Innosetup_end.txt
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 OutputDir=build
-OutputBaseFilename=scbeditor2_Installator
+OutputBaseFilename=scbeditor2_install
 SetupIconFile=appIcon_T_512x512.ico
 Compression=lzma
 SolidCompression=yes
