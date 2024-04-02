@@ -152,9 +152,6 @@ class MyImportPalletWindow:
         i_index_base_block += 1
         a_label = Label( top_frame, text="Select a color in the line to select copy of it:\n", height=2, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='white')
         a_label.grid( row=i_index_base_block, column=i_index_base_column, columnspan=11, sticky='wns', padx=2, pady=0)
-        # Creating a font object with little size for color buttons to reduce their size
-        a_font_label = font.Font( size=6)
-        a_font_button = font.Font( size=3)
 
         # Table of color button for the pallet
         a_pallet_list = a_image.getpalette()
@@ -165,25 +162,21 @@ class MyImportPalletWindow:
             i_from = i_to
             i_to = i_to + 48
             # First element of the line is its number
-            a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, foreground='white', font=a_font_label)
-            if self.s_platform == "Darwin":
-                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-            else:
-                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, foreground='white', font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
+            # if self.s_platform == "Darwin":
+            #     a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            # else:
+            a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for i_value in range( i_from, i_to, 3):
-                s_red   = f'{a_pallet_list[ i_index]:02X}'
-                s_green = f'{a_pallet_list[ i_index + 1]:02X}'
-                s_blue  = f'{a_pallet_list[ i_index + 2]:02X}'
-                a_color_btn_rad = Radiobutton( top_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=a_font_button)
+                a_color_btn_rad = Radiobutton( top_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
                 if self.s_platform in [ "Darwin", "Linux" ]:
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
-                a_color_btn_rad.configure( background="#" + s_red + s_green + s_blue)
-                config_pallet_bottom_with_arg = partial( self.__ipw_select_color_rad_btn, int( i_value / 3))
-                a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
+                a_color_btn_rad.configure( background="#" + f'{a_pallet_list[ i_index]:02X}' + f'{a_pallet_list[ i_index + 1]:02X}' + f'{a_pallet_list[ i_index + 2]:02X}')     # '# red green blue'
+                a_color_btn_rad.configure( command=partial( self.__ipw_select_color_rad_btn, int( i_value / 3)))
                 self.a_pallet_button_lst.append( a_color_btn_rad)
                 i_index_base_column += 1
                 i_index += 3

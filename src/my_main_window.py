@@ -208,7 +208,7 @@ class MyMainWindow:
         __s_date_time = __now.strftime( "%d/%m/%Y %H:%M:%S")
         __s_windows_title = ' ' + self.a_list_application_info[0] + '                                           ' + __s_date_time
         self.w_tk_root.title( __s_windows_title)
-        self.w_tk_root.after( 1000, self.__mw_clock_in_window_bar)
+        # self.w_tk_root.after( 1000, self.__mw_clock_in_window_bar)
 
     # ####################### __mw_change_focus ########################
     def __mw_change_focus( self, event):
