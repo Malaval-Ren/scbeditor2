@@ -5,8 +5,8 @@
 ![Alt text](appIcon_T_256x256.png "scbeditor2")
 
 _Creation: March 2nd, 2024, by Renaud Malaval_  
-_Last review: March 18th, 2024, by Renaud Malaval_  
-_Version: 2.1.8.25_
+_Last review: April 2nd, 2024, by Renaud Malaval_  
+_Version: 2.2.9.27_
 
 &nbsp;
 
@@ -139,6 +139,9 @@ For a bmp with bmp 4 bits / pixels the column is completely blue.
 
   **Copy color** button
     Click on it to remember the color selected. Click one off the pallet radio button to change it.
+
+  **Swap color** button
+    Click on it to remember the color selected. Click one off the pallet radio button to swap value of it.
 
   **Copy line color** button
     Click on it to remember the color line selected. Click one off the pallet radio button to change it.
