@@ -110,6 +110,7 @@ class MyMainWindowPallet:
         self.a_render_zoom = None
         self.i_color_to_copy_offset = -1
         self.i_color_line_to_copy_offset = -1
+        self.i_color_to_swap_offset = -1
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -230,7 +231,6 @@ class MyMainWindowPallet:
                 # Display zoom of a part of the picture
                 self.mwp_draw_zoom_square( i_pox_x, i_pox_y)
 
-
     # ####################### __mwp_set_pen_color ########################
     def __mwp_set_pen_color( self):
         """ Set a new color value in pallet  """
@@ -251,6 +251,12 @@ class MyMainWindowPallet:
         """ copy the selected color to the next click on a pallet color, used in mwp_color_btn_rad() """
         if self.i_color_to_copy_offset == -1:
             self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
+
+    # ####################### __mwp_swap_a_color ########################
+    def __mwp_swap_a_color( self):
+        """ sawp the selected color to the next click on a pallet color, used in mwp_color_btn_rad() """
+        if self.i_color_to_swap_offset == -1:
+            self.i_color_to_swap_offset = int( self.a_btn_offset_lbl.cget( "text"))
 
     # ####################### __mwp_copy_line_color ########################
     def __mwp_copy_line_color( self):
@@ -459,7 +465,7 @@ class MyMainWindowPallet:
         if self.s_platform == "Darwin":
             a_change_color_btn = Button( a_color_bottom_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
-            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=None, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
             a_copy_line_color_btn = Button( a_color_bottom_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
@@ -468,7 +474,7 @@ class MyMainWindowPallet:
         else:
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
-            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=None, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
             a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=4, pady=4, sticky='w')
@@ -667,58 +673,67 @@ class MyMainWindowPallet:
             self.i_color_line_to_copy_offset = -1
             if i_result == 1:
                 self.__mwp_set_line_in_pallet( i_complete, i_color_line_to_copy_offset)
+        elif self.i_color_to_swap_offset != -1:
+            if int( i_number / 16) == int( self.i_color_to_swap_offset / 16):
+                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
+                    "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
+                i_from = self.i_color_to_swap_offset
+                self.i_color_to_swap_offset = -1
+                if i_result == 1:
+                    self.__mwp_swap_color_in_pallet( i_from, i_number)
+            else:
+                self.i_color_to_swap_offset = -1
+                self.c_alert_windows.aw_create_alert_window( 1, "Swap two colors in a pallet line", "The selected colors must be in the same line.")
         else:
             self.mwp_entry_black_focus_out()
             #print( "mwp_color_btn_rad() i_number       = ", str( i_number))
-            a_original_img = self.c_main_image.mwi_get_original_image()
-            a_pallet_list = a_original_img.getpalette()
+            a_pallet_list = self.c_main_image.mwi_get_original_image().getpalette()
             #print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
             if (i_number * 3) > len( a_pallet_list):
                 print( "mwp_color_btn_rad() i_number       = ", str( i_number))
                 print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
                 print( "mwp_color_btn_rad() FAILED")
-
-            i_tmp_number = i_number * 3
-            i_red = a_pallet_list[i_tmp_number]
-            i_green = a_pallet_list[i_tmp_number + 1]
-            i_blue = a_pallet_list[i_tmp_number + 2]
-            if int( i_red) > 15:
-                s_red = f'{int( i_red):X}'
             else:
-                s_red = f'0{int( i_red):X}'
-            if int( i_green) > 15:
-                s_green = f'{int( i_green):X}'
-            else:
-                s_green = f'0{int( i_green):X}'
-            if int( i_blue) > 15:
-                s_blue = f'{int( i_blue):X}'
-            else:
-                s_blue = f'0{int( i_blue):X}'
+                i_tmp_number = i_number * 3
+                i_red = a_pallet_list[i_tmp_number]
+                i_green = a_pallet_list[i_tmp_number + 1]
+                i_blue = a_pallet_list[i_tmp_number + 2]
+                if int( i_red) > 15:
+                    s_red = f'{int( i_red):X}'
+                else:
+                    s_red = f'0{int( i_red):X}'
+                if int( i_green) > 15:
+                    s_green = f'{int( i_green):X}'
+                else:
+                    s_green = f'0{int( i_green):X}'
+                if int( i_blue) > 15:
+                    s_blue = f'{int( i_blue):X}'
+                else:
+                    s_blue = f'0{int( i_blue):X}'
 
-            self.a_red_input_var.set( s_red)                            # hex string
-            self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
-            self.a_green_input_var.set( s_green)
-            self.a_green_ntr_dec_lbl.configure( text=str( i_green))
-            self.a_blue_input_var.set( s_blue)
-            self.a_blue_ntr_dec_lbl.configure( text=str( i_blue))
-            self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
-            self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
-            __i_complete = int( i_number / 16)
-            __i_rest = i_number - ( __i_complete * 16)
-            # print( f'number= {i_number} -> complete= {__i_complete} rest= {__i_rest}')
-            self.a_btn_offset_lbl.configure( text=str( i_number))       # label under Offset
-            if i_number > 15:
-                self.a_btn_x_lbl.configure( text=str( __i_complete))    # label under Pallet Y
-            else:
-                self.a_btn_x_lbl.configure( text="0")                   # label under Pallet Y
+                self.a_red_input_var.set( s_red)                            # hex string
+                self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
+                self.a_green_input_var.set( s_green)
+                self.a_green_ntr_dec_lbl.configure( text=str( i_green))
+                self.a_blue_input_var.set( s_blue)
+                self.a_blue_ntr_dec_lbl.configure( text=str( i_blue))
+                self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
+                self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
+                __i_complete = int( i_number / 16)
+                # print( f'number= {i_number} -> complete= {__i_complete} rest= {i_number - ( __i_complete * 16)}')
+                self.a_btn_offset_lbl.configure( text=str( i_number))                   # label under Offset
+                if i_number > 15:
+                    self.a_btn_x_lbl.configure( text=str( __i_complete))                # label under Pallet Y
+                else:
+                    self.a_btn_x_lbl.configure( text="0")                               # label under Pallet Y
 
-            self.a_btn_y_lbl.configure( text=str( __i_rest))            # label under Offset X
+                self.a_btn_y_lbl.configure( text=str( i_number - ( __i_complete * 16))) # label under Offset X
 
-            # Draw the SCB rectangle
-            self.c_main_image.mwi_draw_scb_bar( i_number)
+                # Draw the SCB rectangle
+                self.c_main_image.mwi_draw_scb_bar( i_number)
 
-             #set value for import a pallet from an another windows
-            self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
+                #set value for import a pallet from an another windows
+                self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
 
     # ####################### __mwp_set_color_in_pallet ########################
     def __mwp_set_color_in_pallet( self, i_new_index):
@@ -752,6 +767,77 @@ class MyMainWindowPallet:
         a_original_img.putpalette( a_pallet_list, rawmode='RGB')
         self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
         self.mwp_color_btn_rad( i_index)
+
+        i_click_pos_x = self.c_main_image.mwi_get_mouse_pos_x_var()
+        i_click_pos_y = self.c_main_image.mwi_get_mouse_pos_y_var()
+        a_work_img = self.c_main_image.mwi_get_working_image()
+        i_offset = a_work_img.getpixel( (i_click_pos_x, i_click_pos_y))
+
+        # Draw bar chart for colors in usage in a line
+        self.c_main_image.mwi_draw_bar_chart( i_offset, i_click_pos_y)
+
+        # Display zoom of a part of the picture
+        self.mwp_draw_zoom_square( i_click_pos_x, i_click_pos_y)
+
+        self.w_tk_root.update()
+
+    # ####################### __mwp_swap_color_in_pallet ########################
+    def __mwp_swap_color_in_pallet( self, i_a_from, i_b_new_index):
+        """ Swap color value in a pallet  """
+        if i_b_new_index == -1:
+            i_b_index = int( self.a_btn_offset_lbl.cget( "text"))
+        else:
+            i_b_index = i_b_new_index
+
+        a_a_pallet_button = self.a_pallet_button_lst[i_a_from]
+        a_b_pallet_button = self.a_pallet_button_lst[i_b_index]
+
+        # Update the picture pallet
+        a_original_img = self.c_main_image.mwi_get_original_image()
+        a_pallet_list = a_original_img.getpalette()
+
+        i_a_pallet_from     = i_a_from * 3
+        s_a_red             = f'{a_pallet_list[ i_a_pallet_from]:02X}'
+        s_a_green           = f'{a_pallet_list[ i_a_pallet_from + 1]:02X}'
+        s_a_blue            = f'{a_pallet_list[ i_a_pallet_from + 2]:02X}'
+        i_b_pallet_index    = i_b_index * 3
+        s_b_red             = f'{a_pallet_list[ i_b_pallet_index]:02X}'
+        s_b_green           = f'{a_pallet_list[ i_b_pallet_index + 1]:02X}'
+        s_b_blue            = f'{a_pallet_list[ i_b_pallet_index + 2]:02X}'
+        # Swap the color in pallet
+        i_temp_red                           = a_pallet_list[ i_a_pallet_from]
+        i_temp_green                         = a_pallet_list[ i_a_pallet_from + 1]
+        i_temp_blue                          = a_pallet_list[ i_a_pallet_from + 2]
+        a_pallet_list[ i_a_pallet_from]      = a_pallet_list[ i_b_pallet_index]
+        a_pallet_list[ i_a_pallet_from + 1]  = a_pallet_list[ i_b_pallet_index + 1]
+        a_pallet_list[ i_a_pallet_from + 2]  = a_pallet_list[ i_b_pallet_index + 2]
+        a_pallet_list[ i_b_pallet_index]     = i_temp_red
+        a_pallet_list[ i_b_pallet_index + 1] = i_temp_green
+        a_pallet_list[ i_b_pallet_index + 2] = i_temp_blue
+
+        a_original_img.putpalette( a_pallet_list, rawmode='RGB')
+
+        # ready when color modification will be done
+        a_a_pallet_button.configure( background= "#" + s_b_red + s_b_green + s_b_blue)
+        a_b_pallet_button.configure( background= "#" + s_a_red + s_a_green + s_a_blue)
+
+        i_scb = int( i_a_from / 16)
+        # Update the picture offset for all line with the same SCB
+        for i_picture_line_y in range( 0, 199, 1):
+            # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
+            for i_loop in range( 0, 319, 1):
+                i_first_color_offset = a_original_img.getpixel( ( i_loop, i_picture_line_y))
+                if i_scb == int(i_first_color_offset / 16): # check the SCB
+                    # swap offset of color in thise line
+                    if i_first_color_offset == i_a_from:
+                        a_original_img.putpixel( ( i_loop, i_picture_line_y), i_b_index)
+                    elif i_first_color_offset == i_b_index:
+                        a_original_img.putpixel( ( i_loop, i_picture_line_y), i_a_from)
+                else:
+                    break
+
+        self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
+        self.mwp_color_btn_rad( i_b_index)
 
         i_click_pos_x = self.c_main_image.mwi_get_mouse_pos_x_var()
         i_click_pos_y = self.c_main_image.mwi_get_mouse_pos_y_var()

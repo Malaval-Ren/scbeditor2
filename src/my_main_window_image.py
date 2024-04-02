@@ -466,6 +466,11 @@ class MyMainWindowImage:
         """ Give access to method of c_pallet """
         self.c_main_pallet = c_pallet
 
+    # ####################### mwi_change_pallet ########################
+    def mwi_change_pallet( self, event):
+        """ Click on the SCB """
+        print( "clicked at", event.x, event.y)
+
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
         """ Frame with the picture to left, and details to right """
@@ -501,6 +506,7 @@ class MyMainWindowImage:
 
         self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
+        self.a_scb_cnvs.bind("<Button-1>", self.mwi_change_pallet)
 
         self.w_tk_root.update()
         # Create details frame
