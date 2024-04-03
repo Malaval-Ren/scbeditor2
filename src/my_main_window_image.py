@@ -40,9 +40,10 @@ from tkinter.ttk import Separator
 from PIL import ImageTk
 
 import src.my_constants as constant
-# from .my_log_an_usage import MyLogAnUsage
+from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
+from .my_scb_window import MyScbPalletWindow
 # from .my_main_window  import mv_entry_black_focus_out, mv_on_single_key, mw_print_widget_under_mouse
 # from .my_main_window_pallet import mwp_entry_black_focus_out, mwp_select_color_rad_btn
 
@@ -72,6 +73,7 @@ class MyMainWindowImage:
         self.i_main_window_x = 20
         self.i_main_window_y = 20
         self.w_tk_root.background = constant.BACKGROUD_COLOR_UI
+        self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( self.w_tk_root)
         self.s_platform = platform.system()
         # Size of the main windows
@@ -84,9 +86,9 @@ class MyMainWindowImage:
 
         self.a_original_img = None
         self.a_work_img = None
-        self.a_bmp_image_file = None
         self.a_picture_lbl = None
         self.a_scb_cnvs = None
+        self.a_scb_cnvs_rect_lst = []
         self.a_render = None
         self.a_image = None
         self.a_filename_lbl = None
@@ -427,19 +429,24 @@ class MyMainWindowImage:
 
     # ####################### mw_draw_scb_bar ########################
     def mwi_draw_scb_bar( self, i_color_offset):
-        """ Draw the bar how display all the same SCB """
-        # Draw the SCB rectangle
+        """ Draw the bar with rectangles to display all the SCB usage """
         i_pallet_number = int( i_color_offset / 16) * 16
         # print( " offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
-
         self.a_scb_cnvs.delete( "all")
+        self.a_scb_cnvs_rect_lst.clear()
+        i_rect_begin = -1
         for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_pallet_number:
-                self.a_scb_cnvs.create_rectangle( 0, i_loop, 24, i_loop+1, fill='blue', outline='blue')
+                if i_rect_begin == -1:
+                    i_rect_begin = i_loop   # te Y hight of the rectangle
             else:
+                if i_rect_begin != -1:
+                    self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop-1, fill='blue', outline='blue'))
+                    i_rect_begin = -1
                 i_inter = 0
+        # print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
 
     # ####################### mw_update_main_window ########################
     def mwi_update_main_window_image( self, s_filename, a_work_img):
@@ -469,7 +476,28 @@ class MyMainWindowImage:
     # ####################### mwi_change_pallet ########################
     def mwi_change_pallet( self, event):
         """ Click on the SCB """
-        print( "clicked at", event.x, event.y)
+        if self.a_original_img and self.a_work_img:
+            print( "clicked at", event.x, event.y)
+            print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+            for i_loop in range( 0, len( self.a_scb_cnvs_rect_lst), 1):
+                a_cnvs_rect = self.a_scb_cnvs_rect_lst[i_loop]
+                x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+                print( f'#{i_loop} {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(i_loop, x0, y0, x1, y1))
+                if event.y >= y0 and event.y <= y1:
+                    print( "C'est le bon at index= ", i_loop )
+                    break
+
+            print()
+            # x0, y0, x1, y1 = w.coords(blue)
+            # w.coords(blue, x0, y0, x1, y1)
+
+            # self.c_the_log.add_string_to_log( 'Do scb editor pallet')
+            # w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst[], event.y)
+            # w_front_window.scbw_create_scb_window( None, self.a_work_img, 0)
+            # w_front_window = None
+            # self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_work_img)
+            # self.c_main_windows.update()
+            # self.mwi_click_in_picture_center()
 
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
