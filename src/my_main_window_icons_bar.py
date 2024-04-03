@@ -307,9 +307,9 @@ class MyMainWindowIconsBar:
 
         i_column += 1
         if self.s_platform == "Darwin":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_column += 1
@@ -352,9 +352,9 @@ class MyMainWindowIconsBar:
 
         i_row_line += 1
         if self.s_platform == "Darwin":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_palet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_row_line += 1

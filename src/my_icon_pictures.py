@@ -55,7 +55,7 @@ class MyIconPictures:
             MyIconPictures.about_photo = None
             MyIconPictures.open_photo = None
             MyIconPictures.save_photo = None
-            MyIconPictures.color_palet_photo = None
+            MyIconPictures.color_palett_photo = None
             MyIconPictures.cursor_photo = None
             MyIconPictures.preferences_photo = None
             MyIconPictures.french_photo = None
@@ -304,7 +304,7 @@ class MyIconPictures:
 		M49c1O0COAapNh5yqQrvzb2IcUNSHXGcAI4/JKYeLy1XUWarkKKf0ZGNyr6JAwKYhNSLAexmhst4VMx1I/nfw+8sfdMEIuQ4p8yrvAfXgBPIMXzIJ7mK7bNp3p4H+9/wfjTfhNSORfEQqRYgBQNSGEaBkA1EDuR4s8gXkUq67nBFvy4hvXxgph8vNpUCGJm9F+KnBElgEdEF21a04AVRIoDII4jxSGk2A1iK1Js4kuurk9qGP8H5vsKJ/7uIbIA\
 		AAAASUVORK5CYII=
 		"""
-        self.color_palet_photo = PhotoImage( master=self.w_windows_parent, data=__app_color_pallet_b_base_64)
+        self.color_palett_photo = PhotoImage( master=self.w_windows_parent, data=__app_color_pallet_b_base_64)
 
 		# Image file = curseur_b_T_81x81.png
         # Converted with my tool convert81 from .png to base64
@@ -685,10 +685,10 @@ class MyIconPictures:
         """Get save icon for the main windows"""
         return self.save_photo
 
-    # ####################### get_color_palet_photo ########################
-    def get_color_palet_photo( self):
-        """Get color palet icon for the main windows"""
-        return self.color_palet_photo
+    # ####################### get_color_pallet_photo ########################
+    def get_color_pallet_photo( self):
+        """Get color pallet icon for the main windows"""
+        return self.color_palett_photo
 
     # ####################### get_cursor_photo ########################
     def get_cursor_photo( self):
