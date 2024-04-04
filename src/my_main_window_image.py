@@ -477,22 +477,24 @@ class MyMainWindowImage:
     def mwi_change_pallet( self, event):
         """ Click on the SCB """
         if self.a_original_img and self.a_work_img:
-            print( "clicked at", event.x, event.y)
-            print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+            self.c_the_log.add_string_to_log( 'Do scb editor pallet')
+            # print( "clicked at", event.x, event.y)
+            # print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+
+            b_click_in_scb_rect = False
             for i_loop in range( 0, len( self.a_scb_cnvs_rect_lst), 1):
-                a_cnvs_rect = self.a_scb_cnvs_rect_lst[i_loop]
-                x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-                print( f'#{i_loop} {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(i_loop, x0, y0, x1, y1))
+                x0, y0, x1, y1 = self.a_scb_cnvs.coords( self.a_scb_cnvs_rect_lst[i_loop])
                 if event.y >= y0 and event.y <= y1:
-                    print( "C'est le bon at index= ", i_loop )
+                    b_click_in_scb_rect = True
                     break
 
-            print()
-            # x0, y0, x1, y1 = w.coords(blue)
-            # w.coords(blue, x0, y0, x1, y1)
+            if b_click_in_scb_rect is True:
+                w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst, event.y)
+                w_front_window.scbw_create_scb_window( self.a_original_img, self.a_scb_cnvs, i_loop)
+                w_front_window = None
 
-            # self.c_the_log.add_string_to_log( 'Do scb editor pallet')
-            # w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst[], event.y)
+            print()
+
             # w_front_window.scbw_create_scb_window( None, self.a_work_img, 0)
             # w_front_window = None
             # self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_work_img)
