@@ -113,11 +113,15 @@ class MyMainWindowIconsBar:
 
         return a_image
 
-    # ####################### __mwib_load_and_check_bmp ########################
-    def __mwib_load_and_check_bmp( self):
+    # ####################### __mwib_select_load_bmp ########################
+    def __mwib_select_load_bmp( self) -> str:
+        """ Select the bmp file to use """
+        return mt_open_file( self.w_main_windows, self.c_main_class)
+
+    # ####################### __mwib_load_check_bmp ########################
+    def __mwib_load_check_bmp( self, s_filename):
         """ Check size and number of color in bmp """
         a_image = None
-        s_filename = mt_open_file( self.w_main_windows, self.c_main_class)
         if s_filename:
             print( '\nLoading : ' + s_filename)
             # resize the original bmp from 320x200 to 640x400
@@ -225,22 +229,6 @@ class MyMainWindowIconsBar:
         self.w_front_window.aw_create_about_window()
         self.w_front_window = None
 
-    # ####################### __mwib_open_box ########################
-    def __mwib_open_box( self):
-        """ Button load of the main window """
-        self.c_the_log.add_string_to_log( 'Do load picture')
-        self.s_filename, self.a_work_img = self.__mwib_load_and_check_bmp()
-        if self.s_filename and self.a_work_img:
-            # Display image already in 8 bpp or a converted to 8 bpp
-            self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
-            self.w_main_windows.update()
-            self.c_mains_image.mwi_click_in_picture_center()
-            # Increase valeur index to use the right line to be SCB ready
-            self.__mwib_validate_scb_in_bmp()
-            self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
-            self.w_main_windows.update()
-            self.c_mains_image.mwi_click_in_picture_center()
-
     # ####################### __mwib_save_box ########################
     def __mwib_save_box( self):
         """ Button save the picture modified """
@@ -254,7 +242,8 @@ class MyMainWindowIconsBar:
         """ Button import pallet from an another picture """
         if self.s_filename and self.a_work_img:
             self.c_the_log.add_string_to_log( 'Do import pallet of picture')
-            s_filename, a_image = self.__mwib_load_and_check_bmp()
+            s_filename = self.__mwib_select_load_bmp()
+            s_filename, a_image = self.__mwib_load_check_bmp( s_filename)
             if s_filename and a_image:
                 self.w_front_window = MyImportPalletWindow( self.c_main_class)
                 self.w_front_window.ipw_create_import_window( a_image, self.a_work_img, self.i_selected_pallet_in_main_windows)
@@ -293,9 +282,9 @@ class MyMainWindowIconsBar:
 
         i_column += 1
         if self.s_platform == "Darwin":
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_column += 1
@@ -338,9 +327,9 @@ class MyMainWindowIconsBar:
 
         i_row_line += 1
         if self.s_platform == "Darwin":
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, highlightbackground='light grey')
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, highlightbackground='light grey')
         else:
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.__mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
         a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_row_line += 1
@@ -366,6 +355,27 @@ class MyMainWindowIconsBar:
 
         i_row_line += 1
         return i_row_line
+
+    # ####################### mwib_open_box ########################
+    def mwib_open_box( self, filepathname=None):
+        """ Button load of the main window """
+        self.c_the_log.add_string_to_log( 'Do load picture')
+        if filepathname:
+            self.s_filename, self.a_work_img = self.__mwib_load_check_bmp( filepathname)
+        else:
+            self.s_filename = self.__mwib_select_load_bmp()
+            self.s_filename, self.a_work_img = self.__mwib_load_check_bmp( self.s_filename)
+
+        if self.s_filename and self.a_work_img:
+            # Display image already in 8 bpp or a converted to 8 bpp
+            self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
+            self.w_main_windows.update()
+            self.c_mains_image.mwi_click_in_picture_center()
+            # Increase valeur index to use the right line to be SCB ready
+            self.__mwib_validate_scb_in_bmp()
+            self.c_main_class.mw_update_main_window( self.s_filename, self.a_work_img)
+            self.w_main_windows.update()
+            self.c_mains_image.mwi_click_in_picture_center()
 
     # ####################### mwib_get_frame ########################
     def mwib_get_frame( self):

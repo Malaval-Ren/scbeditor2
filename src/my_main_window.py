@@ -408,6 +408,11 @@ class MyMainWindow:
         """ Set last used pathname """
         self.s_init_pathname = s_new_pathname
 
+    # ####################### mw_set_pathname ########################
+    def mw_load_this_picture(self, filepathname):
+        """ load the picture from first arg parameter """
+        self.c_main_icon_bar.mwib_open_box( filepathname)
+
     # ####################### mw_save_picture ########################
     def mw_save_picture( self):
         """ Save the picture """
@@ -422,7 +427,7 @@ class MyMainWindow:
 
     # ####################### mw_print_widget_under_mouse ########################
     def mw_print_widget_under_mouse( self, event):
-        """ Show position of the mouse in the loaded picture """
+        """ Show live position of the mouse in the loaded picture """
         a_original_img = self.c_main_image.mwi_get_original_image()
         if a_original_img:              #  and self.c_main_pallet:
             self.c_main_pallet.mwp_entry_black_focus_out()

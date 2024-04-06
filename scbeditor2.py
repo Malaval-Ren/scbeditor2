@@ -148,8 +148,9 @@ def __print_font_info( s_font_tkinter_name):
     # ##########################################################################################
 
 # ####################### main ########################
-def main():
+def main( a_list_argv):
     """ The entry function of the application """
+    i_value_for_exit = 0
     _now = datetime.now()
     # dd/mm/YY H:M:S
     _s_dt_string = _now.strftime( "%d/%m/%Y %H:%M:%S")
@@ -167,14 +168,19 @@ def main():
     a_root_windows.update()
     a_root_windows.deiconify()
     c_my_main_window = MyMainWindow( a_root_windows, LIST_APPLICATION_INFO)
-    mt_get_memory_used( c_my_main_window)
+    # mt_get_memory_used( c_my_main_window)
     c_my_main_window.mw_create_main_window()
-    mt_get_memory_used( c_my_main_window)
-    # c_my_main_window.mw_load_main_window()
+    # mt_get_memory_used( c_my_main_window)
 
     __print_font_info( 'TkDefaultFont')
 #    __print_font_info( 'TkMenuFont')
 #    __print_font_info( 'TkFixedFont')
+
+    if len( a_list_argv) == 2:
+        if os.path.exists(a_list_argv[1]) is True:
+            s_filepathname = a_list_argv[1].lower()
+            if s_filepathname[-4:] == ".bmp":
+                c_my_main_window.mw_load_this_picture( s_filepathname)
 
     a_root_windows.mainloop()
 
@@ -182,8 +188,10 @@ def main():
     c_the_log.write_log()
     print( 'main() : end')
 
+    return int( i_value_for_exit)
+
 # ###############################################################################################
 # ####################### Entry point ########################
 # wrapper(main)
 if __name__ == "__main__":
-    main()
+    sys.exit( int( main( sys.argv)) )
