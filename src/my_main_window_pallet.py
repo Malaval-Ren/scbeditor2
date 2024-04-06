@@ -89,6 +89,7 @@ class MyMainWindowPallet:
         self.a_pallet_button_lst = []
 
         self.color_radio_button = IntVar()
+        self.i_selected_pallet_line = 0
         self.a_red_ntr = None
         self.a_green_ntr = None
         self.a_blue_ntr = None
@@ -732,7 +733,8 @@ class MyMainWindowPallet:
                 # Draw the SCB rectangle
                 self.c_main_image.mwi_draw_scb_bar( i_number)
 
-                #set value for import a pallet from an another windows
+                # Set value for import a pallet from an another windows
+                self.i_selected_pallet_line = __i_complete
                 self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
 
     # ####################### __mwp_set_color_in_pallet ########################
@@ -928,8 +930,13 @@ class MyMainWindowPallet:
 
     # ####################### mwp_get_around_cursor ########################
     def mwp_get_around_cursor( self) -> int:
-        """ the state for cursor """
+        """ The state for cursor """
         return self.i_around_cursor
+
+    # ####################### mwp_selected_pallet_line ########################
+    def mwp_get_selected_pallet_line( self) -> int:
+        """ The selected pallet line on color radio button """
+        return self.i_selected_pallet_line
 
     # ####################### mwp_get_pallet_btn ########################
     def mwp_get_pallet_btn( self, i_element) -> Radiobutton:
@@ -938,7 +945,7 @@ class MyMainWindowPallet:
 
     # ####################### mwp_reset_around_cursor ########################
     def mwp_reset_around_cursor( self):
-        """ the state for cursor """
+        """ The state for cursor """
         self.i_around_cursor = -1
 
     # ####################### __mv_entry_red_focus_out ########################

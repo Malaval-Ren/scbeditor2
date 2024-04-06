@@ -173,7 +173,6 @@ class MyMainWindowImage:
             self.c_main_pallet.mwp_draw_zoom_square( i_pos_x, i_pos_y)
 
             self.w_tk_root.update()
-            print()
 
     # ####################### __mwi_less_x_value_clicked ########################
     def __mwi_less_x_value_clicked( self):
@@ -483,13 +482,13 @@ class MyMainWindowImage:
 
             b_click_in_scb_rect = False
             for i_loop in range( 0, len( self.a_scb_cnvs_rect_lst), 1):
-                x0, y0, x1, y1 = self.a_scb_cnvs.coords( self.a_scb_cnvs_rect_lst[i_loop])
+                _, y0, _, y1 = self.a_scb_cnvs.coords( self.a_scb_cnvs_rect_lst[i_loop])
                 if event.y >= y0 and event.y <= y1:
                     b_click_in_scb_rect = True
                     break
 
             if b_click_in_scb_rect is True:
-                w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst, event.y)
+                w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst, event.y, self.c_main_pallet.mwp_get_selected_pallet_line())
                 w_front_window.scbw_create_scb_window( self.a_original_img, self.a_scb_cnvs, i_loop)
                 w_front_window = None
 

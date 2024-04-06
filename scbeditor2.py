@@ -168,9 +168,9 @@ def main( a_list_argv):
     a_root_windows.update()
     a_root_windows.deiconify()
     c_my_main_window = MyMainWindow( a_root_windows, LIST_APPLICATION_INFO)
-    # mt_get_memory_used( c_my_main_window)
+    mt_get_memory_used( c_my_main_window)
     c_my_main_window.mw_create_main_window()
-    # mt_get_memory_used( c_my_main_window)
+    mt_get_memory_used( c_my_main_window)
 
     __print_font_info( 'TkDefaultFont')
 #    __print_font_info( 'TkMenuFont')

@@ -31,9 +31,8 @@
 import platform
 import tkinter as tk_gui
 
-from tkinter import font, Label, Button, Toplevel, Radiobutton, IntVar
+from tkinter import Label, Button, Toplevel, Scale
 from tkinter.ttk import Combobox
-from functools import partial
 from PIL import ImageTk
 
 import src.my_constants as constant
@@ -51,52 +50,69 @@ class MyScbPalletWindow:
     # pylint: disable=too-many-instance-attributes
     # number is reasonable in this case these are all the icons of the main windows and the application icons
 
-    answer_cancel = 0
-    answer_ok = 1
+    # ANSWER_CANCEL = 0
+    # ANSWER_OK = 1
+    SCB_NUMBER_LST = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+    MIDDLE_FRAME_HEIGHT = 40
+    BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
-    def __init__( self, c_the_main_window, a_scb_cnvs_rect_lst, i_click_y):
+    def __init__( self, c_the_main_window, a_scb_cnvs_rect_lst, i_click_y, i_selected_pallet_line):
         """
             all this parameter are created in main()
             c_the_main_window : the parent windows
         """
         self.c_the_main_window = c_the_main_window
+        self.a_scb_cnvs_rect_lst            : list = a_scb_cnvs_rect_lst
+        self.i_click_y = i_click_y
+        self.i_selected_pallet_line = i_selected_pallet_line
+
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
         self.w_scb_window = None
         self.a_work_img = None
 
-        self.a_scb_cnvs_rect_lst = a_scb_cnvs_rect_lst
-        self.i_click_y = i_click_y
-        self.a_scb_cnvs = None
-
-        self.a_pallet_image = None
-        self.a_list_device_combo = None
+        self.a_original_part_image = None
+        self.a_list_device_combo            : list = None
         self.i_index_in_a_scb_cnvs_rect_lst = 0
 
+        self.a_mouse_live_pos_y_lbl         : Label = None
         self.i_height = 0
         self.i_width = 0
         self.i_position_x = 0
         self.i_position_y = 0
-        self.import_background = 'darkgray'
-        self.color_radio_button = IntVar()
+        self.scb_background = 'darkgray'
         self.i_selected_pallet = -1                     # source of index pallet to copy
         self.i_selected_pallet_in_main_windows = -1     # target of destination index
-        self.a_zoom_lbl = None
-        self.a_zoom_work_img = None
-        self.a_render_zoom = None
+        self.a_zoom_lbl                     : Label = None
+        self.a_zoom_work_img                : ImageTk.PhotoImage = None
+        self.a_render_zoom                  : ImageTk.PhotoImage = None
+        self.a_scb_cnvs                     : list = None
+        self.a_the_color_new_lbl            : Label = None
+        self.a_frontier_scale               : Scale = None
+        self.a_list_pallet_to_begin_combo   : Combobox = None
+        self.a_list_pallet_to_end_combo     : Combobox = None
+        self.a_down_begin_lbl               : Label = None
+
+    # ####################### __scbw_do_stuff_to_leave_this_dialog ########################
+    def __scbw_do_stuff_to_leave_this_dialog( self):
+        """ Do commun stuff when press button ok or cancel on the scb window """
+        self.a_zoom_lbl.unbind( '<Motion>')
+        self.a_zoom_lbl.unbind( '<Button>')
+        self.w_scb_window.grab_release()
+        self.w_scb_window.quit()
 
     # ####################### __scbw_import_ok_button ########################
     def __scbw_import_ok_button( self):
-        """ Button ok of the import window """
+        """ Button ok of the scb window """
         # a_work_pallet_list = self.a_work_img.getpalette()
 
         # self.imported_pallet_lst.clear()
         # i_first_color_conponent_to_copy = int( self.a_list_device_combo.get()) * 16 * 3
         # i_last_color_conponent_to_copy = i_first_color_conponent_to_copy + ( 16 * 3)
 
-        # a_pallet_list = self.a_pallet_image.getpalette()
+        # a_pallet_list = self.a_original_part_image.getpalette()
         # i_index = self.i_selected_pallet * 16 * 3
         # for i_loop in range( 0, len( a_work_pallet_list), 1):
         #     if i_loop in range( i_first_color_conponent_to_copy, i_last_color_conponent_to_copy):
@@ -109,131 +125,140 @@ class MyScbPalletWindow:
 
         # self.a_work_img.putpalette( self.imported_pallet_lst)
 
-        self.w_scb_window.grab_release()
-        self.w_scb_window.quit()
+        self.__scbw_do_stuff_to_leave_this_dialog()
         self.c_the_log.add_string_to_log( 'Do SCB edit close with ok')
 
     # ####################### __scbw_import_cancel_button ########################
     def __scbw_import_cancel_button( self):
-        """ Button cancel of the import window """
+        """ Button cancel of the scb window """
         # self.imported_pallet_lst = None
         # self.i_selected_pallet = -1
-        self.w_scb_window.grab_release()
-        self.w_scb_window.quit()
+
+        self.__scbw_do_stuff_to_leave_this_dialog()
         self.c_the_log.add_string_to_log( 'Do SCB edit close with cancel')
 
+    # ####################### __scbw_print_coord_under_mouse ########################
+    def __scbw_print_coord_under_mouse( self, event):
+        """ Show live position of the mouse in the loaded picture """
+        i_pos_x = event.x
+        i_pos_y = event.y
+        # Use only the pair values, click is done in the picture zoomed x 2
+        if i_pos_y & 3:
+            i_pos_y -= 3
+        if i_pos_x & 3:
+            i_pos_x -= 3
+
+        self.a_mouse_live_pos_y_lbl.configure( text=str( int(event.y / 3)))
+
+        a_pallet_list = self.a_zoom_work_img.getpalette()
+        i_base = 3 * self.a_zoom_work_img.getpixel((i_pos_x, i_pos_y))
+        i_red, i_green, i_blue = a_pallet_list[i_base:i_base+3]
+        self.a_the_color_new_lbl.configure( background= f"#{i_red:02x}{i_green:02x}{i_blue:02x}")
+
+    # ####################### __scbw_update_begin ########################
+    def __scbw_update_begin( self, s_value):
+        """" Scale is moving update the label """
+        i_value = int( s_value)
+        if len( s_value) == 1 and i_value < 9:
+            self.a_down_begin_lbl.configure( text="  " + str( i_value + 1))
+        else:
+            self.a_down_begin_lbl.configure( text=str( i_value + 1))
+
+    # ####################### __scbw_click_on_picture ########################
+    def __scbw_click_on_picture( self, event):
+        """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
+        self.a_frontier_scale.set( int( event.y / 3) )
+        self.a_down_begin_lbl.configure( text=str( int( event.y / 3) + 1))
+
     # ####################### __scbw_scb_block ########################
-    def __scbw_scb_block( self, a_original_image):
+    def __scbw_scb_block( self, i_part_width, i_part_height):
         """ Create a about dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_scb_window, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        # Define the GUI
+        top_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.i_height, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
         top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_frame = tk_gui.Frame( self.w_scb_window, relief='flat', background=constant.BACKGROUD_COLOR_UI, width=self.i_width, height=214)
-        middle_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_scb_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=23)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_up_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_up_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_up_frame.pack_propagate( False)
+        middle_middle_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_middle_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_middle_frame.pack_propagate( False)
+        middle_down_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_down_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_down_frame.pack_propagate( False)
+        button_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
+        button_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_down_frame.pack_propagate( False)
 
         # #### TOP #####
-        a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
-        x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-        print( f'scbw_scb_block() {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(x0, y0, x1, y1))
-
-        i_box_top = (0, int(y0/2), 320, int(y1/2))
-        a_part_image = a_original_image.crop( i_box_top)
-
-        width, height = a_part_image.size
-        self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
-        self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
-
-        # the text is the cursor style on the middle of the label
-        i_index_base_block = 0
-        self.a_zoom_lbl = Label( top_frame, image=self.a_render_zoom, background=constant.BACKGROUD_COLOR_UI, width=width * 3, height=height * 3, borderwidth=0, compound="center", highlightthickness=0)
-        if self.s_platform in [ "Darwin", "Linux" ]:
-            self.a_zoom_lbl.grid( row=i_index_base_block, padx=2, pady=2, sticky='ewns')
-        else:
-            self.a_zoom_lbl.grid( row=i_index_base_block, padx=4, pady=2, sticky='ewns')
+        self.a_zoom_lbl = Label( top_frame, image=self.a_render_zoom, background=constant.BACKGROUD_COLOR_UI, width=i_part_width * 3, height=i_part_height * 3, borderwidth=0, compound="center", highlightthickness=0)
+        # if self.s_platform in [ "Darwin", "Linux" ]:
+        #     self.a_zoom_lbl.pack( side='left', padx=4)
+        # else:
+        self.a_zoom_lbl.pack( side='left', padx=4)
         self.a_zoom_lbl.photo = self.a_render_zoom
-
-        # self.a_zoom_lbl.bind( '<Button>', self.__mwp_click_on_picture_zoom)
-        self.w_scb_window.update()
+        self.a_zoom_lbl.bind( '<Motion>', self.__scbw_print_coord_under_mouse)
+        self.a_zoom_lbl.bind( '<Button>', self.__scbw_click_on_picture)
 
         # #### MIDDLE #####
-        i_index_base_block += 1
-        # a_label = Label( top_frame, text="Select a color in the line to select copy of it:\n", height=2, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='white')
-        # a_label.grid( row=i_index_base_block, column=i_index_base_column, columnspan=11, sticky='wns', padx=2, pady=0)
+        a_label = Label( middle_up_frame, text="The Pallet used for this SCB is " + str(self.i_selected_pallet_line) + ".", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=4)
+        a_label = Label( middle_up_frame, text="Mouse live position on Y:", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=4)
+        self.a_mouse_live_pos_y_lbl = Label( middle_up_frame, text="   ", width=3, background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        self.a_mouse_live_pos_y_lbl.pack( side='left', padx=4)
+        a_label = Label( middle_up_frame, text="Color under the cursor is ", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=4)
+        self.a_the_color_new_lbl = Label( middle_up_frame, text=None, width=8, borderwidth=2, background='black', foreground='black')
+        self.a_the_color_new_lbl.pack( side='left', padx=4)
 
-        # Table of color button for the pallet
-        # a_pallet_list = a_image.getpalette()
-        # i_index_base_block += 1
-        # i_to = 0
-        # i_index = 0
-        # for i_loop in range( 0, 16, 1):
-        #     i_from = i_to
-        #     i_to = i_to + 48
-        #     # First element of the line is its number
-        #     a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, foreground='white', font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
-        #     # if self.s_platform == "Darwin":
-        #     #     a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-        #     # else:
-        #     a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-        #     i_index_base_column += 1
-        #     # create list of line of radio button and add it in a list to be accessible
-        #     for i_value in range( i_from, i_to, 3):
-        #         a_color_btn_rad = Radiobutton( top_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
-        #         if self.s_platform in [ "Darwin", "Linux" ]:
-        #             a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
-        #         else:
-        #             a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
-        #         a_color_btn_rad.configure( background="#" + f'{a_pallet_list[ i_index]:02X}' + f'{a_pallet_list[ i_index + 1]:02X}' + f'{a_pallet_list[ i_index + 2]:02X}')     # '# red green blue'
-        #         a_color_btn_rad.configure( command=partial( self.__scbw_select_color_rad_btn, int( i_value / 3)))
-        #         self.a_pallet_button_lst.append( a_color_btn_rad)
-        #         i_index_base_column += 1
-        #         i_index += 3
+        a_label = Label( middle_middle_frame, text="The UPPER part, from 0 to", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=2)
+        self.a_frontier_scale = Scale( middle_middle_frame, from_=0, to=i_part_height-2, length=500, command=self.__scbw_update_begin, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor='light grey')
+        self.a_frontier_scale.pack( side='left', padx=2)
+        self.a_frontier_scale.set(int(i_part_height/3))
+        a_label = Label( middle_middle_frame, text="use the pallet line (SCB number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=2)
+        self.a_list_pallet_to_begin_combo = Combobox( middle_middle_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
+        self.a_list_pallet_to_begin_combo.pack( side='left', padx=4)
+        self.a_list_pallet_to_begin_combo.current( self.i_selected_pallet_line)
 
-        #     i_index_base_column = 0
-        #     i_index_base_block += 1
-
-        # i_index_base_column = 0
-        # self.a_selected_info_lbl = Label( top_frame, text="The selected line is 0. On click Ok it update pallet:", height=2, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='white')
-        # self.a_selected_info_lbl.grid( row=i_index_base_block, column=i_index_base_column, columnspan=11, sticky='wns', padx=2, pady=0)
-
-        # i_index_base_column += 11
-        # # Création de la Combobox via la méthode ttk.Combobox()
-        # self.a_list_device_combo = Combobox( top_frame, values=self.a_list_device_model, width=4, state="readonly")
-        # self.a_list_device_combo.grid( row=i_index_base_block, column=i_index_base_column, columnspan=2, padx=2, pady=0)
-        # # Choisir l'élément qui s'affiche par défaut
-        # if self.i_selected_pallet_in_main_windows != -1:
-        #     self.a_list_device_combo.current( self.i_selected_pallet_in_main_windows)
-        # else:
-        #     self.a_list_device_combo.current( 0)
+        self.a_list_pallet_to_end_combo = Combobox( middle_down_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
+        self.a_list_pallet_to_end_combo.pack( side='right', padx=4)
+        self.a_list_pallet_to_end_combo.current( self.i_selected_pallet_line)
+        a_label = Label( middle_down_frame, text=" to " + str(i_part_height-1) + " will use the pallet line (SCB number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='right', padx=2)
+        self.a_down_begin_lbl = Label( middle_down_frame, text=str(int(i_part_height/3)+1), height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        self.a_down_begin_lbl.pack( side='right')
+        a_label = Label( middle_down_frame, text="The LOWER part, from ", height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_label.pack( side='right', padx=2)
 
         # #### BOTTOM #####
-        # width size of a button is number of charracters 15 + 2 charracters
+        # width size of a button is number of charracters 15 + 4 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__scbw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__scbw_import_ok_button, relief='raised', background=self.import_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_ok_button, relief='raised', background=self.scb_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
-
-        self.w_scb_window.update()
 
     # ####################### __scbw_set_window_size ########################
     def __scbw_set_window_size( self):
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
+        # print( "computer height =" + str( 30 + self.i_height + (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT))
+        self.i_height += 30 +  (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT
         if self.s_platform == "Linux":
             self.i_width = 968
-            self.i_height = 374
+            self.i_height += 0  #374
         elif self.s_platform == "Darwin":
             self.i_width = 968
-            self.i_height = 306
+            self.i_height += 0  #306
         elif self.s_platform == "Windows":
             self.i_width = 968
-            self.i_height = 376
+            self.i_height += 0  #376
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
@@ -278,7 +303,7 @@ class MyScbPalletWindow:
             #         print( "C'est le bon at index= ", i_loop )
             #         break
 
-            self.a_pallet_image = a_original_image
+            self.a_original_part_image = a_original_image
             self.a_scb_cnvs = a_scb_cnvs
             self.i_index_in_a_scb_cnvs_rect_lst = i_index_in_a_scb_cnvs_rect_lst
 
@@ -291,7 +316,23 @@ class MyScbPalletWindow:
 
             self.w_scb_window.title( ' SCB edit ')
 
-            self.__scbw_scb_block( a_original_image)
+            # Prepare the picture band
+            a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
+            x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+            print( f'scbw_scb_block() rect       size is: {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(x0, y0, x1, y1))
+            width, height = a_original_image.size
+            print( f'scbw_scb_block() org  image size is: {width:d} {height:d}'.format(width, height))
+
+            i_box_top = (0, int(y0/2), 320, int(y1/2))
+            a_part_image = a_original_image.crop( i_box_top)
+            width, height = a_part_image.size
+            print( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
+            self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
+            self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
+            self.i_width = width * 3
+            self.i_height = height * 3
+
+            self.__scbw_scb_block( width, height)
             # self.w_scb_window.update()
             self.__scbw_set_window_size()
 
