@@ -304,7 +304,7 @@ class MyMainWindowImage:
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
                 # s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
-                self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename() , self.a_original_img)
+                self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
                 self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
 
     # ##########################################################################################
@@ -488,17 +488,11 @@ class MyMainWindowImage:
                     break
 
             if b_click_in_scb_rect is True:
-                w_front_window = MyScbPalletWindow( self.c_main_windows, self.a_scb_cnvs_rect_lst, event.y, self.c_main_pallet.mwp_get_selected_pallet_line())
-                w_front_window.scbw_create_scb_window( self.a_original_img, self.a_scb_cnvs, i_loop)
+                w_front_window = MyScbPalletWindow( self, self.c_main_windows, self.a_scb_cnvs_rect_lst, self.c_main_pallet.mwp_get_selected_pallet_line())
+                w_front_window.scbw_create_scb_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img, self.a_scb_cnvs, i_loop)
                 w_front_window = None
-
-            print()
-
-            # w_front_window.scbw_create_scb_window( None, self.a_work_img, 0)
-            # w_front_window = None
-            # self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_work_img)
-            # self.c_main_windows.update()
-            # self.mwi_click_in_picture_center()
+                # self.c_main_windows.update()
+                # self.mwi_click_in_picture_center()
 
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):

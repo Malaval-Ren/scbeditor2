@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-""" Module de gestion SCB pallet editor """
+""" Module de gestion SCB editor """
 
 # ###############################################################################################
 #                                   PYLINT
@@ -31,7 +31,7 @@
 import platform
 import tkinter as tk_gui
 
-from tkinter import Label, Button, Toplevel, Scale
+from tkinter import Label, Button, Toplevel, Scale, Radiobutton, IntVar, font
 from tkinter.ttk import Combobox
 from PIL import ImageTk
 
@@ -54,17 +54,19 @@ class MyScbPalletWindow:
     # ANSWER_OK = 1
     SCB_NUMBER_LST = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
     MIDDLE_FRAME_HEIGHT = 40
+    UP_MIDDLE_FRAME_HEIGHT =  30 + MIDDLE_FRAME_HEIGHT + MIDDLE_FRAME_HEIGHT
+    DOWN_MIDDLE_FRAME_HEIGHT =  30 + MIDDLE_FRAME_HEIGHT
     BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
-    def __init__( self, c_the_main_window, a_scb_cnvs_rect_lst, i_click_y, i_selected_pallet_line):
+    def __init__( self, a_main_window_image, a_the_main_window, a_scb_cnvs_rect_lst, i_selected_pallet_line):
         """
             all this parameter are created in main()
-            c_the_main_window : the parent windows
+            a_main_window : the parent windows
         """
-        self.c_the_main_window = c_the_main_window
+        self.a_main_window = a_the_main_window
+        self.a_main_window_image = a_main_window_image
         self.a_scb_cnvs_rect_lst            : list = a_scb_cnvs_rect_lst
-        self.i_click_y = i_click_y
         self.i_selected_pallet_line = i_selected_pallet_line
 
         self.c_the_log = MyLogAnUsage( None)
@@ -74,6 +76,7 @@ class MyScbPalletWindow:
         self.a_work_img = None
 
         self.a_original_part_image = None
+        self.s_original_filename = None
         self.a_list_device_combo            : list = None
         self.i_index_in_a_scb_cnvs_rect_lst = 0
 
@@ -88,53 +91,71 @@ class MyScbPalletWindow:
         self.a_zoom_lbl                     : Label = None
         self.a_zoom_work_img                : ImageTk.PhotoImage = None
         self.a_render_zoom                  : ImageTk.PhotoImage = None
+        self.var_rdx_btn                    : IntVar = IntVar()
         self.a_scb_cnvs                     : list = None
         self.a_the_color_new_lbl            : Label = None
         self.a_frontier_scale               : Scale = None
-        self.a_list_pallet_to_begin_combo   : Combobox = None
-        self.a_list_pallet_to_end_combo     : Combobox = None
+        self.a_pallet_to_begin_combo        : Combobox = None
+        self.a_pallet_to_end_combo          : Combobox = None
         self.a_down_begin_lbl               : Label = None
+        self.a_pallet_to_all_combo          : Combobox = None
 
-    # ####################### __scbw_do_stuff_to_leave_this_dialog ########################
-    def __scbw_do_stuff_to_leave_this_dialog( self):
+    # ####################### __scbw_do_leave_scb_dialog ########################
+    def __scbw_do_leave_scb_dialog( self):
         """ Do commun stuff when press button ok or cancel on the scb window """
         self.a_zoom_lbl.unbind( '<Motion>')
         self.a_zoom_lbl.unbind( '<Button>')
         self.w_scb_window.grab_release()
         self.w_scb_window.quit()
 
-    # ####################### __scbw_import_ok_button ########################
-    def __scbw_import_ok_button( self):
+    # ####################### __scbw_change_pallet_of_a_scb ########################
+    def __scbw_change_pallet_of_a_scb( self, i_new_pallet_to_use):
+        """ Change the pallet used by a scb to another one """
+        a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
+        _, f_y0, _, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+        f_y0 = (f_y0 + 0.5) / 2
+        f_y1 = (f_y1 + 0.5) / 2
+        print( f'scbw_scb_block() From line: {f_y0:0.0f} to {f_y1:0.0f}'.format(f_y0, f_y1))
+        for i_picture_line_y in range( int(f_y0), int(f_y1), 1):
+            for i_loop in range( 0, 319, 1):
+                i_first_color_offset = self.a_original_part_image.getpixel( ( i_loop, i_picture_line_y))
+                i_first_color_offset = i_first_color_offset - (self.i_selected_pallet_line * 16)
+                i_first_color_offset = i_first_color_offset + (i_new_pallet_to_use * 16)
+                self.a_original_part_image.putpixel( ( i_loop, i_picture_line_y), i_first_color_offset)
+
+    # ####################### __scbw_scb_ok_button ########################
+    def __scbw_scb_ok_button( self):
         """ Button ok of the scb window """
-        # a_work_pallet_list = self.a_work_img.getpalette()
+        b_result = False
+        if self.var_rdx_btn.get() == 1:
+            i_top_scb = int( self.a_pallet_to_begin_combo.get())
+            i_bottom_scb = int( self.a_pallet_to_end_combo.get())
+            print( f'scbw_scb_ok_button() combo up= {i_top_scb:d} down= {i_bottom_scb:d}'.format(i_top_scb, i_bottom_scb))
+            print( f'scbw_scb_ok_button() i_selected_pallet_line= {self.i_selected_pallet_line:d}'.format( self.i_selected_pallet_line))
+            if self.i_selected_pallet_line != i_top_scb or self.i_selected_pallet_line != i_bottom_scb:
 
-        # self.imported_pallet_lst.clear()
-        # i_first_color_conponent_to_copy = int( self.a_list_device_combo.get()) * 16 * 3
-        # i_last_color_conponent_to_copy = i_first_color_conponent_to_copy + ( 16 * 3)
+                self.__scbw_do_leave_scb_dialog()
+                self.c_the_log.add_string_to_log( 'Do split scb close with ok')
+                b_result = True
+        else:
+            i_top_scb = int( self.a_pallet_to_all_combo.get())
+            print( f'scbw_scb_ok_button() combo = {i_top_scb:d}'.format( i_top_scb))
+            if self.i_selected_pallet_line != i_top_scb:
+                self.__scbw_change_pallet_of_a_scb( i_top_scb)
+                self.__scbw_do_leave_scb_dialog()
+                self.c_the_log.add_string_to_log( 'Do change scb close with ok')
+                b_result = True
 
-        # a_pallet_list = self.a_original_part_image.getpalette()
-        # i_index = self.i_selected_pallet * 16 * 3
-        # for i_loop in range( 0, len( a_work_pallet_list), 1):
-        #     if i_loop in range( i_first_color_conponent_to_copy, i_last_color_conponent_to_copy):
-        #         # Copy of 16 colors (3 integers per color)
-        #         self.imported_pallet_lst.append( a_pallet_list[i_index])
-        #         i_index += 1
-        #     else:
-        #         # Copy 768 colors - 48 (3 integers per color)
-        #         self.imported_pallet_lst.append( a_work_pallet_list[i_loop])
+        if b_result is True:
+            self.a_main_window.mw_update_main_window( self.s_original_filename, self.a_original_part_image)
+            w_parent_window = self.a_main_window.mw_get_main_window()
+            w_parent_window.update()
+            self.a_main_window_image.mwi_click_in_picture_center()
 
-        # self.a_work_img.putpalette( self.imported_pallet_lst)
-
-        self.__scbw_do_stuff_to_leave_this_dialog()
-        self.c_the_log.add_string_to_log( 'Do SCB edit close with ok')
-
-    # ####################### __scbw_import_cancel_button ########################
-    def __scbw_import_cancel_button( self):
+    # ####################### __scbw_scb_cancel_button ########################
+    def __scbw_scb_cancel_button( self):
         """ Button cancel of the scb window """
-        # self.imported_pallet_lst = None
-        # self.i_selected_pallet = -1
-
-        self.__scbw_do_stuff_to_leave_this_dialog()
+        self.__scbw_do_leave_scb_dialog()
         self.c_the_log.add_string_to_log( 'Do SCB edit close with cancel')
 
     # ####################### __scbw_print_coord_under_mouse ########################
@@ -170,6 +191,19 @@ class MyScbPalletWindow:
         self.a_frontier_scale.set( int( event.y / 3) )
         self.a_down_begin_lbl.configure( text=str( int( event.y / 3) + 1))
 
+    # ####################### __scbw_selection_rdx_btn ########################
+    def __scbw_selection_rdx_btn( self):
+        if self.var_rdx_btn.get() == 1:
+            self.a_pallet_to_all_combo.config( state="disabled")
+            self.a_frontier_scale.config( state="normal")
+            self.a_pallet_to_begin_combo.config( state="normal")
+            self.a_pallet_to_end_combo.config( state="normal")
+        else:
+            self.a_pallet_to_all_combo.config( state="normal")
+            self.a_frontier_scale.config( state="disabled")
+            self.a_pallet_to_begin_combo.config( state="disabled")
+            self.a_pallet_to_end_combo.config( state="disabled")
+
     # ####################### __scbw_scb_block ########################
     def __scbw_scb_block( self, i_part_width, i_part_height):
         """ Create a about dialog """
@@ -179,12 +213,24 @@ class MyScbPalletWindow:
         middle_up_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
         middle_up_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_up_frame.pack_propagate( False)
-        middle_middle_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        middle_middle_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_middle_frame.pack_propagate( False)
-        middle_down_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        middle_down_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+
+        up_middle_middle_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.UP_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        up_middle_middle_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        up_middle_middle_frame.pack_propagate( False)
+        middle_down_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_down_frame.pack_propagate( False)
+        middle_middle_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_middle_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_middle_frame.pack_propagate( False)
+
+        up_middle_down_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.DOWN_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        up_middle_down_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        up_middle_down_frame.pack_propagate( False)
+        down_middle_down_frame = tk_gui.Frame( up_middle_down_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        down_middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        down_middle_down_frame.pack_propagate( False)
+
         button_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
         button_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_down_frame.pack_propagate( False)
@@ -200,15 +246,19 @@ class MyScbPalletWindow:
         self.a_zoom_lbl.bind( '<Button>', self.__scbw_click_on_picture)
 
         # #### MIDDLE #####
-        a_label = Label( middle_up_frame, text="The Pallet used for this SCB is " + str(self.i_selected_pallet_line) + ".", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        a_split_rdx_btn.pack( side='left', padx=4 )
+        self.var_rdx_btn.set(1)     # initializing the choice, to the Split
+
+        a_label = Label( middle_up_frame, text="The pallet used for this SCB is " + str(self.i_selected_pallet_line) + ".", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black', font=font.Font( size=10))
         a_label.pack( side='left', padx=4)
-        a_label = Label( middle_up_frame, text="Mouse live position on Y:", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label = Label( middle_up_frame, text="Mouse live position on Y :", height=1, justify='right', background=constant.BACKGROUD_COLOR_UI, foreground='black', font=font.Font( size=10))
         a_label.pack( side='left', padx=4)
-        self.a_mouse_live_pos_y_lbl = Label( middle_up_frame, text="   ", width=3, background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        self.a_mouse_live_pos_y_lbl = Label( middle_up_frame, text="   ", width=3, justify="left", background=constant.BACKGROUD_COLOR_UI, foreground='black', font=font.Font( size=10))
         self.a_mouse_live_pos_y_lbl.pack( side='left', padx=4)
-        a_label = Label( middle_up_frame, text="Color under the cursor is ", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label = Label( middle_up_frame, text="Color under the cursor is ", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black', font=font.Font( size=10))
         a_label.pack( side='left', padx=4)
-        self.a_the_color_new_lbl = Label( middle_up_frame, text=None, width=8, borderwidth=2, background='black', foreground='black')
+        self.a_the_color_new_lbl = Label( middle_up_frame, text=None, width=8, borderwidth=2, background='black', foreground='black', font=font.Font( size=10))
         self.a_the_color_new_lbl.pack( side='left', padx=4)
 
         a_label = Label( middle_middle_frame, text="The UPPER part, from 0 to", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
@@ -216,40 +266,52 @@ class MyScbPalletWindow:
         self.a_frontier_scale = Scale( middle_middle_frame, from_=0, to=i_part_height-2, length=500, command=self.__scbw_update_begin, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor='light grey')
         self.a_frontier_scale.pack( side='left', padx=2)
         self.a_frontier_scale.set(int(i_part_height/3))
-        a_label = Label( middle_middle_frame, text="use the pallet line (SCB number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label = Label( middle_middle_frame, text="use the pallet line (scb number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_label.pack( side='left', padx=2)
-        self.a_list_pallet_to_begin_combo = Combobox( middle_middle_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
-        self.a_list_pallet_to_begin_combo.pack( side='left', padx=4)
-        self.a_list_pallet_to_begin_combo.current( self.i_selected_pallet_line)
+        self.a_pallet_to_begin_combo = Combobox( middle_middle_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
+        self.a_pallet_to_begin_combo.pack( side='left', padx=4)
+        self.a_pallet_to_begin_combo.current( self.i_selected_pallet_line)
 
-        self.a_list_pallet_to_end_combo = Combobox( middle_down_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
-        self.a_list_pallet_to_end_combo.pack( side='right', padx=4)
-        self.a_list_pallet_to_end_combo.current( self.i_selected_pallet_line)
-        a_label = Label( middle_down_frame, text=" to " + str(i_part_height-1) + " will use the pallet line (SCB number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        self.a_pallet_to_end_combo = Combobox( middle_down_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
+        self.a_pallet_to_end_combo.pack( side='right', padx=4)
+        self.a_pallet_to_end_combo.current( self.i_selected_pallet_line)
+        a_label = Label( middle_down_frame, text=" to " + str(i_part_height-1) + " will use the pallet line (scb number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_label.pack( side='right', padx=2)
         self.a_down_begin_lbl = Label( middle_down_frame, text=str(int(i_part_height/3)+1), height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         self.a_down_begin_lbl.pack( side='right')
         a_label = Label( middle_down_frame, text="The LOWER part, from ", height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_label.pack( side='right', padx=2)
 
+        a_pallet_rdx_btn = Radiobutton( up_middle_down_frame, text="Change the pallet used by this scb :", variable=self.var_rdx_btn, value=2, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        a_pallet_rdx_btn.pack( side='left', padx=4 )
+        a_label = Label( down_middle_down_frame, text="Selected the new pallet instead of " + str(self.i_selected_pallet_line) + " use :", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_label.pack( side='left', padx=4)
+        self.a_pallet_to_all_combo = Combobox( down_middle_down_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
+        self.a_pallet_to_all_combo.pack( side='left', padx=4)
+        self.a_pallet_to_all_combo.current( self.i_selected_pallet_line)
+        self.a_pallet_to_all_combo.config( state="disabled")
+
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 4 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.scb_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_ok_button, relief='raised', background=self.scb_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_ok_button, relief='raised', background=self.scb_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_import_cancel_button, relief='raised', background=self.scb_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
     # ####################### __scbw_set_window_size ########################
     def __scbw_set_window_size( self):
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
         # print( "computer height =" + str( 30 + self.i_height + (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT))
-        self.i_height += 30 +  (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT
+        # i_height of the picture part + 30 windows title + 3 frames for action widgets + 1 frame for cancel and ok button
+        # self.i_height += 30 +  (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT
+        self.i_height += 30 + self.MIDDLE_FRAME_HEIGHT + self.UP_MIDDLE_FRAME_HEIGHT + self.DOWN_MIDDLE_FRAME_HEIGHT
+
         if self.s_platform == "Linux":
             self.i_width = 968
             self.i_height += 0  #374
@@ -260,8 +322,8 @@ class MyScbPalletWindow:
             self.i_width = 968
             self.i_height += 0  #376
 
-        self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
-        self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
+        self.i_position_x = self.a_main_window.mw_get_main_window_pos_x() + int((self.a_main_window.mw_get_main_window_width() - self.i_width) / 2)
+        self.i_position_y = self.a_main_window.mw_get_main_window_pos_y() + int((self.a_main_window.mw_get_main_window_height() - self.i_height) / 2)
 
         s_windows_size_and_position = ( str( self.i_width) + 'x' + str( self.i_height) + '+' + str( self.i_position_x) + '+' + str( self.i_position_y))
         self.w_scb_window.geometry( s_windows_size_and_position)  # dimension + position x/y a l'ouverture
@@ -289,20 +351,12 @@ class MyScbPalletWindow:
     # ##########################################################################################
 
     # ####################### scbw_create_scb_window ########################
-    def scbw_create_scb_window( self, a_original_image, a_scb_cnvs, i_index_in_a_scb_cnvs_rect_lst):
-        """ Design the import pallet box dialog """
+    def scbw_create_scb_window( self, s_filename, a_original_image, a_scb_cnvs, i_index_in_a_scb_cnvs_rect_lst):
+        """ Design the scb box dialog """
         if a_original_image and a_scb_cnvs:
             self.c_the_log.add_string_to_log( 'scbw_create_scb_window()')
-            w_parent_window = self.c_the_main_window.mw_get_main_window()
-
-            # for i_loop in range( 0, len( self.a_scb_cnvs_rect_lst), 1):
-            #     a_cnvs_rect = self.a_scb_cnvs_rect_lst[i_loop]
-            #     x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-            #     print( f'#{i_loop} {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(i_loop, x0, y0, x1, y1))
-            #     if self.i_click_y >= y0 and self.i_click_y <= y1:
-            #         print( "C'est le bon at index= ", i_loop )
-            #         break
-
+            w_parent_window = self.a_main_window.mw_get_main_window()
+            self.s_original_filename = s_filename
             self.a_original_part_image = a_original_image
             self.a_scb_cnvs = a_scb_cnvs
             self.i_index_in_a_scb_cnvs_rect_lst = i_index_in_a_scb_cnvs_rect_lst
@@ -313,7 +367,6 @@ class MyScbPalletWindow:
             self.w_scb_window.grab_set()
             self.w_scb_window.focus_set()
             self.w_scb_window.configure( background=constant.BACKGROUD_COLOR_UI)
-
             self.w_scb_window.title( ' SCB edit ')
 
             # Prepare the picture band
@@ -342,5 +395,4 @@ class MyScbPalletWindow:
     # ####################### scbw_close_scb_window ########################
     def scbw_close_scb_window( self):
         """ Close the preference window """
-        self.__scbw_import_cancel_button()
-        self.w_scb_window.quit()
+        self.__scbw_scb_cancel_button()
