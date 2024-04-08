@@ -64,19 +64,19 @@ class MyScbPalletWindow:
             all this parameter are created in main()
             a_main_window : the parent windows
         """
-        self.a_main_window = a_the_main_window
-        self.a_main_window_image = a_main_window_image
+        self.a_main_window                  = a_the_main_window
+        self.a_main_window_image            = a_main_window_image
         self.a_scb_cnvs_rect_lst            : list = a_scb_cnvs_rect_lst
-        self.i_selected_pallet_line = i_selected_pallet_line
+        self.i_selected_pallet_line         = i_selected_pallet_line
 
-        self.c_the_log = MyLogAnUsage( None)
-        self.c_the_icons = MyIconPictures( None)
-        self.s_platform = platform.system()
-        self.w_scb_window = None
-        self.a_work_img = None
+        self.c_the_log                      = MyLogAnUsage( None)
+        self.c_the_icons                    = MyIconPictures( None)
+        self.s_platform                     = platform.system()
+        self.w_scb_window                   = None
+        self.a_work_img                     = None
 
-        self.a_original_part_image = None
-        self.s_original_filename = None
+        self.a_original_part_image          = None
+        self.s_original_filename            = None
         self.a_list_device_combo            : list = None
         self.i_index_in_a_scb_cnvs_rect_lst = 0
 
@@ -108,15 +108,10 @@ class MyScbPalletWindow:
         self.w_scb_window.grab_release()
         self.w_scb_window.quit()
 
-    # ####################### __scbw_change_pallet_of_a_scb ########################
-    def __scbw_change_pallet_of_a_scb( self, i_new_pallet_to_use):
+    # ####################### __scbw_change_pallet_for_lines ########################
+    def __scbw_change_pallet_for_lines( self, i_new_pallet_to_use, i_from, i_to):
         """ Change the pallet used by a scb to another one """
-        a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
-        _, f_y0, _, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-        f_y0 = (f_y0 + 0.5) / 2
-        f_y1 = (f_y1 + 0.5) / 2
-        print( f'scbw_scb_block() From line: {f_y0:0.0f} to {f_y1:0.0f}'.format(f_y0, f_y1))
-        for i_picture_line_y in range( int(f_y0), int(f_y1), 1):
+        for i_picture_line_y in range( i_from, i_to, 1):
             for i_loop in range( 0, 319, 1):
                 i_first_color_offset = self.a_original_part_image.getpixel( ( i_loop, i_picture_line_y))
                 i_first_color_offset = i_first_color_offset - (self.i_selected_pallet_line * 16)
@@ -127,21 +122,33 @@ class MyScbPalletWindow:
     def __scbw_scb_ok_button( self):
         """ Button ok of the scb window """
         b_result = False
+        # print( f'scbw_scb_ok_button() i_selected_pallet_line= {self.i_selected_pallet_line}')
+        a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
+        _, f_y0, _, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+        f_y0 = (f_y0 + 0.5) / 2
+        f_y1 = (f_y1 + 0.5) / 2
+        # print( f'scbw_scb_ok_button() from line: {f_y0:0.0f} to {f_y1:0.0f}'.format(f_y0, f_y1))
         if self.var_rdx_btn.get() == 1:
-            i_top_scb = int( self.a_pallet_to_begin_combo.get())
-            i_bottom_scb = int( self.a_pallet_to_end_combo.get())
-            print( f'scbw_scb_ok_button() combo up= {i_top_scb:d} down= {i_bottom_scb:d}'.format(i_top_scb, i_bottom_scb))
-            print( f'scbw_scb_ok_button() i_selected_pallet_line= {self.i_selected_pallet_line:d}'.format( self.i_selected_pallet_line))
-            if self.i_selected_pallet_line != i_top_scb or self.i_selected_pallet_line != i_bottom_scb:
-
+            i_top_selected_pallet_line = int( self.a_pallet_to_begin_combo.get())
+            i_bottom_selected_pallet_line = int( self.a_pallet_to_end_combo.get())
+            # print( f'scbw_scb_ok_button() combo up= {i_top_selected_pallet_line} down= {i_bottom_selected_pallet_line}')
+            if self.i_selected_pallet_line != i_top_selected_pallet_line:
+                # Change the pallet on top part of the image band
+                self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y0) + int(self.a_frontier_scale.get())+1)
                 self.__scbw_do_leave_scb_dialog()
-                self.c_the_log.add_string_to_log( 'Do split scb close with ok')
+                self.c_the_log.add_string_to_log( 'Do split up scb close with ok')
+                b_result = True
+            if self.i_selected_pallet_line != i_bottom_selected_pallet_line:
+                # Change the pallet on bottom part of the image band
+                self.__scbw_change_pallet_for_lines( i_bottom_selected_pallet_line, int(f_y0) + int(self.a_frontier_scale.get() + 1), int(f_y1)+1)
+                self.__scbw_do_leave_scb_dialog()
+                self.c_the_log.add_string_to_log( 'Do split down scb close with ok')
                 b_result = True
         else:
-            i_top_scb = int( self.a_pallet_to_all_combo.get())
-            print( f'scbw_scb_ok_button() combo = {i_top_scb:d}'.format( i_top_scb))
-            if self.i_selected_pallet_line != i_top_scb:
-                self.__scbw_change_pallet_of_a_scb( i_top_scb)
+            i_top_selected_pallet_line = int( self.a_pallet_to_all_combo.get())
+            # print( f'scbw_scb_ok_button() combo = {i_top_selected_pallet_line}')
+            if self.i_selected_pallet_line != i_top_selected_pallet_line:
+                self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y1)+1)
                 self.__scbw_do_leave_scb_dialog()
                 self.c_the_log.add_string_to_log( 'Do change scb close with ok')
                 b_result = True
@@ -371,12 +378,17 @@ class MyScbPalletWindow:
 
             # Prepare the picture band
             a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
-            x0, y0, x1, y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-            print( f'scbw_scb_block() rect       size is: {x0:0.0f} {y0:0.0f} {x1:0.0f} {y1:0.0f}'.format(x0, y0, x1, y1))
+            f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+            print( f'scbw_scb_block() rect       size is: {f_x0:0.0f} {f_y0:0.0f} {f_x1:0.0f} {f_y1:0.0f}'.format(f_x0, f_y0, f_x1, f_y1))
             width, height = a_original_image.size
             print( f'scbw_scb_block() org  image size is: {width:d} {height:d}'.format(width, height))
 
-            i_box_top = (0, int(y0/2), 320, int(y1/2))
+            f_y0 = (f_y0 + 0.5) / 2
+            f_y1 = (f_y1 + 0.5) / 2
+            if int(f_y0) == int(f_y1):
+                f_y1 = f_y0 + 1
+
+            i_box_top = (0, int(f_y0), 320, int(f_y1))
             a_part_image = a_original_image.crop( i_box_top)
             width, height = a_part_image.size
             print( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
@@ -386,7 +398,6 @@ class MyScbPalletWindow:
             self.i_height = height * 3
 
             self.__scbw_scb_block( width, height)
-            # self.w_scb_window.update()
             self.__scbw_set_window_size()
 
             self.w_scb_window.mainloop()
@@ -394,5 +405,5 @@ class MyScbPalletWindow:
 
     # ####################### scbw_close_scb_window ########################
     def scbw_close_scb_window( self):
-        """ Close the preference window """
+        """ Close the scb window """
         self.__scbw_scb_cancel_button()
