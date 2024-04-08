@@ -85,8 +85,9 @@ class MyMainWindowPallet:
         self.c_main_image = None                   # top icon menu bar : MyMainWindowPicture
         self.c_main_pallet = None                  # top icon menu bar : MyMainWindowPallet
 
-        self.a_pallet_number_lst = []
-        self.a_pallet_button_lst = []
+        self.a_pallet_horizontal_number_lst : list = []
+        self.a_pallet_vertical_number_lst   : list = []
+        self.a_pallet_button_lst            : list = []
 
         self.color_radio_button = IntVar()
         self.i_selected_pallet_line = 0
@@ -324,7 +325,7 @@ class MyMainWindowPallet:
         for i_loop in range( 0, 16, 1):
             a_label = Label( a_pallet_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-            self.a_pallet_number_lst.append( a_label)
+            self.a_pallet_horizontal_number_lst.append( a_label)
             i_index_base_column += 1
 
         # Table of color button for the pallet
@@ -341,6 +342,7 @@ class MyMainWindowPallet:
                 a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             else:
                 a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            self.a_pallet_vertical_number_lst.append( a_label)
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
@@ -479,8 +481,10 @@ class MyMainWindowPallet:
             a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
             a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=4, pady=4, sticky='w')
+            # a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap line color", command=None, width=len("Swap line color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            # a_swap_color_btn.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_pen_color_btn.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='w')
+            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='w')
 
         # self.w_tk_root.update()
 
@@ -737,6 +741,20 @@ class MyMainWindowPallet:
                 self.i_selected_pallet_line = __i_complete
                 self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
 
+    # ####################### mwp_update_color_number_vertical_used ########################
+    def mwp_update_color_number_vertical_used( self):
+        """ Parse heigth of the original image to change color of label white when pallet is used """
+        for i_loop in range( 0, 16, 1):
+            i_counter = self.c_main_image.mwi_count_number_of_scb( i_loop * 16)
+            a_label = self.a_pallet_vertical_number_lst[i_loop]
+            if i_counter > 0:
+                a_label.configure( foreground='white')
+            else:
+                a_label.configure( foreground='black')
+
+        self.w_tk_root.update()
+        # print()
+
     # ####################### __mwp_set_color_in_pallet ########################
     def __mwp_set_color_in_pallet( self, i_new_index):
         """ Set a new color value in pallet  """
@@ -830,7 +848,7 @@ class MyMainWindowPallet:
             for i_loop in range( 0, 319, 1):
                 i_first_color_offset = a_original_img.getpixel( ( i_loop, i_picture_line_y))
                 if i_scb == int(i_first_color_offset / 16): # check the SCB
-                    # swap offset of color in thise line
+                    # swap offset of color in this line
                     if i_first_color_offset == i_a_from:
                         a_original_img.putpixel( ( i_loop, i_picture_line_y), i_b_index)
                     elif i_first_color_offset == i_b_index:
@@ -942,6 +960,11 @@ class MyMainWindowPallet:
     def mwp_get_pallet_btn( self, i_element) -> Radiobutton:
         """ Return the color of the button radio """
         return self.a_pallet_button_lst[i_element]
+
+    # ####################### mwp_get_pallet_horizontal_lbl ########################
+    def mwp_get_pallet_horizontal_lbl( self, i_element) -> Label:
+        """ Return the label for horizontal list of number of column """
+        return self.a_pallet_horizontal_number_lst[i_element]
 
     # ####################### mwp_reset_around_cursor ########################
     def mwp_reset_around_cursor( self):

@@ -87,8 +87,8 @@ class MyMainWindowImage:
         self.a_original_img = None
         self.a_work_img = None
         self.a_picture_lbl = None
-        self.a_scb_cnvs = None
-        self.a_scb_cnvs_rect_lst = []
+        self.a_scb_cnvs                     : Canvas = None
+        self.a_scb_cnvs_rect_lst            : list = []
         self.a_render = None
         self.a_image = None
         self.a_filename_lbl = None
@@ -111,7 +111,7 @@ class MyMainWindowImage:
         self.a_less_x_btn = None
         self.a_more_y_btn = None
         self.a_less_y_btn = None
-        self.a_bar_chart_cnvs = None
+        self.a_bar_chart_cnvs               : Canvas = None
 
         self.i_around_cursor = -1
 
@@ -160,14 +160,14 @@ class MyMainWindowImage:
             self.a_scb_lbl.configure( text=str( int( i_offset / 16)))
             self.a_line_slider.set( int( i_offset / 16))
 
+            # Draw bar chart for colors in usage in a line
+            self.mwi_draw_bar_chart( i_offset, i_pos_y)
+
             # Select the radio button color in the pallet
             self.c_main_pallet.mwp_select_color_rad_btn( i_offset)
 
             # print( "mw_click_on_picture() i_offset = ", str( i_offset))
             self.c_main_pallet.mwp_color_btn_rad( i_offset)
-
-            # Draw bar chart for colors in usage in a line
-            self.mwi_draw_bar_chart( i_offset, i_pos_y)
 
             # Display zoom of a part of the picture
             self.c_main_pallet.mwp_draw_zoom_square( i_pos_x, i_pos_y)
@@ -423,14 +423,14 @@ class MyMainWindowImage:
             if a_result_color_rry[i_loop] > 0:
                 self.a_bar_chart_cnvs.create_rectangle( (i_colmun_x, 84-i_hauteur, i_colmun_x+20, 84), fill=self.c_main_pallet.get_from_pal_btn_lst_color(i_pallet_number+i_loop), outline='white')
                 if a_usage_color_rry[i_loop] > 0 and a_usage_color_rry[i_loop] < 10:
-                    self.a_bar_chart_cnvs.create_text( i_colmun_x+8, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
+                    self.a_bar_chart_cnvs.create_text( i_colmun_x+9, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
             i_colmun_x += 24
 
     # ####################### mw_draw_scb_bar ########################
     def mwi_draw_scb_bar( self, i_color_offset):
         """ Draw the bar with rectangles to display all the SCB usage """
         i_pallet_number = int( i_color_offset / 16) * 16
-        # print( " offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        # print( "mwi_draw_scb_bar() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         self.a_scb_cnvs.delete( "all")
         self.a_scb_cnvs_rect_lst.clear()
         i_rect_begin = -1
@@ -445,7 +445,36 @@ class MyMainWindowImage:
                     self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop-1, fill='blue', outline='blue'))
                     i_rect_begin = -1
                 i_inter = 0
-        # print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+
+        # Add last rectangle for the exit of the for i_loop without created it
+        if i_rect_begin != -1:
+            self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
+        # print( "mwi_draw_scb_bar() Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+
+    # ####################### mwi_count_number_of_scb ########################
+    def mwi_count_number_of_scb( self, i_color_offset) -> int:
+        """ Draw the bar with rectangles to display all the SCB usage """
+        i_pallet_number = int( i_color_offset / 16) * 16
+        # print( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        i_counter = 0
+        i_rect_begin = -1
+        for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
+            i_offset = self.a_work_img.getpixel( ( 0, i_loop))
+            i_inter = int( i_offset / 16) * 16
+            if i_inter == i_pallet_number:
+                if i_rect_begin == -1:
+                    i_rect_begin = i_loop   # te Y hight of the rectangle
+            else:
+                if i_rect_begin != -1:
+                    i_counter += 1
+                    i_rect_begin = -1
+                i_inter = 0
+
+        # Add last rectangle for the exit of the for i_loop without created it
+        if i_rect_begin != -1:
+            i_counter += 1
+        # print( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
+        return i_counter
 
     # ####################### mw_update_main_window ########################
     def mwi_update_main_window_image( self, s_filename, a_work_img):
@@ -491,8 +520,6 @@ class MyMainWindowImage:
                 w_front_window = MyScbPalletWindow( self, self.c_main_windows, self.a_scb_cnvs_rect_lst, self.c_main_pallet.mwp_get_selected_pallet_line())
                 w_front_window.scbw_create_scb_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img, self.a_scb_cnvs, i_loop)
                 w_front_window = None
-                # self.c_main_windows.update()
-                # self.mwi_click_in_picture_center()
 
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
@@ -529,7 +556,7 @@ class MyMainWindowImage:
 
         self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
-        self.a_scb_cnvs.bind("<Button-1>", self.mwi_change_pallet)
+        self.a_scb_cnvs.bind( "<Button-1>", self.mwi_change_pallet)
 
         self.w_tk_root.update()
         # Create details frame
@@ -549,7 +576,7 @@ class MyMainWindowImage:
         a_font_label = font.Font( size=6)
 
         a_bar_chart_comment_frame = tk_gui.Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_bar_chart_comment_frame.place( x=667, y=30+(constant.PICTURE_HEIGHT-20), width=self.i_main_window_width - 438, height=15)
+        a_bar_chart_comment_frame.place( x=668, y=30+(constant.PICTURE_HEIGHT-20), width=self.i_main_window_width - 434, height=15)
         for i_loop in range( 0, 16, 1):
             a_label = Label(a_bar_chart_comment_frame, text=str( i_loop), width=2, justify='left', background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
             if s_platform == "Linux":

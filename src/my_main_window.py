@@ -322,6 +322,7 @@ class MyMainWindow:
         if s_filename and a_work_img:
             self.c_main_image.mwi_update_main_window_image( s_filename, a_work_img)
 
+            # Update pallet radio buttons
             a_work_img = self.c_main_image.mwi_get_working_image()
             a_pallet_list = a_work_img.getpalette()
             # Disabled for debug
@@ -353,10 +354,11 @@ class MyMainWindow:
                     a_color_btn_rad.configure( background="#" + s_red + s_green + s_blue)
                     i_element += 1
 
-                self.w_tk_root.update()
                 # Disabled for debug
+                # self.w_tk_root.update()
                 # print( s_my_hex)
 
+            self.c_main_pallet.mwp_update_color_number_vertical_used()
             self.w_tk_root.update()
             b_return = True
         else:
@@ -423,6 +425,7 @@ class MyMainWindow:
                 s_new_file_name = s_new_file_name + ".bmp"
 
             a_original_img = self.c_main_image.mwi_get_original_image()
+            print( '\nSaving : ' + s_new_file_name)
             a_original_img.save( s_new_file_name, 'BMP')
 
     # ####################### mw_print_widget_under_mouse ########################
