@@ -56,12 +56,15 @@ class MyImportPalletWindow:
     a_list_device_model = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
 
     # ####################### __init__ ########################
-    def __init__( self, c_the_main_window):
+    def __init__( self, a_the_main_window, a_main_window_image, file_path_name):
         """
             all this parameter are created in main()
-            c_the_main_window : the parent windows
+            a_main_window : the parent windows
+            a_main_window_image : the top right part class who manage the iamge
         """
-        self.c_the_main_window = c_the_main_window
+        self.a_main_window = a_the_main_window
+        self.a_main_window_image = a_main_window_image
+        self.s_original_filename = file_path_name
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
@@ -83,6 +86,12 @@ class MyImportPalletWindow:
         self.i_selected_pallet_in_main_windows = -1     # target of destination index
         self.imported_pallet_lst = []
 
+    # ####################### __scbw_do_leave_import_dialog ########################
+    def __scbw_do_leave_import_dialog( self):
+        """ Do commun stuff when press button ok or cancel on the scb window """
+        self.w_import_window.grab_release()
+        self.w_import_window.quit()
+ 
     # ####################### __ipw_import_ok_button ########################
     def __ipw_import_ok_button( self):
         """ Button ok of the import window """
@@ -105,17 +114,19 @@ class MyImportPalletWindow:
 
         self.a_work_img.putpalette( self.imported_pallet_lst)
 
-        self.w_import_window.grab_release()
-        self.w_import_window.quit()
+        self.__scbw_do_leave_import_dialog()
         self.c_the_log.add_string_to_log( 'Do import pallet close with ok')
+        self.a_main_window.mw_update_main_window( self.s_original_filename, self.a_work_img)
+        w_parent_window = self.a_main_window.mw_get_main_window()
+        w_parent_window.update()
+        self.a_main_window_image.mwi_click_in_picture_center()
 
     # ####################### __ipw_import_cancel_button ########################
     def __ipw_import_cancel_button( self):
         """ Button cancel of the import window """
         self.imported_pallet_lst = None
         self.i_selected_pallet = -1
-        self.w_import_window.grab_release()
-        self.w_import_window.quit()
+        self.__scbw_do_leave_import_dialog()
         self.c_the_log.add_string_to_log( 'Do import pallet close with cancel')
 
     # ####################### __ipw_select_color_rad_btn ########################
@@ -227,8 +238,8 @@ class MyImportPalletWindow:
             self.i_width = 592
             self.i_height = 556
 
-        self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
-        self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
+        self.i_position_x = self.a_main_window.mw_get_main_window_pos_x() + int((self.a_main_window.mw_get_main_window_width() - self.i_width) / 2)
+        self.i_position_y = self.a_main_window.mw_get_main_window_pos_y() + int((self.a_main_window.mw_get_main_window_height() - self.i_height) / 2)
 
         s_windows_size_and_position = ( str( self.i_width) + 'x' + str( self.i_height) + '+' + str( self.i_position_x) + '+' + str( self.i_position_y))
         self.w_import_window.geometry( s_windows_size_and_position)  # dimension + position x/y a l'ouverture
@@ -240,7 +251,7 @@ class MyImportPalletWindow:
         self.w_import_window.resizable( False, False)
         self.w_import_window.iconphoto( True, self.c_the_icons.get_app_photo())
 
-        print( '\npw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
+        print( '\nipw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -260,7 +271,7 @@ class MyImportPalletWindow:
         """ Design the import pallet box dialog """
         if a_pallet_image and a_work_img:
             self.c_the_log.add_string_to_log( 'ipw_create_import_window()')
-            w_parent_window = self.c_the_main_window.mw_get_main_window()
+            w_parent_window = self.a_main_window.mw_get_main_window()
             self.a_pallet_image = a_pallet_image
             self.a_work_img = a_work_img
             self.i_selected_pallet_in_main_windows = i_selected_pallet_in_main_windows
@@ -271,7 +282,6 @@ class MyImportPalletWindow:
             self.w_import_window.grab_set()
             self.w_import_window.focus_set()
             self.w_import_window.configure( background=constant.BACKGROUD_COLOR_UI)
-
             self.w_import_window.title( ' Import pallet ')
 
             self.__ipw_import_block( a_pallet_image)
@@ -281,8 +291,7 @@ class MyImportPalletWindow:
             self.w_import_window.mainloop()
             self.w_import_window.destroy()
 
-    # ####################### pw_close_import_window ########################
+    # ####################### ipw_close_import_window ########################
     def ipw_close_import_window( self):
         """ Close the preference window """
         self.__ipw_import_cancel_button()
-        self.w_import_window.quit()
