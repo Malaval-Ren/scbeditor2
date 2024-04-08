@@ -358,7 +358,7 @@ class MyMainWindowPallet:
             i_index_base_column = 0
             i_index_base_block += 1
 
-        self.w_tk_root.update()
+        # self.w_tk_root.update()
 
         # Create color button right frame
         a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'

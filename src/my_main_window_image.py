@@ -558,7 +558,7 @@ class MyMainWindowImage:
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
         self.a_scb_cnvs.bind( "<Button-1>", self.mwi_change_pallet)
 
-        self.w_tk_root.update()
+        # self.w_tk_root.update()
         # Create details frame
         i_width = i_pic_frame_width
         i_width = i_width - ( 640 + 24 + 10)
