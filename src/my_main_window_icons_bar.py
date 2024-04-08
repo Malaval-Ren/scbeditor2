@@ -30,6 +30,7 @@
 # pylint: disable=too-many-instance-attributes
 # ###############################################################################################
 
+import os
 import platform
 
 from tkinter import Button
@@ -383,6 +384,11 @@ class MyMainWindowIconsBar:
     def mwib_get_get_path_filename( self):
         """ Return thye complete file pathname of the last image loaded """
         return self.s_filename
+
+    # ####################### mwib_get_get_pathname ########################
+    def mwib_get_get_pathname( self):
+        """ Return thye complete pathname of the last image loaded """
+        return os.path.dirname( os.path.abspath(self.s_filename))
 
     # ####################### mwib_get_get_path_filename ########################
     def mwib_set_main_image( self, c_mains_image):

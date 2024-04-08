@@ -398,7 +398,7 @@ class MyMainWindow:
     # ####################### mw_get_pathname ########################
     def mw_get_pathname( self) -> str:
         """ Return default pathname """
-        return self.s_init_pathname
+        return self.c_main_icon_bar.mwib_get_get_pathname()
 
     # ####################### mw_get_application_info ########################
     def mw_get_application_info( self):
