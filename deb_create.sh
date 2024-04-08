@@ -162,6 +162,7 @@ aError=$NO_ERROR
 pyInstall_Name=$(basename "$PWD")
 pyInstall_getVersion="StringStruct(u'ProductVersion', u'"
 pyInstall_version=""
+user_name=$USERNAME
 
 echo -e $BGreen "Project name        :" "$pyInstall_Name" $Color_Off
 echo
@@ -395,6 +396,9 @@ then
 	sudo chmod 755 "$packageSrcBase""/usr/bin/""$appName"
 	sudo chmod 755 "$packageSrcBase""/DEBIAN/preinst"	
 
+	echo $USERNAME
+	username=$()
+
 	echo
 	echo -e $BGreen "Package name        :" "$packageSrcBase"".deb" $Color_Off
 	echo
@@ -402,7 +406,7 @@ then
     aError=$?
 	if [ $aError -ne 0 ] || [ ! -f "$packageSrcBase"".deb" ]  
 	then
-		sudo chown renaud:renaud -R "$packageSrcBase"
+		sudo chown $user_name:$user_name -R "$packageSrcBase"
 		echo
 		echo -e $BRed "dpkg-deb failed ! error =" "$aError"  $Color_Off
 		exit $ERROR_SH_FAILED
@@ -417,13 +421,13 @@ then
 	sudo alien -r -k $packageSrcBase".deb" 
     if [ $? -ne 0 ]
     then
-		sudo chown renaud:renaud -R "$packageSrcBase"
+		sudo chown $user_name:$user_name -R "$packageSrcBase"
         echo -e $BRed "Failed to do convert .deb to .rpm ! error =" $? $Color_Off
         exit $ERROR_SH_FILE
     fi
-	sudo chown renaud:renaud -R "$packageSrcBase"
-	sudo chown renaud:renaud ./scbeditor2_2.2.9-27_amd64.deb
-	sudo chown renaud:renaud ./scbeditor2-2.2.9-27.x86_64.rpm
+	sudo chown $user_name:$user_name -R "$packageSrcBase"
+	sudo chown $user_name:$user_name ./scbeditor2_2.2.9-27_amd64.deb
+	sudo chown $user_name:$user_name ./scbeditor2-2.2.9-27.x86_64.rpm
 	echo
 	echo -e $BGreen "Convert is done with success." $Color_Off
 	cd ..
