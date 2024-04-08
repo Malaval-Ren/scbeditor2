@@ -36,11 +36,13 @@ The goal of **SCB Editor II** is to prepare a .bmp file to be converted to .pic 
 The bmp file is directly converted to be compatible with **SCB Editor II**.  
 A bmp 4 bits / pixels is converted to bmp 8 bits / pixels, the 16 colors pallet is copied 15 times to fill the 256 colors pallet.  
 Supported picture have 320 x 200 pixels size.  
+You see the pallet used in your picture (number is in white)
 You could modify, copy color in the pallet.  
 You could copy a line of color to an another line.  
 You could change color of a pattern in zoom.  
 You could set a SCB to a line of color to increase the number of color used.  
-You could import pallet from an another image.
+You could import pallet from an another image.  
+You could scb edit, split a group of picture line.  
 
 ## Main window
 
@@ -58,6 +60,7 @@ From the up icon to the down:
   2 - Load picture  
   3 - Save picture  
   4 - Import from an another picture a 16 colors pallet  
+![Alt text](importer_pallet.png "import pallet of 16 color from an another picture")
   5 - Set color reserved for cursor **Not implemented**  
 
 ### Picture part
@@ -71,6 +74,7 @@ Automatic click on the middle of the picture update all the interfaces.
 
 Display the blue rectangle to indicate the number of line with the same **SCB**.  
 For a bmp with bmp 4 bits / pixels the column is completely blue.
+![Alt text](change_scb.png "Change pallet usable by line scb")
 
 #### Under *Details*
 
