@@ -331,6 +331,8 @@ class MyScbPalletWindow:
 
         self.i_position_x = self.a_main_window.mw_get_main_window_pos_x() + int((self.a_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.a_main_window.mw_get_main_window_pos_y() + int((self.a_main_window.mw_get_main_window_height() - self.i_height) / 2)
+        if self.i_position_y < 0:
+            self.i_position_y = 0
 
         s_windows_size_and_position = ( str( self.i_width) + 'x' + str( self.i_height) + '+' + str( self.i_position_x) + '+' + str( self.i_position_y))
         self.w_scb_window.geometry( s_windows_size_and_position)  # dimension + position x/y a l'ouverture
