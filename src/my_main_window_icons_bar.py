@@ -387,8 +387,13 @@ class MyMainWindowIconsBar:
 
     # ####################### mwib_get_get_pathname ########################
     def mwib_get_get_pathname( self):
-        """ Return thye complete pathname of the last image loaded """
-        return os.path.dirname( os.path.abspath(self.s_filename))
+        """ Return the complete pathname of the last image loaded """
+        if self.s_filename:
+            s_pathname = os.path.dirname( os.path.abspath(self.s_filename))
+        else:
+            s_pathname = os.getcwd()
+            s_pathname, _ = os.path.split(s_pathname)
+        return s_pathname
 
     # ####################### mwib_get_get_path_filename ########################
     def mwib_set_main_image( self, c_mains_image):
