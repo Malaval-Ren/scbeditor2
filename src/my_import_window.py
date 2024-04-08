@@ -71,7 +71,8 @@ class MyImportPalletWindow:
         self.w_import_window = None
         self.a_work_img = None
 
-        self.a_pallet_button_lst = []
+        self.a_pallet_button_lst            : list = []
+        self.a_pallet_vertical_number_lst   : list = []
         self.a_selected_info_lbl = None
         self.a_pallet_image = None
         self.a_list_device_combo = None
@@ -91,7 +92,7 @@ class MyImportPalletWindow:
         """ Do commun stuff when press button ok or cancel on the scb window """
         self.w_import_window.grab_release()
         self.w_import_window.quit()
- 
+
     # ####################### __ipw_import_ok_button ########################
     def __ipw_import_ok_button( self):
         """ Button ok of the import window """
@@ -140,6 +141,45 @@ class MyImportPalletWindow:
             self.i_selected_pallet = 0
             self.a_selected_info_lbl.configure( text="\nThe selected line is 0. On click Ok it update pallet : ")
 
+    # ####################### __ipw_count_number_of_scb ########################
+    def __ipw_count_number_of_scb( self, i_color_offset) -> int:
+        """ Draw the bar with rectangles to display all the SCB usage """
+        i_pallet_number = int( i_color_offset / 16) * 16
+        # print( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        i_counter = 0
+        i_rect_begin = -1
+        for i_loop in range( 0, 199, 2):
+            i_offset = self.a_pallet_image.getpixel( ( 0, i_loop))
+            i_inter = int( i_offset / 16) * 16
+            if i_inter == i_pallet_number:
+                if i_rect_begin == -1:
+                    i_rect_begin = i_loop   # the Y height of the rectangle
+            else:
+                if i_rect_begin != -1:
+                    i_counter += 1
+                    i_rect_begin = -1
+                i_inter = 0
+
+        # Add last rectangle for the exit of the for i_loop without created it
+        if i_rect_begin != -1:
+            i_counter += 1
+        # print( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
+        return i_counter
+
+    # ####################### __ipw_update_color_number_vertical_used ########################
+    def __ipw_update_color_number_vertical_used( self):
+        """ Parse heigth of the original image to change color of label white when pallet is used """
+        for i_loop in range( 0, 16, 1):
+            i_counter = self.__ipw_count_number_of_scb( i_loop * 16)
+            a_label = self.a_pallet_vertical_number_lst[i_loop]
+            if i_counter > 0:
+                a_label.configure( foreground='white')
+            else:
+                a_label.configure( foreground='black')
+
+        self.w_import_window.update()
+        # print()
+
     # ####################### __ipw_import_block ########################
     def __ipw_import_block( self, a_image):
         """ Create a about dialog """
@@ -173,11 +213,13 @@ class MyImportPalletWindow:
             i_from = i_to
             i_to = i_to + 48
             # First element of the line is its number
-            a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, foreground='white', font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
+            a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
             # if self.s_platform == "Darwin":
             #     a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             # else:
             a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            self.a_pallet_vertical_number_lst.append( a_label)
+
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for i_value in range( i_from, i_to, 3):
@@ -224,6 +266,7 @@ class MyImportPalletWindow:
 
         self.w_import_window.update()
         self.__ipw_select_color_rad_btn( 0)
+        self.__ipw_update_color_number_vertical_used()
 
     # ####################### __ipw_set_window_size ########################
     def __ipw_set_window_size( self):
