@@ -51,9 +51,13 @@ class MyImportPalletWindow:
     # pylint: disable=too-many-instance-attributes
     # number is reasonable in this case these are all the icons of the main windows and the application icons
 
-    answer_cancel = 0
-    answer_ok = 1
-    a_list_device_model = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+    ANSWER_CANCEL = 0
+    ANSWER_OK = 1
+    SCB_NUMBER_LST = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+
+    TOP_FRAME_HEIGHT = 200
+    MIDDLE_FRAME_HEIGHT = 300
+    BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
     def __init__( self, a_the_main_window, a_main_window_image, file_path_name):
@@ -136,10 +140,10 @@ class MyImportPalletWindow:
         self.a_pallet_button_lst[i_offset].select()
         if i_offset > 15:
             self.i_selected_pallet = int( i_offset / 16)
-            self.a_selected_info_lbl.configure( text="\nThe selected line is " + str( self.i_selected_pallet) + ". On click Ok it update pallet : ")
+            self.a_selected_info_lbl.configure( text="The selected line is " + str( self.i_selected_pallet) + ". On click Ok it update pallet : ")
         else:
             self.i_selected_pallet = 0
-            self.a_selected_info_lbl.configure( text="\nThe selected line is 0. On click Ok it update pallet : ")
+            self.a_selected_info_lbl.configure( text="The selected line is 0. On click Ok it update pallet : ")
 
     # ####################### __ipw_count_number_of_scb ########################
     def __ipw_count_number_of_scb( self, i_color_offset) -> int:
@@ -184,24 +188,25 @@ class MyImportPalletWindow:
     def __ipw_import_block( self, a_image):
         """ Create a about dialog """
         # global s_device_information
-        top_frame = tk_gui.Frame( self.w_import_window, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        top_frame = tk_gui.Frame( self.w_import_window, width=320, height=self.TOP_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
         top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_import_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
+        middle_frame = tk_gui.Frame( self.w_import_window, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        middle_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame = tk_gui.Frame( self.w_import_window, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
         button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP #####
-        i_index_base_block = 0
-        i_index_base_column = 0
         a_render = ImageTk.PhotoImage( a_image)
         if self.s_platform == "Linux":
-            a_picture_lbl = Label( top_frame, padx=0, pady=0, image=a_render, height=200, anchor='center', background=constant.BACKGROUD_COLOR_UI, borderwidth=0, compound="center", highlightthickness=0)
+            a_picture_lbl = Label( top_frame, padx=0, pady=0, image=a_render, height=200, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, compound="center", highlightthickness=0)
         else:
-            a_picture_lbl = Label( top_frame, padx=0, pady=0, image=a_render, height=200, anchor='center', background=constant.BACKGROUD_COLOR_UI, borderwidth=0, compound="center", highlightthickness=0)
-        a_picture_lbl.grid( row=i_index_base_block, column=i_index_base_column, columnspan=16, sticky='ew')
+            a_picture_lbl = Label( top_frame, padx=0, pady=0, image=a_render, height=200, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, compound="center", highlightthickness=0)
         a_picture_lbl.photo = a_render
+        a_picture_lbl.place( relx=0.5, rely=0.5, anchor='center')
 
-        i_index_base_block += 1
-        a_label = Label( top_frame, text="Select a color in the line to select copy of it:\n", height=2, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='white')
+        i_index_base_block = 0
+        i_index_base_column = 0
+        a_label = Label( middle_frame, text="Select a color in the line to select copy of it :", height=2, anchor='center', compound="center", background=constant.BACKGROUD_COLOR_UI)
         a_label.grid( row=i_index_base_block, column=i_index_base_column, columnspan=11, sticky='wns', padx=2, pady=0)
 
         # Table of color button for the pallet
@@ -213,17 +218,17 @@ class MyImportPalletWindow:
             i_from = i_to
             i_to = i_to + 48
             # First element of the line is its number
-            a_label = Label( top_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
-            # if self.s_platform == "Darwin":
-            #     a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
-            # else:
-            a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            a_label = Label( middle_frame, text=str(i_loop), background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=6))  # Creating a font object with little size for color buttons to reduce their size
+            if self.s_platform == "Darwin":
+                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            else:
+                a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
             self.a_pallet_vertical_number_lst.append( a_label)
 
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for i_value in range( i_from, i_to, 3):
-                a_color_btn_rad = Radiobutton( top_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
+                a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
                 if self.s_platform in [ "Darwin", "Linux" ]:
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
@@ -238,12 +243,12 @@ class MyImportPalletWindow:
             i_index_base_block += 1
 
         i_index_base_column = 0
-        self.a_selected_info_lbl = Label( top_frame, text="The selected line is 0. On click Ok it update pallet:", height=2, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='white')
+        self.a_selected_info_lbl = Label( middle_frame, text="The selected line is 0. On click Ok it update pallet :", height=2, anchor='center', compound="center", background=constant.BACKGROUD_COLOR_UI)
         self.a_selected_info_lbl.grid( row=i_index_base_block, column=i_index_base_column, columnspan=11, sticky='wns', padx=2, pady=0)
 
         i_index_base_column += 11
         # Création de la Combobox via la méthode ttk.Combobox()
-        self.a_list_device_combo = Combobox( top_frame, values=self.a_list_device_model, width=4, state="readonly")
+        self.a_list_device_combo = Combobox( middle_frame, values=self.SCB_NUMBER_LST, width=4, state="readonly")
         self.a_list_device_combo.grid( row=i_index_base_block, column=i_index_base_column, columnspan=2, padx=2, pady=0)
         # Choisir l'élément qui s'affiche par défaut
         if self.i_selected_pallet_in_main_windows != -1:
@@ -254,14 +259,14 @@ class MyImportPalletWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__ipw_import_ok_button, relief='raised', background=self.import_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', background=self.import_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_import_window.update()
@@ -271,6 +276,7 @@ class MyImportPalletWindow:
     # ####################### __ipw_set_window_size ########################
     def __ipw_set_window_size( self):
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
+        self.i_height += 30 + self.TOP_FRAME_HEIGHT + self.MIDDLE_FRAME_HEIGHT + self.BOTTOM_FRAME_HEIGHT
         if self.s_platform == "Linux":
             self.i_width = 592
             self.i_height = 574
@@ -278,8 +284,8 @@ class MyImportPalletWindow:
             self.i_width = 552
             self.i_height = 506
         elif self.s_platform == "Windows":
-            self.i_width = 592
-            self.i_height = 556
+            self.i_width = 578
+            self.i_height = self.i_height    # 556
 
         self.i_position_x = self.a_main_window.mw_get_main_window_pos_x() + int((self.a_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.a_main_window.mw_get_main_window_pos_y() + int((self.a_main_window.mw_get_main_window_height() - self.i_height) / 2)
