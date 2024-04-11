@@ -72,8 +72,10 @@ Automatic click on the middle of the picture update all the interfaces.
 
 #### Under *SCB*
 
-Display the blue rectangle to indicate the number of line with the same **SCB**.  
-For a bmp with bmp 4 bits / pixels the column is completely blue.
+Display blue rectangle(s) to indicate the number of line using the same pallet.  
+For a bmp with bmp 4 bits or 8 bis / pixels the column is completely blue. We use only 16 colors just one pallet.  
+Click on it to modify a group of line using the same pallet.  
+You could cut it in two part group to use two pallet or to change the pallet of this group.  
 ![Alt text](change_scb.png "Change pallet usable by line scb")
 
 #### Under *Details*
@@ -111,8 +113,9 @@ For a bmp with bmp 4 bits / pixels the column is completely blue.
 
 #### Under *Pallet*
 
+  The first column is the pallet number and become white when it is used.  
   The 256 colors are check box colors.  
-  Each line is a pallet.  
+  Each line is a pallet (after converted in .pic image).  
   Click on one of this check box update the interfaces.
 
 #### Under *Color*
@@ -157,4 +160,4 @@ For a bmp with bmp 4 bits / pixels the column is completely blue.
   Click on it is only need after a click on **Pen color**.
 
   **Pen color** button
-    Click on it to remember the color selected. Click on the zoomed picture to change the pixels.
+    Click on it to remember the color selected. After click on the zoomed picture to change the pixels with the same color around the cursor "_ _".

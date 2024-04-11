@@ -44,7 +44,7 @@ The Red Hat package .rpm is converted by [Alien](https://joeyh.name/code/alien/)
 
 - [Python](https://www.python.org/) with Tcl/Tk
   - Windows 10 : 3.12.1
-  - [Linux Mint](https://linuxmint.com/) : default release installed with your distribution (min 3.12.2)  
+  - [Linux Mint](https://linuxmint.com/) : default release installed with your distribution (min 3.10.12)  
   - [Mac OSx86 10.15.7](https://apps.apple.com/fr/app/macos-catalina/id1466841314?mt=12) : 3.12.2
 - [Python modules](https://pypi.org/)
   - [pip](https://pypi.org/project/pip/)
