@@ -253,7 +253,12 @@ class MyScbPalletWindow:
         self.a_zoom_lbl.bind( '<Button>', self.__scbw_click_on_picture)
 
         # #### MIDDLE #####
-        a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        if self.s_platform == "Darwin":
+            a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        elif self.s_platform == "Linux":
+            a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, borderwidth=0, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        else:
+            a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
         a_split_rdx_btn.pack( side='left', padx=4 )
         self.var_rdx_btn.set(1)     # initializing the choice, to the Split
 
@@ -288,8 +293,12 @@ class MyScbPalletWindow:
         self.a_down_begin_lbl.pack( side='right')
         a_label = Label( middle_down_frame, text="The LOWER part, from ", height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_label.pack( side='right', padx=2)
-
-        a_pallet_rdx_btn = Radiobutton( up_middle_down_frame, text="Change the pallet used by this scb :", variable=self.var_rdx_btn, value=2, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        if self.s_platform == "Darwin":
+            a_pallet_rdx_btn = Radiobutton( up_middle_down_frame, text="Change the pallet used by this scb :", variable=self.var_rdx_btn, value=2, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        elif self.s_platform == "Linux":
+            a_pallet_rdx_btn = Radiobutton( up_middle_down_frame, text="Change the pallet used by this scb :", variable=self.var_rdx_btn, value=2, command=self.__scbw_selection_rdx_btn, borderwidth=0, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
+        else:
+            a_pallet_rdx_btn = Radiobutton( up_middle_down_frame, text="Change the pallet used by this scb :", variable=self.var_rdx_btn, value=2, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
         a_pallet_rdx_btn.pack( side='left', padx=4 )
         a_label = Label( down_middle_down_frame, text="Selected the new pallet instead of " + str(self.i_selected_pallet_line) + " use :", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_label.pack( side='left', padx=4)
@@ -321,7 +330,7 @@ class MyScbPalletWindow:
 
         if self.s_platform == "Linux":
             self.i_width = 968
-            self.i_height += 0  #374
+            self.i_height += 10  #374
         elif self.s_platform == "Darwin":
             self.i_width = 968
             self.i_height += 0  #306

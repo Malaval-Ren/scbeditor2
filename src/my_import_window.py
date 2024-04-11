@@ -228,10 +228,14 @@ class MyImportPalletWindow:
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for i_value in range( i_from, i_to, 3):
-                a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
-                if self.s_platform in [ "Darwin", "Linux" ]:
+                if self.s_platform == "Darwin":
+                    a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
+                    a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
+                elif self.s_platform == "Linux":
+                    a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=2), borderwidth=1, highlightthickness=0)    # Creating a font object with little size for color buttons to reduce their size
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
+                    a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 a_color_btn_rad.configure( background="#" + f'{a_pallet_list[ i_index]:02X}' + f'{a_pallet_list[ i_index + 1]:02X}' + f'{a_pallet_list[ i_index + 2]:02X}')     # '# red green blue'
                 a_color_btn_rad.configure( command=partial( self.__ipw_select_color_rad_btn, int( i_value / 3)))

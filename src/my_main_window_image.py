@@ -630,6 +630,8 @@ class MyMainWindowImage:
 
         if self.s_platform == "Darwin":
             self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_less_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_less_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
@@ -637,12 +639,16 @@ class MyMainWindowImage:
         i_index_base_block += 1
         if self.s_platform == "Darwin":
             self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_less_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_less_x_btn.grid( row=i_index_base_block, column=5, padx=4, pady=1, sticky='ew')
 
         if self.s_platform == "Darwin":
             self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_more_x_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_x_btn.grid( row=i_index_base_block, column=7, padx=4, pady=1, sticky='ew')
@@ -665,6 +671,8 @@ class MyMainWindowImage:
 
         if self.s_platform == "Darwin":
             self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=44, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_more_y_btn = Button( a_details_pic_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=44, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_y_btn.grid( row=i_index_base_block, column=6, padx=4, pady=1, sticky='ew')
@@ -681,6 +689,9 @@ class MyMainWindowImage:
         if self.s_platform == "Darwin":
             a_change_scb_btn = Button( a_details_pic_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=2, pady=0, sticky='ew')
+        elif self.s_platform == "Linux":
+            a_change_scb_btn = Button( a_details_pic_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+            a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')
         else:
             a_change_scb_btn = Button( a_details_pic_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=1, sticky='ew')

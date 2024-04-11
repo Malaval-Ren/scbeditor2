@@ -317,8 +317,15 @@ class MyMainWindowPallet:
             a_pallet_bottom_frame.place( x=2, y=20, width=570, height=276 )
 
         # Creating a font object with little size for color buttons to reduce their size
-        a_font_label = font.Font( size=6)
-        a_font_button = font.Font( size=3)
+        if self.s_platform == "Darwin":
+            a_font_label = font.Font( size=6)
+            a_font_button = font.Font( size=2)
+        elif self.s_platform == "Linux":
+            a_font_label = font.Font( size=6)
+            a_font_button = font.Font( size=2)
+        else:
+            a_font_label = font.Font( size=6)
+            a_font_button = font.Font( size=3)
 
         # Create a line of number for the column
         i_index_base_column = 1
@@ -346,10 +353,14 @@ class MyMainWindowPallet:
             i_index_base_column += 1
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
-                a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
-                if self.s_platform in [ "Darwin", "Linux" ]:
+                if self.s_platform == "Darwin":        # highlightbackground option, and its focused color with highlightcolor
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
+                    a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
+                elif self.s_platform == "Linux":
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 self.a_pallet_button_lst.append( a_button_color)
                 i_index_base_column += 1
@@ -438,8 +449,15 @@ class MyMainWindowPallet:
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
         else:
             set_color_in_pallet_with_arg = partial( self.__mwp_set_color_in_pallet, -1)
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
+            if self.s_platform == "Darwin":
+                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
+            elif self.s_platform == "Linux":
+                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
+            else:
+                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
             self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=7, height=1, relief='raised', background='light grey')
             self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
 
@@ -474,6 +492,15 @@ class MyMainWindowPallet:
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
             a_pen_color_btn = Button( a_color_bottom_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
+        elif self.s_platform == "Linux":
+            a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+            a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=4, sticky='w')
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+            a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=2, pady=4, sticky='w')
+            a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-4, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=4, sticky='w')
+            a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=4, sticky='w')       
         else:
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
