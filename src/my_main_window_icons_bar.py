@@ -193,13 +193,8 @@ class MyMainWindowIconsBar:
             # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
             for i_loop in range( 0, 319, 1):
                 i_first_color_offset = self.a_original_image.getpixel( ( i_loop, i_picture_line_y))
-                if i_first_color_offset > i_big_index:
-                    i_big_index = i_first_color_offset
-                    # i_big_pos_x = i_loop
-
-                if i_first_color_offset < i_small_index:
-                    i_small_index = i_first_color_offset
-                    # i_small_pos_x = i_loop
+                i_big_index = max(i_big_index, i_first_color_offset)
+                i_small_index = min(i_small_index, i_first_color_offset)
 
             if int( i_big_index / 16) != int( i_small_index / 16):
                 # - re-pare the line to upgrade each index to have the same SCB on all the line

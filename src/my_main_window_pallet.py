@@ -58,8 +58,6 @@ from .my_tools import mt_hexlify_byte_string
 # ####################### MyMainWindowPallet ########################
 class MyMainWindowPallet:
     """ Create the main Windows Pallet part of the application. """
-    # Optimizing memory usage with slots
-    # __slots__ = ["w_root_windows", "a_list_application_info" ]
 
     # ####################### __init__ ########################
     def __init__( self, w_root_windows, c_main_window):
@@ -243,15 +241,6 @@ class MyMainWindowPallet:
         """ Set a new color value in pallet  """
         if self.c_main_image.mwi_get_original_image():
             self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
-            # s_red = self.a_red_input_var.get()
-            # s_green = self.a_green_input_var.get()
-            # s_blue = self.a_blue_input_var.get()
-            # i_index = int(self.a_btn_offset_lbl.cget( "text"))
-            # a_pallet_button = self.a_pallet_button_lst[i_index]
-            # # ready when color modification will be done
-            # a_pallet_button.configure( background= "#" + s_red + s_green + s_blue)
-            #
-            # to do : Modify the picture pallet
 
     # ####################### __mwp_copy_a_color ########################
     def __mwp_copy_a_color( self):
@@ -409,8 +398,7 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         red_okay_command = self.w_tk_root.register( self.mwp_red_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_red_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, width=constant.DEFAULT_BUTTON_WIDTH,
-                               validate='all', validatecommand=( red_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='red')
+        self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate='all', validatecommand=( red_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='red')
         self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
         self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
         self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
@@ -429,8 +417,7 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         green_okay_command = self.w_tk_root.register( self.mwp_green_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_green_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, width=constant.DEFAULT_BUTTON_WIDTH,
-                                validate="all", validatecommand=( green_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
+        self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( green_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
         self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
         self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
@@ -442,8 +429,7 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         blue_okay_command = self.w_tk_root.register( self.mwp_blue_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_blue_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, width=constant.DEFAULT_BUTTON_WIDTH,
-                                validate="all", validatecommand=( blue_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='blue')
+        self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( blue_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='blue')
         self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
         self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
@@ -508,7 +494,7 @@ class MyMainWindowPallet:
             a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-4, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=4, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=4, sticky='w')       
+            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=4, sticky='w')
         else:
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
@@ -516,8 +502,6 @@ class MyMainWindowPallet:
             a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
             a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=4, pady=4, sticky='w')
-            # a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap line color", command=None, width=len("Swap line color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-            # a_swap_color_btn.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='w')
 
@@ -700,23 +684,20 @@ class MyMainWindowPallet:
     def mwp_color_btn_rad( self, i_number):
         """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
         if self.i_color_to_copy_offset != -1:
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
-                "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
             self.i_color_to_copy_offset = -1
             if i_result == 1:
                 self.__mwp_set_color_in_pallet( i_number)
         elif self.i_color_line_to_copy_offset != -1:
             i_complete = int( i_number / 16)
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
-                "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
             i_color_line_to_copy_offset = self.i_color_line_to_copy_offset
             self.i_color_line_to_copy_offset = -1
             if i_result == 1:
                 self.__mwp_set_line_in_pallet( i_complete, i_color_line_to_copy_offset)
         elif self.i_color_to_swap_offset != -1:
             if int( i_number / 16) == int( self.i_color_to_swap_offset / 16):
-                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question",
-                    "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
+                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
                 i_from = self.i_color_to_swap_offset
                 self.i_color_to_swap_offset = -1
                 if i_result == 1:
@@ -731,8 +712,7 @@ class MyMainWindowPallet:
                 a_pallet_list = self.c_main_image.mwi_get_original_image().getpalette()
                 #print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
                 if (i_number * 3) > len( a_pallet_list):
-                    print( "mwp_color_btn_rad() i_number       = ", str( i_number))
-                    print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
+                    print( "mwp_color_btn_rad() i_number = ", str( i_number) + " a_pallet_list = " + str( len( a_pallet_list)))
                     print( "mwp_color_btn_rad() FAILED")
                 else:
                     i_tmp_number = i_number * 3
@@ -810,10 +790,7 @@ class MyMainWindowPallet:
             a_pallet_button.configure( background= "#" + s_red + s_green + s_blue)
             # Update the picture pallet
             a_pallet_list = a_original_img.getpalette()
-            # s_red   = self.a_red_ntr_dec_lbl.cget( "text")
-            # s_green = self.a_green_ntr_dec_lbl.cget( "text")
-            # s_blue  = self.a_blue_ntr_dec_lbl.cget( "text")
-            # print( "btn: red   = ", s_red, "  green = ", s_green, "  blue  = ", s_blue)
+            # print( "btn: red   = ", self.a_red_ntr_dec_lbl.cget( "text"), "  green = ", self.a_green_ntr_dec_lbl.cget( "text"), "  blue  = ", self.a_blue_ntr_dec_lbl.cget( "text"))
             # i_index is a number of radio button and the pallete is 3 int for RGB so I do a * 3
             i_pallet_index = i_index * 3
             # print( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index+1]), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
@@ -961,7 +938,6 @@ class MyMainWindowPallet:
         a_work_img = self.c_main_image.mwi_get_working_image()
         a_part_image = a_work_img.crop( i_box_top)
         width, height = a_part_image.size
-        # a_part_image.show()
 
         self.a_zoom_work_img = a_part_image.resize( (width * 4, height * 4))     # Total of zoom is x 8
         self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)

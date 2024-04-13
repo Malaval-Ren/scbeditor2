@@ -2,13 +2,13 @@
 
 ## *Context*
 
-date :  sam. 6 avr. 2024 23:12:26
+date :  sam. 13 avr. 2024 09:44:51
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
 | Python | 3.12.1 |
-| PyInstaller | 6.3.0 |
-| Pylint | 3.0.3 |
+| PyInstaller | 6.5.0 |
+| Pylint | 3.1.0 |
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | *Project* |  |
@@ -73,11 +73,12 @@ Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
   
 *** Module src.my_import_window  
 
-src\my_import_window.py:133:4: R0914: Too many local variables (18/15) (too-many-locals)
-src\my_import_window.py:133:4: R0915: Too many statements (60/50) (too-many-statements)
+src\my_import_window.py:188:4: R0914: Too many local variables (19/15) (too-many-locals)
+src\my_import_window.py:188:4: R0912: Too many branches (13/12) (too-many-branches)
+src\my_import_window.py:188:4: R0915: Too many statements (70/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
+Your code has been rated at 9.85/10 (previous run: 9.85/10, +0.00)
 
 &nbsp;
 
@@ -120,8 +121,13 @@ Your code has been rated at 9.95/10 (previous run: 9.95/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+*** Module src.my_main_window_icons_bar  
+
+src\my_main_window_icons_bar.py:262:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window_icons_bar.py:316:4: R0912: Too many branches (15/12) (too-many-branches)
+
+------------------------------------------------------------------
+Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
 
 &nbsp;
 
@@ -132,9 +138,9 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window_image  
 
-src\my_main_window_image.py:504:4: R0914: Too many local variables (27/15) (too-many-locals)
-src\my_main_window_image.py:504:4: R0912: Too many branches (15/12) (too-many-branches)
-src\my_main_window_image.py:504:4: R0915: Too many statements (131/50) (too-many-statements)
+src\my_main_window_image.py:525:4: R0914: Too many local variables (27/15) (too-many-locals)
+src\my_main_window_image.py:525:4: R0912: Too many branches (20/12) (too-many-branches)
+src\my_main_window_image.py:525:4: R0915: Too many statements (141/50) (too-many-statements)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.92/10 (previous run: 9.92/10, +0.00)
@@ -148,16 +154,16 @@ Your code has been rated at 9.92/10 (previous run: 9.92/10, +0.00)
   
 *** Module src.my_main_window_pallet  
 
-src\my_main_window_pallet.py:287:4: R0914: Too many local variables (34/15) (too-many-locals)
-src\my_main_window_pallet.py:287:4: R0912: Too many branches (23/12) (too-many-branches)
-src\my_main_window_pallet.py:287:4: R0915: Too many statements (157/50) (too-many-statements)
-src\my_main_window_pallet.py:661:4: R0912: Too many branches (19/12) (too-many-branches)
-src\my_main_window_pallet.py:661:4: R0915: Too many statements (65/50) (too-many-statements)
-src\my_main_window_pallet.py:787:4: R0914: Too many local variables (27/15) (too-many-locals)
-src\my_main_window_pallet.py:858:4: R0914: Too many local variables (16/15) (too-many-locals)
+src\my_main_window_pallet.py:285:4: R0914: Too many local variables (34/15) (too-many-locals)
+src\my_main_window_pallet.py:285:4: R0912: Too many branches (31/12) (too-many-branches)
+src\my_main_window_pallet.py:285:4: R0915: Too many statements (184/50) (too-many-statements)
+src\my_main_window_pallet.py:684:4: R0912: Too many branches (20/12) (too-many-branches)
+src\my_main_window_pallet.py:684:4: R0915: Too many statements (66/50) (too-many-statements)
+src\my_main_window_pallet.py:819:4: R0914: Too many local variables (27/15) (too-many-locals)
+src\my_main_window_pallet.py:891:4: R0914: Too many local variables (16/15) (too-many-locals)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.87/10 (previous run: 9.87/10, +0.00)
+Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
 
 &nbsp;
 
@@ -178,10 +184,11 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_scb_window  
 
-src\my_scb_window.py:174:4: R0915: Too many statements (59/50) (too-many-statements)
+src\my_scb_window.py:215:4: R0914: Too many local variables (16/15) (too-many-locals)
+src\my_scb_window.py:215:4: R0915: Too many statements (89/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.95/10 (previous run: 9.95/10, +0.00)
+Your code has been rated at 9.92/10 (previous run: 9.89/10, +0.04)
 
 &nbsp;
 
@@ -205,5 +212,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.965 / 10**
+**note = 9.956 / 10**
 
