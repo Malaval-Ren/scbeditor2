@@ -4,17 +4,17 @@
 #define MyAppName "scbeditor2"
 #define MyAppVersion "2.2.9.27"
 #define MyAppPublisher "Disk Crack band"
-#define MyAppExeName "scbeditor2_v2.2.9.27.exe"
+#define MyAppExeName MyAppName + "_v" + MyAppVersion + ".exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{FDCC3A87-5C4D-413B-BD67-CD9B181C557A}
+AppId={{FDCC3A87-5C4D-413B-BD67-CD9B181C557A}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-VersionInfoVersion=1.0.0.0
+VersionInfoVersion=1.0.3.0
 ;AppVerName={#MyAppName} {#MyAppVersion}
-AppCopyright=Copyright @ 2023-2024 {#MyAppPublisher}, Renaud Malaval
+AppCopyright=Copyright @ 2023..2024 {#MyAppPublisher}, Renaud Malaval
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
@@ -25,7 +25,7 @@ InfoAfterFile=Innosetup_end.txt
 PrivilegesRequired=lowest
 OutputDir=build
 OutputBaseFilename=scbeditor2_install
-SetupIconFile=appIcon_T_512x512.ico
+SetupIconFile="appIcon_T_512x512.ico"
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -37,7 +37,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "G:\DEV\Python\scbeditorII\scbeditor2\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

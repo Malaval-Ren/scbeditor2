@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.79'
+version='1.81'
 
 # definition all colors and styles to use with an echo
 
@@ -513,6 +513,36 @@ then
         fi
     fi
 
+    # Generate window install with Inno Setup
+    echo
+    if [[ -f "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ]]
+    then
+        if [[ -f "./Innosetup_create_install.iss" ]]
+        then
+            echo -e $BGreen "Inno Setup" $Color_Off
+            "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "./Innosetup_create_install.iss"
+            if [ $? -eq 0 ]
+            then
+                if [[ -f "./"$pyInstall_build"/scbeditor2_install.exe" ]]
+                then            
+                    mv "./"$pyInstall_build"/scbeditor2_install.exe" "./"$pyInstall_dist"/scbeditor2_install.exe"
+                    if [[ -f "./dist/scbeditor2_install.exe" ]]
+                    then
+                        echo
+                        echo -e $BGreen "Inno Setup install is OK" $Color_Off
+                    fi
+                else
+                    echo -e $Yellow "Inno Setup "$pyInstall_build" NOT FOUND" $Color_Off
+                    exit $ERROR_SH_FILE
+                fi
+            else
+                echo -e $BRed "Inno Setup "$pyInstall_build" of install : FAILED on error= " $? $Color_Off
+                exit $ERROR_SH_FILE
+            fi
+        fi
+    fi
+
+    # Create the backup folder of delivery 
     echo
     if [ ! -d $livraisons_folder ]
     then
@@ -527,26 +557,37 @@ then
 
     if [ ! -d $targetDir ]
     then
-        echo -e $BGreen "Create backup folder : " $targetDir $Color_Off
+        echo -e $BGreen "Create backup folder :" $targetDir $Color_Off
         mkdir $targetDir
         echo
         sAppName="$currentFolder""/""$pyInstall_dist""/""$pyInstall_Name""$pyInstall_version"
-        if [[ -f "$sAppName" ]] # LINUX
+        # echo -e $Green  "sAppName             :" $sAppName $Color_Off
+        if [[ -e "$sAppName".* ]] # LINUX
         then
             file_size_kb=`du -k "$sAppName" | cut -f1`
             echo -e $Green "Copying LINUX app    " "$sAppName" "     of " $file_size_kb "kb" $Color_Off
             cp -fpv "$sAppName" "$targetDir" # "/""$pyInstall_Name""$pyInstall_version"
+            echo
+        fi
+        if [[ -f *.deb ]]   # LINUX
+        then
             cd ./dist
             file_size_kb=`du -k *.deb | cut -f1`
             echo -e $Green "Copying LINUX package .deb     of " $file_size_kb "kb" $Color_Off
             cp -fpv *.deb "../""$targetDir"
+            cd ..
+            echo
+        fi
+        if [[ -f *.rpm ]]   # LINUX
+        then
+            cd ./dist
             file_size_kb=`du -k *.rpm | cut -f1`
             echo -e $Green "Copying LINUX package .rpm     of " $file_size_kb "kb" $Color_Off
             cp -fpv *.rpm "../""$targetDir"
             cd ..
             echo
         fi
-        if [[ -f "$sAppName"".exe" ]] # WINDOWS
+        if [[ -f "$sAppName"".exe" ]]   # WINDOWS
         then   
             file_size_kb=`du -k "$sAppName"".exe" | cut -f1`
             echo -e $Green "Copying WINDOWS app  " "$sAppName"".exe  of " $file_size_kb "kb" $Color_Off
@@ -573,6 +614,7 @@ then
         # copy manual in folder /Documents.
         cp -R "Documents" "$targetDir""/Documents"
         cp -fp "README.md" "$targetDir"
+        cp -fp "LICENSE" "$targetDir"
         # history of the development of the project
         if [[ -f "Evolution_Release.md" ]]
         then
@@ -604,6 +646,8 @@ then
         cp -fp *.spec "$targetDir"
         rm -f "$currentFolder""/""$targetDir""/""$pyInstall_Name"".spec"
         cp -fp Display_Version.sh "$targetDir"
+        cp -fp right_linux.sh "$targetDir"
+        cp -fp right_mac.sh "$targetDir"
         # Copy Quality
         cp -fp Quality.sh "$targetDir"
         cp -fp Quality_pylint_log.md "$targetDir"
@@ -611,7 +655,9 @@ then
 		then        
             cp -fp unitTestShell.bat "$targetDir"
         fi
-
+        # Copy Inno Setup
+        cp Innosetup_* "$targetDir"
+        # Compress folder
         echo
         if [[ -f $sevenZipPath ]]
         then
@@ -647,15 +693,22 @@ then
         echo -e $IYellow "Folder :" $targetDir "already exist." $Color_Off
     fi
 
+    # Cleaning folder
     echo
+    echo -e $BGreen "Cleaning" $Color_Off
     if [[ -f "$pyInstallSpec" ]]
     then
-        echo -e $IGreen "Delete spec file    :" "$pyInstallSpec" $Color_Off
+        echo -e $Green "Delete spec file                :" "$pyInstallSpec" $Color_Off
         rm -f $pyInstallSpec
     fi
+    echo -e $Green "Delete files and sub folder in  : ./""$pyInstall_build""/" $Color_Off
+    echo
+    cd "./"$pyInstall_build
+    rm -rf ./**
+    cd ..
 
 	echo
-	echo -e $BGreen "Build is done with success." $Color_Off
+	echo -e $BGreen "Total build is done with success." $Color_Off
 	echo
 else
     echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
@@ -664,4 +717,3 @@ fi
 sleep 1  #Wait 1 seconds
 
 exit $NO_ERROR
-
