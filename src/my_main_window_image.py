@@ -34,7 +34,8 @@ import platform
 import os
 import array
 
-from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar, Radiobutton
+from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar
+#, Radiobutton
 from tkinter.ttk import Separator
 from PIL import ImageTk
 
