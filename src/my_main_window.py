@@ -296,7 +296,7 @@ class MyMainWindow:
         self.c_main_icon_bar.mwib_set_main_image( self.c_main_image)
         # Create line 3 for pallet
         self.c_main_pallet = MyMainWindowPallet( self.w_tk_root, self)
-        self.c_main_pallet.mwp_pallet_zone( a_pallet_frame, self.c_main_image, self.c_main_icon_bar)
+        self.c_main_pallet.mwp_pallet_zone( a_pic_frame.winfo_width(), a_pallet_frame, self.c_main_image, self.c_main_icon_bar)
         self.c_main_image.mwi_set_pallet( self.c_main_pallet)
 
         self.w_tk_root.update()

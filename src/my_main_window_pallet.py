@@ -32,9 +32,8 @@
 
 import platform
 import os
-import tkinter as tk_gui
 
-from tkinter import font, Label, Button, Entry, Scale, StringVar, Radiobutton, IntVar
+from tkinter import Frame, font, Label, Button, Entry, Scale, StringVar, Radiobutton, IntVar
 from tkinter.ttk import Separator
 from functools import partial
 
@@ -282,36 +281,28 @@ class MyMainWindowPallet:
         return self.a_pallet_button_lst[i_offset].cget( 'bg')
 
     # ####################### mwp_pallet_zone ########################
-    def mwp_pallet_zone( self, a_bottom_frame, c_main_image, c_main_icon_bar):
+    def mwp_pallet_zone( self, i_pic_frame_width, a_bottom_frame, c_main_image, c_main_icon_bar):
         """ Frame with the pallet button to left, and details to right """
         self.c_main_image = c_main_image
         self.c_main_icon_bar = c_main_icon_bar
-        i_index_base_block = 0
-        a_pallet_sep_h0 = Separator( a_bottom_frame, orient='horizontal')
-        a_pallet_sep_h0.grid( row=i_index_base_block, column=0, columnspan=8, sticky='ew')
-        a_pallet_sep_lbl_h0 = Label( a_bottom_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI)
-        a_pallet_sep_lbl_h0.grid( row=i_index_base_block, column=0, columnspan=2, padx=260)
-        a_pallet_sep_h1 = Separator( a_bottom_frame, orient='horizontal')
-        a_pallet_sep_h1.grid( row=i_index_base_block, column=9, columnspan=4, sticky='ew')
-        a_pallet_sep_lbl_h1 = Label( a_bottom_frame, text="Color", background=constant.BACKGROUD_COLOR_UI)
-        if self.s_platform in [ "Darwin", "Linux" ]:
-            a_pallet_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=130)
-        else:
-            a_pallet_sep_lbl_h1.grid( row=i_index_base_block, column=9, columnspan=4, padx=120)
-        a_pallet_sep_h2 = Separator( a_bottom_frame, orient='horizontal')
-        a_pallet_sep_h2.grid( row=i_index_base_block, column=13, columnspan=4, sticky='ew')
-        a_pallet_sep_lbl_h2 = Label( a_bottom_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI)
-        if self.s_platform in [ "Darwin", "Linux" ]:
-            a_pallet_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=120)
-        else:
-            a_pallet_sep_lbl_h2.grid( row=i_index_base_block, column=13, columnspan=4, padx=100)
+        a_top_separator_frame = Frame( a_bottom_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=21)
+        a_pallet_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
+        a_pallet_sep_h0.place( x=0, y=10, relwidth=1.0)
+        a_pallet_sep_lbl_h0 = Label( a_top_separator_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pallet_sep_lbl_h0.place( x=280, y=0)
+        a_pallet_sep_lbl_h1 = Label( a_top_separator_frame, text="Color", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pallet_sep_lbl_h1.place( x=660, y=0)
+        a_pallet_sep_lbl_h2 = Label( a_top_separator_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pallet_sep_lbl_h2.place( x=640+270, y=0)
+        # self.w_tk_root.update()
 
         # Create pallet button left frame
-        a_pallet_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pallet_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_pallet_bottom_frame.place( x=2, y=20, width=590, height=276 )
+            a_pallet_bottom_frame.place( x=0, y=20, width=590, height=276 )
         else:
-            a_pallet_bottom_frame.place( x=2, y=20, width=570, height=276 )
+            a_pallet_bottom_frame.place( x=0, y=20, width=570, height=276 )
 
         # Creating a font object with little size for color buttons to reduce their size
         if self.s_platform == "Darwin":
@@ -325,10 +316,11 @@ class MyMainWindowPallet:
             a_font_button = font.Font( size=3)
 
         # Create a line of number for the column
+        i_index_base_block = 0
         i_index_base_column = 1
         for i_loop in range( 0, 16, 1):
             a_label = Label( a_pallet_bottom_frame, text=str( i_loop), background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
-            a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=0)
+            a_label.grid( row=i_index_base_block, column=i_index_base_column, padx=0, pady=0)
             self.a_pallet_horizontal_number_lst.append( a_label)
             i_index_base_column += 1
 
@@ -351,7 +343,7 @@ class MyMainWindowPallet:
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
                 if self.s_platform == "Darwin":        # highlightbackground option, and its focused color with highlightcolor
-                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=14, height=4, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 elif self.s_platform == "Linux":
                     a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
@@ -369,16 +361,16 @@ class MyMainWindowPallet:
         # self.w_tk_root.update()
 
         # Create color button right frame
-        a_color_bottom_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_color_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276-40 )
+            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276-12 )
         else:
             a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276-40 )
 
         # Create botom button frame
-        a_pallet_bottom_btn_frame = tk_gui.Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pallet_bottom_btn_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_pallet_bottom_btn_frame.place( x=592, y=256, width=self.i_main_window_width - 592, height=40 )
+            a_pallet_bottom_btn_frame.place( x=592, y=266, width=self.i_main_window_width - 592, height=40 )
         else:
             a_pallet_bottom_btn_frame.place( x=572, y=256, width=self.i_main_window_width - 572, height=40 )
 
@@ -478,13 +470,13 @@ class MyMainWindowPallet:
 
         i_index_base_block += 1
         if self.s_platform == "Darwin":
-            a_change_color_btn = Button( a_color_bottom_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
-            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+            a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='w')
-            a_copy_line_color_btn = Button( a_color_bottom_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-2, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
-            a_pen_color_btn = Button( a_color_bottom_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
         elif self.s_platform == "Linux":
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
