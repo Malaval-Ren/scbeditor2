@@ -229,7 +229,7 @@ class MyImportPalletWindow:
             # create list of line of radio button and add it in a list to be accessible
             for i_value in range( i_from, i_to, 3):
                 if self.s_platform == "Darwin":
-                    a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3))    # Creating a font object with little size for color buttons to reduce their size
+                    a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=8, height=2, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=3), borderwidth=1, highlightthickness=0)    # Creating a font object with little size for color buttons to reduce their size
                     a_color_btn_rad.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 elif self.s_platform == "Linux":
                     a_color_btn_rad = Radiobutton( middle_frame, text="", indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=2), borderwidth=1, highlightthickness=0)    # Creating a font object with little size for color buttons to reduce their size
@@ -265,7 +265,7 @@ class MyImportPalletWindow:
         if self.s_platform == "Darwin":
             a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
             a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', background=self.import_background)
@@ -286,7 +286,7 @@ class MyImportPalletWindow:
             self.i_height = 574
         elif self.s_platform == "Darwin":
             self.i_width = 552
-            self.i_height = 506
+            self.i_height = 572
         elif self.s_platform == "Windows":
             self.i_width = 578
             self.i_height = self.i_height    # 556
