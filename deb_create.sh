@@ -33,7 +33,7 @@
 #		Problem not solved to convert script 'preinst'
 #		https://stackoverflow.com/questions/54480244/how-to-easily-convert-debian-script-to-rpm-script
 
-version='1.45'
+version='1.47'
 
 # definition all colors and styles to use with an echo
 
@@ -142,11 +142,12 @@ ERROR_GIT_init=$(($ERROR_GIT+1))
 
 aError=$NO_ERROR
 
+# note : $versionTemp is defined at line 266
 # How to install package 
-# sudo apt-get install ./scbeditor2_2.2.9-27_amd64.deb
+# sudo apt-get install "./scbeditor2_""$versionTemp""_amd64.deb"
 #
 # How to uninstall package
-# sudo apt-get remove ./scbeditor2_2.2.9-27_amd64.deb
+# sudo apt-get remove ""./scbeditor2_""$versionTemp""_amd64.deb"
 
 # How to uninstall package manualy
 # sudo rm -r /usr/bin/scbeditor2
@@ -154,7 +155,7 @@ aError=$NO_ERROR
 # sudo rm -r /usr/share/icons/scbeditor2.png
 
 # if problem
-# sudo dpkg -i ./scbeditor2_2.2.9-27_amd64.deb
+# sudo dpkg -i ""./scbeditor2_""$versionTemp""_amd64.deb"
 # sudo dpkg -r scbeditor2
 
 #Clear the terminal screen
@@ -162,7 +163,7 @@ aError=$NO_ERROR
 pyInstall_Name=$(basename "$PWD")
 pyInstall_getVersion="StringStruct(u'ProductVersion', u'"
 pyInstall_version=""
-user_name=$USERNAME
+my_user_name=$USER
 
 echo -e $BGreen "Project name        :" "$pyInstall_Name" $Color_Off
 echo
@@ -265,6 +266,7 @@ versionIndex=$(($versionLen + $counter))
 # echo ${versionTemp:versionIndex-1}-${versionTemp:versionIndex}
 versionTemp="${versionTemp:0:versionIndex-1}-${versionTemp:versionIndex}"
 echo -e $Green "Package version is  :" "$versionTemp" $Color_Off
+echo
 
 if [[ "$pyInstall_version" != "" ]]
 then
@@ -274,6 +276,7 @@ then
 	appName=$(echo "${pyInstall_Name,,}")
     # display $appName
     echo -e $Green "appName             :" "$appName" $Color_Off
+	echo -e $Green "user name           :" "$my_user_name" $Color_Off
     refLineLen=${#appName}
     echo -e $Green "len (appName)       :" "$refLineLen" $Color_Off
     # Replace character _ by -
@@ -406,7 +409,7 @@ then
     aError=$?
 	if [ $aError -ne 0 ] || [ ! -f "$packageSrcBase"".deb" ]  
 	then
-		sudo chown $user_name:$user_name -R "$packageSrcBase"
+		sudo chown "$my_user_name":"$my_user_name" -R "$packageSrcBase"
 		echo
 		echo -e $BRed "dpkg-deb failed ! error =" "$aError"  $Color_Off
 		exit $ERROR_SH_FAILED
@@ -421,13 +424,14 @@ then
 	sudo alien -r -k $packageSrcBase".deb" 
     if [ $? -ne 0 ]
     then
-		sudo chown $user_name:$user_name -R "$packageSrcBase"
+		sudo chown $my_user_name:$my_user_name -R "$packageSrcBase""/"
+		sudo chown $my_user_name:$my_user_name "$packageSrcBase"".deb"
         echo -e $BRed "Failed to do convert .deb to .rpm ! error =" $? $Color_Off
         exit $ERROR_SH_FILE
     fi
-	sudo chown $user_name:$user_name -R "$packageSrcBase"
-	sudo chown $user_name:$user_name ./scbeditor2_2.2.9-27_amd64.deb
-	sudo chown $user_name:$user_name ./scbeditor2-2.2.9-27.x86_64.rpm
+	sudo chown $my_user_name:$my_user_name -R "$packageSrcBase""/"
+	sudo chown $my_user_name:$my_user_name "$packageSrcBase"".deb"
+	sudo chown $my_user_name:$my_user_name "./""$pkgAppName""-""$versionTemp"".x86_64.rpm"	
 	echo
 	echo -e $BGreen "Convert is done with success." $Color_Off
 	cd ..
