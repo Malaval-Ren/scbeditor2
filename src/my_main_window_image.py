@@ -753,7 +753,7 @@ class MyMainWindowImage:
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_y_btn.grid( row=1, column=1, padx=4, pady=4, sticky='ew')
 
-        # Future feature to have color BMP: RGB are 0..255 and PIC RGB are 0..15  
+        # Future feature to have color BMP: RGB are 0..255 and PIC RGB are 0..15
         # a_color_chart_frame = Frame( a_pic_frame, padx=0, pady=0, background='green')     # background='darkgray' or 'light grey'
         # a_color_chart_frame.place( x=672+int(i_width/2)+2, y=21+48+72+72, width=int(i_width/2)-2, height=44)
         # a_pic_sep_lbl_h3 = Label( a_color_chart_frame, text="Color chart :", background=constant.BACKGROUD_COLOR_UI)

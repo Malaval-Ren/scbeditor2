@@ -37,7 +37,7 @@ VSVersionInfo(
         StringStruct(u'LegalTrademarks', u'Disk Crack Band'),
         StringStruct(u'OriginalFilename', u'scbeditor2.exe'),
         StringStruct(u'ProductName', u'SCB Editor II'),
-        StringStruct(u'ProductVersion', u'2.2.9.27')])
+        StringStruct(u'ProductVersion', u'2.8.15.107')])
       ]),
     VarFileInfo([VarStruct(u'Translation', [1033, 1200])])
   ]

@@ -700,9 +700,9 @@ class MyMainWindowPallet:
         else:
             self.mwp_entry_black_focus_out()
             if self.c_main_image.mwi_get_original_image():
-                print( "mwp_color_btn_rad() i_number       = ", str( i_number))
+                # print( "mwp_color_btn_rad() i_number       = ", str( i_number))
                 a_pallet_list = self.c_main_image.mwi_get_original_image().getpalette()
-                #print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
+                # print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
                 if (i_number * 3) > len( a_pallet_list):
                     print( "mwp_color_btn_rad() i_number = ", str( i_number) + " a_pallet_list = " + str( len( a_pallet_list)))
                     print( "mwp_color_btn_rad() FAILED")

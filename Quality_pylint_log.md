@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  mar. 23 avr. 2024 21:10:38
+date :  ven. 19 juil. 2024 16:51:04
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -12,7 +12,7 @@ date :  mar. 23 avr. 2024 21:10:38
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | *Project* |  |
-| scbeditor2 | 2.2.9.27 |
+| scbeditor2 | 2.8.15.107 |
 
 &nbsp;
 
@@ -138,12 +138,12 @@ Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
   
 *** Module src.my_main_window_image  
 
-src\my_main_window_image.py:525:4: R0914: Too many local variables (31/15) (too-many-locals)
-src\my_main_window_image.py:525:4: R0912: Too many branches (20/12) (too-many-branches)
-src\my_main_window_image.py:525:4: R0915: Too many statements (149/50) (too-many-statements)
+src\my_main_window_image.py:601:4: R0914: Too many local variables (31/15) (too-many-locals)
+src\my_main_window_image.py:601:4: R0912: Too many branches (32/12) (too-many-branches)
+src\my_main_window_image.py:601:4: R0915: Too many statements (175/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.93/10 (previous run: 9.90/10, +0.02)
+Your code has been rated at 9.94/10 (previous run: 9.93/10, +0.01)
 
 &nbsp;
 
@@ -158,12 +158,12 @@ src\my_main_window_pallet.py:284:4: R0914: Too many local variables (34/15) (too
 src\my_main_window_pallet.py:284:4: R0912: Too many branches (27/12) (too-many-branches)
 src\my_main_window_pallet.py:284:4: R0915: Too many statements (176/50) (too-many-statements)
 src\my_main_window_pallet.py:676:4: R0912: Too many branches (20/12) (too-many-branches)
-src\my_main_window_pallet.py:676:4: R0915: Too many statements (66/50) (too-many-statements)
+src\my_main_window_pallet.py:676:4: R0915: Too many statements (65/50) (too-many-statements)
 src\my_main_window_pallet.py:811:4: R0914: Too many local variables (27/15) (too-many-locals)
 src\my_main_window_pallet.py:883:4: R0914: Too many local variables (16/15) (too-many-locals)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
+Your code has been rated at 9.88/10 (previous run: 9.88/10, -0.00)
 
 &nbsp;
 
@@ -212,5 +212,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.957 / 10**
+**note = 9.958 / 10**
 

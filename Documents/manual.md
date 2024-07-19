@@ -5,8 +5,8 @@
 ![Alt text](appIcon_T_256x256.png "scbeditor2")
 
 _Creation: March 2nd, 2024, by Renaud Malaval_  
-_Last review: April 2nd, 2024, by Renaud Malaval_  
-_Version: 2.2.9.27_
+_Last review: July 19th, 2024, by Renaud Malaval_  
+_Version: 2.8.15.107_
 
 &nbsp;
 
@@ -86,8 +86,14 @@ You could cut it in two part group to use two pallet or to change the pallet of 
 **Mouse live position**
   **X** and **Y** are the cursor position.
 
+**4 blue arrows** button
+  To roll the picture to up, down, left and right.
+  
 **Mouse click position**
   **X** and **Y** are the cursor position on the mouse click (value for zoomed picture and not zoomed).
+
+**4 blue arrows** button
+  To move the cursors simply, like the mouse.
 
 **Color offset**
   The offset of the color in the 256 colors pallet. Like field **Offset** below.
@@ -99,9 +105,6 @@ You could cut it in two part group to use two pallet or to change the pallet of 
 
 **Change pallet line number** button
   Modify **Pallet line** by using the **Pallet line** value, set a new **SCB** value.
-
-**4 blue arrows** button
-  To move the cursors simply, like the mouse.
 
 **Histogram**
   Display the number of colors are used in a line.  
