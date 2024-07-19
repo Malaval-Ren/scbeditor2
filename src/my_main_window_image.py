@@ -34,7 +34,7 @@ import platform
 import os
 import array
 
-from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar
+from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar     #, Radiobutton
 #, Radiobutton
 from tkinter.ttk import Separator
 from PIL import ImageTk
@@ -96,6 +96,10 @@ class MyMainWindowImage:
         self.a_mouse_live_pos_y = None
         self.a_mouse_pos_x = None
         self.a_mouse_pos_y = None
+        self.a_roll_up_btn = None
+        self.a_roll_down_btn = None
+        self.a_roll_left_btn = None
+        self.a_roll_rigth_btn = None
         self.a_mouse_pos_x_input_var = StringVar()
         self.a_mouse_pos_y_input_var = StringVar()
         self.a_pos_x_true_lbl = None
@@ -217,6 +221,78 @@ class MyMainWindowImage:
             self.a_pos_y_true_lbl.configure( text=str( int( i_current_val / 2)))
             # goto self.__mwi_click_on_picture()
             self.a_picture_lbl.event_generate("<1>", x=self.a_mouse_pos_x_input_var.get(), y=i_current_val)
+
+    # ####################### __mwi_roll_up_clicked ########################
+    def __mwi_roll_up_clicked( self):
+        """ Roll the picture The line 0 go to line 199 """
+        if self.a_original_img:     # self.a_work_img
+            print( "Move to up")
+            xsize, ysize = self.a_original_img.size
+            delta = 1
+            part_line = self.a_original_img.crop( (0, 0, xsize, delta))         # copy 1 row the 0
+            part_rect = self.a_original_img.crop( (0, delta, xsize, ysize))     # copy rect from 1 to 199
+            part_line.load()
+            part_rect.load()
+            self.a_original_img.paste( part_rect, (0, 0, xsize, ysize-delta))
+            self.a_original_img.paste( part_line, (0, ysize-delta, xsize, ysize))
+            self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+            self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
+
+    # ####################### __mwi_roll_down_clicked ########################
+    def __mwi_roll_down_clicked( self):
+        """ Roll the picture The line 199 go to line 0 """
+        if self.a_work_img:
+            print( "Move to down")
+            xsize, ysize = self.a_original_img.size
+            delta = 1
+            part_line = self.a_original_img.crop( (0, 199, xsize, ysize))       # copy 1 row the 199
+            part_rect = self.a_original_img.crop( (0, 0, xsize, ysize-delta))     # copy rect from 0 to 198
+            part_line.load()
+            part_rect.load()
+            self.a_original_img.paste( part_rect, (0, delta, xsize, ysize))
+            self.a_original_img.paste( part_line, (0, 0, xsize, delta))
+            self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+            self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
+
+    # ####################### __mwi_roll_left_clicked ########################
+    def __mwi_roll_left_clicked( self):
+        """ Roll the picture the column 0 go to colum 319 """
+        if self.a_original_img:
+            print( "Move to left")
+            xsize, ysize = self.a_original_img.size
+            delta = 1
+            part_column = self.a_original_img.crop( (0, 0, delta, ysize))       # copy 1 column the 0
+            part_rect = self.a_original_img.crop( (delta, 0, xsize, ysize))     # copy a rect from 1 to 319
+            part_column.load()
+            part_rect.load()
+            self.a_original_img.paste( part_rect, (0, 0, xsize-delta, ysize))
+            self.a_original_img.paste( part_column, (xsize-delta, 0, xsize, ysize))
+            self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+            self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
+
+    # ####################### __mwi_roll_right_clicked ########################
+    def __mwi_roll_right_clicked( self):
+        """ Roll the picture the column 319 go to colum 0 """
+        if self.a_original_img:
+            print( "Move to right")
+            xsize, ysize = self.a_original_img.size
+            delta = 1
+            part_column = self.a_original_img.crop( (319, 0, xsize, ysize))     # copy 1 column the 319
+            # full width of image
+            part_rect = self.a_original_img.crop( (0, 0, xsize-delta, ysize))   # copy a rect from 0 to 318
+            part_column.load()
+            part_rect.load()
+            self.a_original_img.paste( part_rect, (delta, 0, xsize, ysize))
+            self.a_original_img.paste( part_column, (0, 0, delta, ysize))
+            # middle of image column 150
+            # part_rect = self.a_original_img.crop( (150, 0, xsize-delta, ysize))   # copy a rect from 0 to 318
+            # part_column.load()
+            # part_rect.load()
+            # self.a_original_img.paste( part_rect, (151, 0, xsize, ysize))
+            # self.a_original_img.paste( part_column, (150, 0, 150+delta, ysize))
+
+            self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
+            self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
 
     # ####################### __mv_entry_mouse_x_focus_in ########################
     def __mwi_entry_mouse_x_focus_in( self, _):
@@ -585,14 +661,36 @@ class MyMainWindowImage:
         self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
 
-        a_bmp_pic_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_bmp_pic_frame.place( x=672+int(i_width/2)+2, y=21+48, width=int(i_width/2)-2, height=60)
-        i_index_base_block += 1
-        # a_split_rdx_btn = Radiobutton( a_bmp_pic_frame, text="BMP pallet 8 bits per colors", variable=None, value=1, command=None, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=8))
-        # a_split_rdx_btn.grid( row=i_index_base_block, column=1, padx=4, pady=2, sticky='w')
-        i_index_base_block += 1
-        # a_pallet_rdx_btn = Radiobutton( a_bmp_pic_frame, text="PIC pallet 4 bits per colors", variable=None, value=2, command=None, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=8))
-        # a_pallet_rdx_btn.grid( row=i_index_base_block, column=1, padx=4, pady=2, sticky='w')
+        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+48, width=int(i_width/2)-2, height=70)
+        if self.s_platform == "Darwin":
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_up_btn.grid( row=0, column=1, padx=4, pady=5, sticky='ew')
+        if self.s_platform == "Darwin":
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_left_btn.grid( row=1, column=0, padx=4, pady=2, sticky='ew')
+        if self.s_platform == "Darwin":
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_rigth_btn.grid( row=1, column=2, padx=4, pady=2, sticky='ew')
+        if self.s_platform == "Darwin":
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_down_btn.grid( row=1, column=1, padx=4, pady=4, sticky='ew')
 
         a_mouse_click_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_mouse_click_frame.place( x=672, y=21+48+62, width=int(i_width/2), height=116)
@@ -625,7 +723,7 @@ class MyMainWindowImage:
         self.a_color_lbl.grid( row=i_index_base_block, column=4, columnspan=1, padx=4, pady=2, sticky='ew')
 
         a_arrow_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+62, width=int(i_width/2)-2, height=116)
+        a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+72, width=int(i_width/2)-2, height=70)
         if self.s_platform == "Darwin":
             self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         elif self.s_platform == "Linux":
@@ -653,7 +751,17 @@ class MyMainWindowImage:
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_y_btn.grid( row=2, column=1, padx=4, pady=4, sticky='ew')
+        self.a_more_y_btn.grid( row=1, column=1, padx=4, pady=4, sticky='ew')
+
+        # Future feature to have color BMP: RGB are 0..255 and PIC RGB are 0..15  
+        # a_color_chart_frame = Frame( a_pic_frame, padx=0, pady=0, background='green')     # background='darkgray' or 'light grey'
+        # a_color_chart_frame.place( x=672+int(i_width/2)+2, y=21+48+72+72, width=int(i_width/2)-2, height=44)
+        # a_pic_sep_lbl_h3 = Label( a_color_chart_frame, text="Color chart :", background=constant.BACKGROUD_COLOR_UI)
+        # a_pic_sep_lbl_h3.grid( row=0, column=0, padx=4, pady=8, sticky='w')
+        # a_split_rdx_btn = Radiobutton( a_color_chart_frame, text="BMP", variable=None, value=1, command=None, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=8))
+        # a_split_rdx_btn.grid( row=0, column=1, padx=4, pady=4, sticky='w')
+        # a_pallet_rdx_btn = Radiobutton( a_color_chart_frame, text="PIC", variable=None, value=2, command=None, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=8))
+        # a_pallet_rdx_btn.grid( row=0, column=2, padx=4, pady=4, sticky='w')
 
         a_pallet_scb_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_pallet_scb_frame.place( x=672, y=21+48+62+118, width=i_width, height=64)
