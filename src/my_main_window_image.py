@@ -661,7 +661,7 @@ class MyMainWindowImage:
         self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
 
-        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background='orange')     # background='darkgray' or 'light grey'
+        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_roll_frame.place( x=672+int(i_width/2)+2, y=21+48, width=int(i_width/2)-2, height=70)
         if self.s_platform == "Darwin":
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
