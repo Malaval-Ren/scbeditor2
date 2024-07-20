@@ -661,7 +661,7 @@ class MyMainWindowImage:
         self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
 
-        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background='orange')     # background='darkgray' or 'light grey'
         a_roll_frame.place( x=672+int(i_width/2)+2, y=21+48, width=int(i_width/2)-2, height=70)
         if self.s_platform == "Darwin":
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
@@ -669,28 +669,28 @@ class MyMainWindowImage:
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_up_btn.grid( row=0, column=1, padx=4, pady=5, sticky='ew')
+        self.a_roll_up_btn.place( x=6+56+6, y=5, width=56) # height = 26
         if self.s_platform == "Darwin":
             self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_left_btn.grid( row=1, column=0, padx=4, pady=2, sticky='ew')
+        self.a_roll_left_btn.place( x=6, y=5+17, width=56)
         if self.s_platform == "Darwin":
             self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_rigth_btn.grid( row=1, column=2, padx=4, pady=2, sticky='ew')
+        self.a_roll_rigth_btn.place( x=6+56+6+56+6, y=5+17, width=56)
         if self.s_platform == "Darwin":
             self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_down_btn.grid( row=1, column=1, padx=4, pady=4, sticky='ew')
+        self.a_roll_down_btn.place( x=6+56+6, y=5+26+4+4, width=56)
 
         a_mouse_click_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_mouse_click_frame.place( x=672, y=21+48+62, width=int(i_width/2), height=116)
@@ -730,28 +730,28 @@ class MyMainWindowImage:
             self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_y_btn.grid( row=0, column=1, padx=4, pady=5, sticky='ew')
+        self.a_less_y_btn.place( x=6+56+6, y=5, width=56) # height = 26
         if self.s_platform == "Darwin":
             self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_x_btn.grid( row=1, column=0, padx=4, pady=2, sticky='ew')
+        self.a_less_x_btn.place( x=6, y=5+17, width=56)
         if self.s_platform == "Darwin":
             self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_x_btn.grid( row=1, column=2, padx=4, pady=2, sticky='ew')
+        self.a_more_x_btn.place( x=6+56+6+56+6, y=5+17, width=56)
         if self.s_platform == "Darwin":
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         elif self.s_platform == "Linux":
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
         else:
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_y_btn.grid( row=1, column=1, padx=4, pady=4, sticky='ew')
+        self.a_more_y_btn.place( x=6+56+6, y=5+26+4+4, width=56)
 
         # Future feature to have color BMP: RGB are 0..255 and PIC RGB are 0..15
         # a_color_chart_frame = Frame( a_pic_frame, padx=0, pady=0, background='green')     # background='darkgray' or 'light grey'
