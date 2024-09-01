@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.20'
+version='1.23'
 
 # definition all colors and styles to use with an echo
 
@@ -252,7 +252,7 @@ then
 		fi
 	fi
 	# echo -e "version : ""$tempver""\n" >> "$pylint_log"
-	echo -e "| *Project* |  |" >> "$pylint_log"	
+	echo -e "| **Project** |  |" >> "$pylint_log"	
 	echo -e "| "$pyInstall_Name" |" "$tempver"" |" >> "$pylint_log"
 	echo -e "" >> "$pylint_log"
 	echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
