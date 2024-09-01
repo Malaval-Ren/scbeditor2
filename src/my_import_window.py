@@ -152,7 +152,7 @@ class MyImportPalletWindow:
         # print( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         i_counter = 0
         i_rect_begin = -1
-        for i_loop in range( 0, 199, 2):
+        for i_loop in range( 0, 200, 2):
             i_offset = self.a_pallet_image.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_pallet_number:

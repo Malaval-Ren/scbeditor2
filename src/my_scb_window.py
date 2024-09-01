@@ -112,7 +112,7 @@ class MyScbPalletWindow:
     def __scbw_change_pallet_for_lines( self, i_new_pallet_to_use, i_from, i_to):
         """ Change the pallet used by a scb to another one """
         for i_picture_line_y in range( i_from, i_to, 1):
-            for i_loop in range( 0, 319, 1):
+            for i_loop in range( 0, 320, 1):
                 i_first_color_offset = self.a_original_part_image.getpixel( ( i_loop, i_picture_line_y))
                 i_first_color_offset = i_first_color_offset - (self.i_selected_pallet_line * 16)
                 i_first_color_offset = i_first_color_offset + (i_new_pallet_to_use * 16)
