@@ -28,6 +28,7 @@
 #                                   PYLINT
 # Disable C0301 = Line too long (80 chars by line is not enough)
 # pylint: disable=line-too-long
+# Number is reasonable in this case these are all the icons of the main windows and the application icons
 # ###############################################################################################
 
 from tkinter import PhotoImage

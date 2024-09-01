@@ -44,6 +44,7 @@ from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 from .my_scb_window import MyScbPalletWindow
+from .my_tool_tips import MyToolTip
 # from .my_main_window  import mv_entry_black_focus_out, mv_on_single_key, mw_print_widget_under_mouse
 # from .my_main_window_pallet import mwp_entry_black_focus_out, mwp_select_color_rad_btn
 
@@ -51,7 +52,6 @@ from .my_scb_window import MyScbPalletWindow
 
 # ###############################################################################################
 # #######========================= constant private =========================
-
 # ###############################################################################################
 # #######=========================     GUI     =========================
 # ####################### MyMainWindow ########################
@@ -609,10 +609,13 @@ class MyMainWindowImage:
         a_pic_sep_h0.place( x=0, y=10, relwidth=1.0)
         a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pic_sep_lbl_h0.place( x=300, y=0)
+        MyToolTip( widget=a_pic_sep_lbl_h0, text="Click on Picture to sea zoomed part")
         a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pic_sep_lbl_h1.place( x=635, y=0)
+        MyToolTip( widget=a_pic_sep_lbl_h1, text="Click on blue rectangle to manage SCB")
         a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pic_sep_lbl_h2.place( x=640+200, y=0)
+        MyToolTip( widget=a_pic_sep_lbl_h2, text="- Show filename\n- Arrows to roll picture pixels\n- Arrows to move cursor in picture\n- Set a pallet to a line\n- Show color used")
         # self.w_tk_root.update()
 
         i_index_base_block += 2

@@ -26,7 +26,6 @@
 #                                   PYLINT
 # Disable C0301 = Line too long (80 chars by line is not enough)
 # pylint: disable=line-too-long
-# number is reasonable in this case these are all the icons of the main windows and the application icons
 # pylint: disable=too-many-instance-attributes
 # ###############################################################################################
 
@@ -46,6 +45,7 @@ import src.my_constants as constant
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 from .my_tools import mt_hexlify_byte_string
+from .my_tool_tips import MyToolTip
 
 # __name__ = "MyMainWindowPallet"
 
@@ -291,10 +291,13 @@ class MyMainWindowPallet:
         a_pallet_sep_h0.place( x=0, y=10, relwidth=1.0)
         a_pallet_sep_lbl_h0 = Label( a_top_separator_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pallet_sep_lbl_h0.place( x=280, y=0)
+        MyToolTip( widget=a_pallet_sep_lbl_h0, text="Click to select a color in a pallet")
         a_pallet_sep_lbl_h1 = Label( a_top_separator_frame, text="Color", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pallet_sep_lbl_h1.place( x=660, y=0)
+        MyToolTip( widget=a_pallet_sep_lbl_h1, text="Edit a color to modify it")
         a_pallet_sep_lbl_h2 = Label( a_top_separator_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pallet_sep_lbl_h2.place( x=640+270, y=0)
+        MyToolTip( widget=a_pallet_sep_lbl_h2, text="Show zoom around the last click on the picture")
         # self.w_tk_root.update()
 
         # Create pallet button left frame
