@@ -853,9 +853,9 @@ class MyMainWindowPallet:
 
             i_scb = int( i_a_from / 16)
             # Update the picture offset for all line with the same SCB
-            for i_picture_line_y in range( 0, 199, 1):
+            for i_picture_line_y in range( 0, 200, 1):
                 # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
-                for i_loop in range( 0, 319, 1):
+                for i_loop in range( 0, 320, 1):
                     i_first_color_offset = a_original_img.getpixel( ( i_loop, i_picture_line_y))
                     if i_scb == int(i_first_color_offset / 16): # check the SCB
                         # swap offset of color in this line
