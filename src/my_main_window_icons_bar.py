@@ -184,14 +184,14 @@ class MyMainWindowIconsBar:
         # a_pallet_list = self.a_original_image.getpalette()
 
         self.w_front_window.pbw_progress_bar_start()
-        for i_picture_line_y in range( 0, 199, 1):
+        for i_picture_line_y in range( 0, 200, 1):
             i_small_index = 255
             # i_small_pos_x = 255
             i_big_index = 0
             # i_big_pos_x = 0
             self.w_front_window.pbw_progress_bar_step()
             # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
-            for i_loop in range( 0, 319, 1):
+            for i_loop in range( 0, 320, 1):
                 i_first_color_offset = self.a_original_image.getpixel( ( i_loop, i_picture_line_y))
                 i_big_index = max(i_big_index, i_first_color_offset)
                 i_small_index = min(i_small_index, i_first_color_offset)
@@ -202,7 +202,7 @@ class MyMainWindowIconsBar:
                 #     " at pox X = " + str( i_big_pos_x) )
                 # print( "    " + " i_small_index = " + str( i_small_index) + " line  Y = " + str( int( i_small_index / 16)) + " index X = " + str( i_small_index - int( i_small_index / 16) * 16) + \
                 #     " at pox X = " + str( i_small_pos_x) )
-                for i_index in range( 0, 319, 1):
+                for i_index in range( 0, 320, 1):
                     i_current_index = self.a_original_image.getpixel( ( i_index, i_picture_line_y))
                     if int( i_current_index / 16) != int( i_big_index / 16):
                         # print( "    " + str( i_current_index) )
