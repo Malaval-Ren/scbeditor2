@@ -41,9 +41,9 @@ The Red Hat package .rpm is converted by [Alien](https://joeyh.name/code/alien/)
 [Homebrew](https://brew.sh/)
 
 - Create Release :
-A complete release could be created with "Delivery.sh".
-I'm using it currently for internal usage and testing.
-I have to create an ".venv" environment to simplify it.
+A complete release could be created with "Delivery.sh"  
+I'm using it currently for internal usage and testing  
+I have to create an ".venv" environment to simplify it  
 
 ## **Tools**
 
