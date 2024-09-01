@@ -641,7 +641,7 @@ class MyMainWindowImage:
         i_width = i_pic_frame_width - ( 640 + 24 + 10)
 
         a_filename_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_filename_frame.place( x=672, y=21, width=i_width, height=48)
+        a_filename_frame.place( x=672, y=21, width=int(i_width/2), height=48)
         i_index_base_block = 0
         a_pic_sep_lbl_h2 = Label( a_filename_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h2.pack( fill="both", ipady=1)
@@ -664,8 +664,13 @@ class MyMainWindowImage:
         self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
         self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
 
+        a_roll_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_roll_title_frame.place( x=672+int(i_width/2)+2, y=24, width=int(i_width/2)-2, height=16)
+        a_pic_sep_lbl_h7 = Label( a_roll_title_frame, text="Roll image", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h7.pack( fill="both", ipady=1)
+
         a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+48, width=int(i_width/2)-2, height=70)
+        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+24, width=int(i_width/2)-2, height=70+12)
         if self.s_platform == "Darwin":
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
         elif self.s_platform == "Linux":
@@ -724,6 +729,11 @@ class MyMainWindowImage:
         a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=2, sticky='ew')
         self.a_color_lbl = Label( a_mouse_click_frame, text="   ", background='light grey', foreground='black')
         self.a_color_lbl.grid( row=i_index_base_block, column=4, columnspan=1, padx=4, pady=2, sticky='ew')
+
+        a_arrow_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_arrow_title_frame.place( x=672+int(i_width/2)+2, y=21+48+51, width=int(i_width/2)-2, height=16)
+        a_pic_sep_lbl_h8 = Label( a_arrow_title_frame, text="Move cursor", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h8.pack( fill="both", ipady=1)
 
         a_arrow_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+72, width=int(i_width/2)-2, height=70)
