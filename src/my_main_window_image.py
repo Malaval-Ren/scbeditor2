@@ -370,7 +370,7 @@ class MyMainWindowImage:
                 else:
                     i_delta = abs( (i_current_pallet_number - i_new_pallet_number) * 16)
 
-                for i_index in range( 0, 319, 1):
+                for i_index in range( 0, 320, 1):
                     i_current_index = self.a_original_img.getpixel( ( i_index, i_line_number))
                     i_current_index += i_delta
                     self.a_original_img.putpixel( ( i_index, i_line_number), i_current_index)
