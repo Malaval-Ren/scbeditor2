@@ -146,7 +146,7 @@ class MyMainWindow:
         # same line for origin to right
         i_run_to_rigth = i_true_x
         i_run_offset = i_offset
-        while i_run_to_rigth <= 320:
+        while i_run_to_rigth < 320:
             if (i_offset == i_run_offset) and (i_offset != i_around_cursor):
                 a_original_img.putpixel( (i_run_to_rigth, i_true_y), i_around_cursor)
                 i_run_to_rigth += 1
