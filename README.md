@@ -4,7 +4,7 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
 _Creation: December 31th, 2023..2024, by Renaud Malaval_  
-_Last review: March 20th, 2024, by Renaud Malaval_
+_Last review: September 1st, 2024, by Renaud Malaval_
 
 ## Features
 
@@ -39,6 +39,11 @@ The Red Hat package .rpm is converted by [Alien](https://joeyh.name/code/alien/)
 
 - Mac OSx86 : 
 [Homebrew](https://brew.sh/)
+
+- Create Release :
+A complete release could be created with "Delivery.sh".
+I'm using it currently for internal usage and testing.
+I have to create an ".venv" environment to simplify it.
 
 ## **Tools**
 
