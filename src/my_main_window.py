@@ -174,10 +174,10 @@ class MyMainWindow:
                     break
 
             i_down = i_true_y + 1
-            if i_down <= 199:
+            if i_down < 200:
                 i_run_offset = a_original_img.getpixel( ( i_true_x, i_down))
                 while (i_offset == i_run_offset) and (i_offset != i_around_cursor):
-                    if i_down <= 199:
+                    if i_down < 200:
                         self.__mw_paint_left_and_right( i_offset, i_true_x, i_down)
                         i_down += 1
                         i_run_offset = a_original_img.getpixel( ( i_true_x, i_down))
