@@ -34,20 +34,20 @@ _Last review: September 6th, 2024, by Renaud Malaval_
 ## **Notes**
 
 - Windows 10 :
-:warning:Microsoft Defender found **PUA:Win32/Packunwan** but I think that is an error  
+:warning: Microsoft Defender found **PUA:Win32/Packunwan** but I think that is an error  
 Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and on my hard drive  
 Please, check it before install it, svp  
 If your antivirus find some think, send me a mail, please  
 
-- Windows 10 :
-:warning:Not tested  
+- Windows 11 :
+:warning: Not tested  
 
 - Linux Mint :
-The Debian package .deb is created on Linux Mint Virginia (v21.3)  
-The Red Hat package .rpm is converted by [Alien](https://joeyh.name/code/alien/) (I don't have access to this Linux version, not tested)  
+The **Debian** package .deb is created on Linux Mint Virginia (v21.3)  
+:warning: Not tested. The **Red Hat** package .rpm is converted by [Alien](https://joeyh.name/code/alien/)  
 
- - Mac OSx86 : 
-[Homebrew](https://brew.sh/)
+- Mac OSx86 : 
+[Homebrew](https://brew.sh/)  
 
 - Create Release :
 A complete release could be created with "Delivery.sh"  
@@ -62,9 +62,9 @@ I have to create an ".venv" environment to simplify it
   - [Mac OSx86 10.15.7](https://apps.apple.com/fr/app/macos-catalina/id1466841314?mt=12) : 3.12.2
 - [Python modules](https://pypi.org/)
   - [pip](https://pypi.org/project/pip/)
-  - [pillow](https://pypi.org/project/pillow/)
+  - [pylint](https://pypi.org/project/pylint/)
   - [pyinstaller](https://pyinstaller.org/en/stable/)
-  - [pylance](https://pypi.org/project/pylance/)
+  - [pillow](https://pypi.org/project/pillow/)
 - [Visual Studio Code](https://code.visualstudio.com/) : IDE (with somes extensions)
 - [Mark Text](https://www.marktext.cc/) : A viewer for markdown file (.md)
 - [GIT](https://git-scm.com/) : Distributed version control system
