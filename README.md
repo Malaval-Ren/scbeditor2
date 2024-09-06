@@ -39,6 +39,8 @@ Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and
 Please, check it before install it, svp  
 If your antivirus find some think, send me a mail, please  
 
+- Windows 10 :
+:warning:Not tested  
 
 - Linux Mint :
 The Debian package .deb is created on Linux Mint Virginia (v21.3)  
