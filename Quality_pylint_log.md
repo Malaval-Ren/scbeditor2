@@ -2,13 +2,13 @@
 
 ## *Context*
 
-date :  dim. 1 sept. 2024 17:51:58
+date :  jeu. 12 sept. 2024 23:49:48
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
-| Python | 3.12.1 |
+| Python | 3.12.5 |
 | PyInstaller | 6.10.0 |
-| Pylint | 3.2.6 |
+| Pylint | 3.2.7 |
 | Perl | 5.36.1 |
 | Bash | 5.2.21(1)-release |
 | **Project** |  |
@@ -138,9 +138,9 @@ Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
   
 *** Module src.my_main_window_image  
 
-src\my_main_window_image.py:601:4: R0914: Too many local variables (31/15) (too-many-locals)
+src\my_main_window_image.py:601:4: R0914: Too many local variables (35/15) (too-many-locals)
 src\my_main_window_image.py:601:4: R0912: Too many branches (32/12) (too-many-branches)
-src\my_main_window_image.py:601:4: R0915: Too many statements (178/50) (too-many-statements)
+src\my_main_window_image.py:601:4: R0915: Too many statements (186/50) (too-many-statements)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.94/10 (previous run: 9.94/10, +0.00)

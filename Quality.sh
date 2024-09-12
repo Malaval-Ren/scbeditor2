@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.23'
+version='1.25'
 
 # definition all colors and styles to use with an echo
 
@@ -265,6 +265,9 @@ fi
 
 # exit $NO_ERROR
 
+# Declare an array variable of folder to do nothing
+declare -a folder_ignore=( "./git/" "./vscode/" "./.venv/" "./build/" "./images/" "./Documents/")
+
 # Work start here
 echo -e $BGreen "Pylint analyse files :" $Color_Off
 echo
@@ -273,149 +276,160 @@ notetotal=0.0
 tempval=0.0
 for i in $(find . -type f \( -iname "*.py" ! -iname "__*.py" \) ); 
 do
-	if [[ $i = *'./images/'* ]]
-	then
-		continue
-	fi
-	echo -e $BGreen " ""$i" $Color_Off
-	# pylint --rcfile=pylint_config -E $i
-	echo -e "&nbsp;\n" >> "$pylint_log"
-	echo -e "## *""$i""*" >> "$pylint_log"
-	echo -e "" >> "$pylint_log"
-    temp=$(grep -F "$pylint_rules" "$i")
-	if [[ ! "$temp" == "" ]]
-	then
-		echo
-		# echo -e "temp          :" "$temp"
-		PylintWarningArr=()
-		while read -r line; do
-			PylintWarningArr+=("$line")
-		done <<< "$temp"
+	# Loop through each folder_ignore we does nothink
+	drop_it=0
+	for folder in "${folder_ignore[@]}"
+	do
+		if [[ "$i" =~ "$folder" ]]
+		then
+			drop_it=1
+			break
+		fi
+	done
 
-		# Do a layout to display Pylint rule one by lines in .md 
-		totalnumberofrules=$(echo ${PylintWarningArr[@]} | grep -o '# ' | wc -l)
-		for k in "${PylintWarningArr[@]}"
-		do
-			tempNoSpace=$(echo $k | tr -s '# ' '  ')
-			echo -e $Green "$tempNoSpace" $Color_Off
-			if [ $totalnumberofrules -gt 1 ]
-			then
-				spaces="  "
-			else
-				spaces=""
-			fi
-			echo -e ">""$tempNoSpace""$spaces" >> "$pylint_log"
-		done
-
-		# Qdd separator if error are present
-		numberOfLine="${#PylintWarningArr[@]}"
-		borne=0
-		# echo -e $Green "numberOfLine :" "$numberOfLine" $Color_Off		
-		# echo -e $Green "borne        :" "$borne" $Color_Off		
-		if [ "$numberOfLine" -gt "$borne" ]
+	if [ $drop_it -eq 0 ]
+	then
+		echo -e $BGreen " ""$i" $Color_Off
+		# pylint --rcfile=pylint_config -E $i
+		echo -e "&nbsp;\n" >> "$pylint_log"
+		echo -e "## *""$i""*" >> "$pylint_log"
+		echo -e "" >> "$pylint_log"
+		temp=$(grep -F "$pylint_rules" "$i")
+		if [[ ! "$temp" == "" ]]
 		then
 			echo
-			echo -e "  " >> "$pylint_log"
+			# echo -e "temp          :" "$temp"
+			PylintWarningArr=()
+			while read -r line; do
+				PylintWarningArr+=("$line")
+			done <<< "$temp"
+
+			# Do a layout to display Pylint rule one by lines in .md 
+			totalnumberofrules=$(echo ${PylintWarningArr[@]} | grep -o '# ' | wc -l)
+			for k in "${PylintWarningArr[@]}"
+			do
+				tempNoSpace=$(echo $k | tr -s '# ' '  ')
+				echo -e $Green "$tempNoSpace" $Color_Off
+				if [ $totalnumberofrules -gt 1 ]
+				then
+					spaces="  "
+				else
+					spaces=""
+				fi
+				echo -e ">""$tempNoSpace""$spaces" >> "$pylint_log"
+			done
+
+			# Qdd separator if error are present
+			numberOfLine="${#PylintWarningArr[@]}"
+			borne=0
+			# echo -e $Green "numberOfLine :" "$numberOfLine" $Color_Off		
+			# echo -e $Green "borne        :" "$borne" $Color_Off		
+			if [ "$numberOfLine" -gt "$borne" ]
+			then
+				echo
+				echo -e "  " >> "$pylint_log"
+			fi
+			# echo
 		fi
-		# echo
-	fi
 
-	# Do the Pylint analyse
-	pylint $i > "$pylint_tmp"
-	pylint_error=$?
+		# Do the Pylint analyse
+		pylint $i > "$pylint_tmp"
+		pylint_error=$?
 
-	# Do a layout to display element name with only 3 * in .md 
-	# echo -e $Green "pylint_tmp           :" "$pylint_tmp" $Color_Off
-	numberoflines=$(wc -l < "$pylint_tmp")
-	# echo -e $Green "numberoflines        :" "$numberoflines" $Color_Off
-	firstline=$(head -1 < "$pylint_tmp")
-	# echo -e $Green "firstline            :" "$firstline" $Color_Off
-	short="${firstline:0:14}"
-	# echo -e $Green "short                :" "$short" $Color_Off
-	if [ "$short" == "************* " ]
-	then
-		firstline=${firstline:10}
-		firstline=$firstline"  "
+		# Do a layout to display element name with only 3 * in .md 
+		# echo -e $Green "pylint_tmp           :" "$pylint_tmp" $Color_Off
+		numberoflines=$(wc -l < "$pylint_tmp")
+		# echo -e $Green "numberoflines        :" "$numberoflines" $Color_Off
+		firstline=$(head -1 < "$pylint_tmp")
 		# echo -e $Green "firstline            :" "$firstline" $Color_Off
-		echo -e "$firstline" >> "$pylint_log"
-		echo -e "" >> "$pylint_log"
-		# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
-		let "numberoflines -= 1"
-		let "numberoflines *= -1"
-		# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
-		# Do a layout to display Pylint info in .md 
-		tagpart=$(tail $numberoflines < "$pylint_tmp" )
-		# echo -e $Green "tagpart              :" $Color_Off
-		# echo -e $Green "$tagpart" $Color_Off
-		echo -e "$tagpart" >> "$pylint_log"
-		echo -e "" >> "$pylint_log"
-	else
-		# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
-		let "numberoflines -= 1"
-		let "numberoflines *= -1"
-		# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
-		# Do a layout to display Pylint info in .md 
-		tagpart=$(tail $numberoflines < "$pylint_tmp" )
-		# echo -e $Green "tagpart              :" $Color_Off
-		# echo -e $Green "$tagpart" $Color_Off
-		echo -e "$tagpart" >> "$pylint_log"
-		echo -e "" >> "$pylint_log"
-	fi
-	rm "$pylint_tmp"
+		short="${firstline:0:14}"
+		# echo -e $Green "short                :" "$short" $Color_Off
+		if [ "$short" == "************* " ]
+		then
+			firstline=${firstline:10}
+			firstline=$firstline"  "
+			# echo -e $Green "firstline            :" "$firstline" $Color_Off
+			echo -e "$firstline" >> "$pylint_log"
+			echo -e "" >> "$pylint_log"
+			# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
+			let "numberoflines -= 1"
+			let "numberoflines *= -1"
+			# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
+			# Do a layout to display Pylint info in .md 
+			tagpart=$(tail $numberoflines < "$pylint_tmp" )
+			# echo -e $Green "tagpart              :" $Color_Off
+			# echo -e $Green "$tagpart" $Color_Off
+			echo -e "$tagpart" >> "$pylint_log"
+			echo -e "" >> "$pylint_log"
+		else
+			# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
+			let "numberoflines -= 1"
+			let "numberoflines *= -1"
+			# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
+			# Do a layout to display Pylint info in .md 
+			tagpart=$(tail $numberoflines < "$pylint_tmp" )
+			# echo -e $Green "tagpart              :" $Color_Off
+			# echo -e $Green "$tagpart" $Color_Off
+			echo -e "$tagpart" >> "$pylint_log"
+			echo -e "" >> "$pylint_log"
+		fi
+		rm "$pylint_tmp"
 
 
-	# Get last line of log file to display it and compute note 
-	tag=$(tail -2 < "$pylint_log" )
-	# echo -e $Green "tag                  :" $Color_Off
-	# echo -e $Green "$tag" $Color_Off
-	if [[ "$OSTYPE" == "darwin"* ]]
-	then
-		v2=${tag:0:$((${#tag} - 1))}
-		echo -e $Green '\t '$v2 $Color_Off
-	else
-		echo -e $Green '\t '${tag::-1} $Color_Off
-	fi
-	# Get from line the note
-	newnote=${tag:28:5}
-	# echo -e $Green "newnote              :" "$newnote" $Color_Off	
-	lastchar=${newnote: -1}
-	if [ $lastchar == '/' ]
-	then
+		# Get last line of log file to display it and compute note 
+		tag=$(tail -2 < "$pylint_log" )
+		# echo -e $Green "tag                  :" $Color_Off
+		# echo -e $Green "$tag" $Color_Off
 		if [[ "$OSTYPE" == "darwin"* ]]
 		then
-			v2=${newnote:0:$((${#newnote} - 1))}
-			newnote=$v2
+			v2=${tag:0:$((${#tag} - 1))}
+			echo -e $Green '\t '$v2 $Color_Off
 		else
-			newnote=${newnote::-1}
+			echo -e $Green '\t '${tag::-1} $Color_Off
 		fi
-	fi
-	tempval=$(perl -E "say $notetotal+$newnote")
-	notetotal=$tempval
-	if [ $pylint_error -ne 0 ]
-	then
-		if [ $pylint_error -eq 1 ]
+		# Get from line the note
+		newnote=${tag:28:5}
+		# echo -e $Green "newnote              :" "$newnote" $Color_Off	
+		lastchar=${newnote: -1}
+		if [ $lastchar == '/' ]
 		then
-			echo -e $Red '\t '"errors type = fatal message" $Color_Off
-		elif [ $pylint_error -eq 2 ]
-		then
-			echo -e $Yellow '\t '"errors type = error message" $Color_Off
-		elif [ $pylint_error -eq 4 ]
-		then
-			echo -e $Purple '\t '"errors type = warning message" $Color_Off
-		elif [ $pylint_error -eq 8 ]
-		then
-			echo -e $Green '\t '"errors type = refactor message" $Color_Off
-		elif [ $pylint_error -eq 16 ]
-		then
-			echo -e $Cyan '\t '"errors type = convention message" $Color_Off
-		else
-			echo -e $White '\t '"errors type =" "$pylint_error" "(usage error)" $Color_Off
+			if [[ "$OSTYPE" == "darwin"* ]]
+			then
+				v2=${newnote:0:$((${#newnote} - 1))}
+				newnote=$v2
+			else
+				newnote=${newnote::-1}
+			fi
 		fi
+		tempval=$(perl -E "say $notetotal+$newnote")
+		notetotal=$tempval
+		if [ $pylint_error -ne 0 ]
+		then
+			if [ $pylint_error -eq 1 ]
+			then
+				echo -e $Red '\t '"errors type = fatal message" $Color_Off
+			elif [ $pylint_error -eq 2 ]
+			then
+				echo -e $Yellow '\t '"errors type = error message" $Color_Off
+			elif [ $pylint_error -eq 4 ]
+			then
+				echo -e $Purple '\t '"errors type = warning message" $Color_Off
+			elif [ $pylint_error -eq 8 ]
+			then
+				echo -e $Green '\t '"errors type = refactor message" $Color_Off
+			elif [ $pylint_error -eq 16 ]
+			then
+				echo -e $Cyan '\t '"errors type = convention message" $Color_Off
+			else
+				echo -e $White '\t '"errors type =" "$pylint_error" "(usage error)" $Color_Off
+			fi
+		fi
+		echo
+		# note : does nothing : somefile,colorized
+		# pylint --output-format=json:somefile,colorized $i >> "$pylint_log"".json"
+		let "filecount += 1"
 	fi
-	echo
-	# note : does nothing : somefile,colorized
-	# pylint --output-format=json:somefile,colorized $i >> "$pylint_log"".json"
-	let "filecount += 1"
+
 done
 
 echo -e $BGreen "Pylint files analyzed = ""$filecount"  $Color_Off
