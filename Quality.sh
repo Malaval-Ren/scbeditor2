@@ -266,7 +266,7 @@ fi
 # exit $NO_ERROR
 
 # Declare an array variable of folder to do nothing
-declare -a folder_ignore=( "./git/" "./vscode/" "./.venv/" "./build/" "./images/" "./Documents/")
+declare -a folder_ignore=( "./.git/" "./.venv/" "./.vscode/" "./build/" "./images/" "./Documents/" )
 
 # Work start here
 echo -e $BGreen "Pylint analyse files :" $Color_Off
