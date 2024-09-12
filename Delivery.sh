@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.81'
+version='1.91'
 
 # definition all colors and styles to use with an echo
 
@@ -513,32 +513,41 @@ then
         fi
     fi
 
-    # Generate window install with Inno Setup
     echo
-    if [[ -f "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ]]
+    if [[ "$OSTYPE" == "msys" ]]
     then
-        if [[ -f "./Innosetup_create_install.iss" ]]
+        # Generate window install with Inno Setup
+        if [[ -f "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ]]
         then
-            echo -e $BGreen "Inno Setup" $Color_Off
-            "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "./Innosetup_create_install.iss"
-            if [ $? -eq 0 ]
+            if [[ -f "./Innosetup_create_install.iss" ]]
             then
-                if [[ -f "./"$pyInstall_build"/scbeditor2_install.exe" ]]
-                then            
-                    mv "./"$pyInstall_build"/scbeditor2_install.exe" "./"$pyInstall_dist"/scbeditor2_install.exe"
-                    if [[ -f "./dist/scbeditor2_install.exe" ]]
-                    then
-                        echo
-                        echo -e $BGreen "Inno Setup install is OK" $Color_Off
+                echo -e $BGreen "Inno Setup" $Color_Off
+                "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "./Innosetup_create_install.iss"
+                if [ $? -eq 0 ]
+                then
+                    if [[ -f "./"$pyInstall_build"/scbeditor2_install.exe" ]]
+                    then            
+                        mv "./"$pyInstall_build"/scbeditor2_install.exe" "./"$pyInstall_dist"/scbeditor2_install.exe"
+                        if [[ -f "./dist/scbeditor2_install.exe" ]]
+                        then
+                            echo
+                            echo -e $BGreen "Inno Setup installator is created" $Color_Off
+                        fi
+                    else
+                        echo -e $Yellow "Inno Setup "$pyInstall_build"/scbeditor2_install.exe NOT FOUND" $Color_Off
+                        exit $ERROR_SH_FILE
                     fi
                 else
-                    echo -e $Yellow "Inno Setup "$pyInstall_build" NOT FOUND" $Color_Off
+                    echo -e $BRed "Inno Setup "$pyInstall_build" of install : FAILED on error= " $? $Color_Off
                     exit $ERROR_SH_FILE
                 fi
             else
-                echo -e $BRed "Inno Setup "$pyInstall_build" of install : FAILED on error= " $? $Color_Off
-                exit $ERROR_SH_FILE
+                echo -e $BRed "Inno Setup projet file 'Innosetup_create_install.iss' not present" $Color_Off
+                exit $ERROR_SH_FILE                
             fi
+        else
+            echo -e $BRed "Inno Setup not installed" $Color_Off
+            exit $ERROR_SH_FILE
         fi
     fi
 
