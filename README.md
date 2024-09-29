@@ -75,3 +75,20 @@ I have to create an ".venv" environment to simplify it
 - [Image Magick Display](https://imagemagick.org/) : To convert .png to .icns
 - [XnView](https://www.xnview.com/) : To view .icns Mac Os icon file on Windows 10
 - [FlatIcon](https://www.flaticon.com) : Source of wonderful free pictures
+
+## **Development**
+
+$ git clone https://github.com/Malaval-Ren/scbeditor2.git
+
+pip install -r requirements.txt
+
+
+>note : https://code.visualstudio.com/docs/python/environments
+
+
+py -m pip install pillow
+
+pip install -r requirements.txt
+
+
+

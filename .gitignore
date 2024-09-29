@@ -2,6 +2,10 @@
 /.vscode
 */.vscode
 
+# virtual context
+/.venv
+*/.venv
+
 #not used file just to known where I'am
 __LINUX__
 __LINUX_VM__
