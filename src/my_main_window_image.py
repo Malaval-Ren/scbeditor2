@@ -784,15 +784,17 @@ class MyMainWindowImage:
         self.a_scb_lbl = Label( a_pallet_scb_frame, text="    ", background='light grey', foreground='black')
         self.a_scb_lbl.place( x=108, y=6, width=44)
         self.a_line_slider = Scale( a_pallet_scb_frame, from_=0, to=15, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0)
-        self.a_line_slider.place( x=int(i_width/2)-38, y=6, width=int(i_width/2)+34, height=50)
         i_index_base_block += 1
         if self.s_platform == "Darwin":
+            self.a_line_slider.place( x=int(i_width/2)-38, y=6, width=int(i_width/2)+34, height=50)
             a_change_scb_btn = Button( a_pallet_scb_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.place( x=2, y=30, width=178)
         elif self.s_platform == "Linux":
+            self.a_line_slider.place( x=int(i_width/2)-38, y=6, width=int(i_width/2)+24, height=50)
             a_change_scb_btn = Button( a_pallet_scb_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
             a_change_scb_btn.place( x=2, y=30, width=178)
         else:
+            self.a_line_slider.place( x=int(i_width/2)-38, y=6, width=int(i_width/2)+34, height=50)
             a_change_scb_btn = Button( a_pallet_scb_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.place( x=2, y=30, width=152)
 
