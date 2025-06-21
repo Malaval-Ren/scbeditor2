@@ -184,18 +184,9 @@ class MyImportPalletWindow:
         self.w_import_window.update()
         # print()
 
-    # ####################### __ipw_import_block ########################
-    def __ipw_import_block( self, a_image):
-        """ Create a about dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_import_window, width=320, height=self.TOP_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_frame = tk_gui.Frame( self.w_import_window, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        middle_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_import_window, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-
-        # #### TOP #####
+    # ####################### __ipw_import_block_top ########################
+    def __ipw_import_block_top( self, a_image, top_frame):
+        """ Create an import palet dialog top part"""
         a_render = ImageTk.PhotoImage( a_image)
         if self.s_platform == "Linux":
             a_picture_lbl = Label( top_frame, padx=0, pady=0, image=a_render, height=200, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, compound="center", highlightthickness=0)
@@ -204,6 +195,9 @@ class MyImportPalletWindow:
         a_picture_lbl.photo = a_render
         a_picture_lbl.place( relx=0.5, rely=0.5, anchor='center')
 
+    # ####################### __ipw_import_block_middle ########################
+    def __ipw_import_block_middle( self, a_image, middle_frame):
+        """ Create an import palet dialog middle part"""
         i_index_base_block = 0
         i_index_base_column = 0
         a_label = Label( middle_frame, text="Select a color in the line to select copy of it :", height=2, anchor='center', compound="center", background=constant.BACKGROUD_COLOR_UI)
@@ -260,7 +254,9 @@ class MyImportPalletWindow:
         else:
             self.a_list_device_combo.current( 0)
 
-        # #### BOTTOM #####
+    # ####################### __ipw_import_block_bottom ########################
+    def __ipw_import_block_bottom( self, button_frame):
+        """ Create an import palet dialog bottom part"""
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
             a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
@@ -272,6 +268,26 @@ class MyImportPalletWindow:
             a_ok_btn.pack( side='right', padx=4, pady=4 )
             a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
+
+    # ####################### __ipw_import_block ########################
+    def __ipw_import_block( self, a_image):
+        """ Create an import palet dialog """
+        # global s_device_information
+        top_frame = tk_gui.Frame( self.w_import_window, width=320, height=self.TOP_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_frame = tk_gui.Frame( self.w_import_window, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        middle_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame = tk_gui.Frame( self.w_import_window, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
+        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+
+        # #### TOP #####
+        self.__ipw_import_block_top( a_image, top_frame)
+
+        # #### MIDDLE #####
+        self.__ipw_import_block_middle( a_image, middle_frame)
+
+        # #### BOTTOM #####
+        self.__ipw_import_block_bottom( button_frame)
 
         self.w_import_window.update()
         self.__ipw_select_color_rad_btn( 0)

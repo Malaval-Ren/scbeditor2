@@ -211,38 +211,9 @@ class MyScbPalletWindow:
             self.a_pallet_to_begin_combo.config( state="disabled")
             self.a_pallet_to_end_combo.config( state="disabled")
 
-    # ####################### __scbw_scb_block ########################
-    def __scbw_scb_block( self, i_part_width, i_part_height):
-        """ Create a about dialog """
-        # Define the GUI
-        top_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.i_height, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_up_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        middle_up_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_up_frame.pack_propagate( False)
-
-        up_middle_middle_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.UP_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        up_middle_middle_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        up_middle_middle_frame.pack_propagate( False)
-        middle_down_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_down_frame.pack_propagate( False)
-        middle_middle_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        middle_middle_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_middle_frame.pack_propagate( False)
-
-        up_middle_down_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.DOWN_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        up_middle_down_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        up_middle_down_frame.pack_propagate( False)
-        down_middle_down_frame = tk_gui.Frame( up_middle_down_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
-        down_middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        down_middle_down_frame.pack_propagate( False)
-
-        button_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
-        button_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
-        middle_down_frame.pack_propagate( False)
-
-        # #### TOP #####
+    # ####################### __scbw_scb_block_top ########################
+    def __scbw_scb_block_top( self, top_frame, i_part_width, i_part_height):
+        """ Create a SCB top dialog """
         self.a_zoom_lbl = Label( top_frame, image=self.a_render_zoom, background=constant.BACKGROUD_COLOR_UI, width=i_part_width * 3, height=i_part_height * 3, borderwidth=0, compound="center", highlightthickness=0)
         # if self.s_platform in [ "Darwin", "Linux" ]:
         #     self.a_zoom_lbl.pack( side='left', padx=4)
@@ -252,7 +223,9 @@ class MyScbPalletWindow:
         self.a_zoom_lbl.bind( '<Motion>', self.__scbw_print_coord_under_mouse)
         self.a_zoom_lbl.bind( '<Button>', self.__scbw_click_on_picture)
 
-        # #### MIDDLE #####
+    # ####################### __scbw_scb_block_middle_up ########################
+    def __scbw_scb_block_middle_up( self, middle_up_frame, up_middle_middle_frame, middle_middle_frame, i_part_height):
+        """ Create a SCB middle up dialog """
         if self.s_platform == "Darwin":
             a_split_rdx_btn = Radiobutton( up_middle_middle_frame, text="Split this scb to two scb :", variable=self.var_rdx_btn, value=1, command=self.__scbw_selection_rdx_btn, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=10))
         elif self.s_platform == "Linux":
@@ -284,6 +257,9 @@ class MyScbPalletWindow:
         self.a_pallet_to_begin_combo.pack( side='left', padx=4)
         self.a_pallet_to_begin_combo.current( self.i_selected_pallet_line)
 
+    # ####################### __scbw_scb_block_middle_down ########################
+    def __scbw_scb_block_middle_down( self, middle_down_frame, up_middle_down_frame, down_middle_down_frame, i_part_height):
+        """ Create a SCB middle down dialog """
         self.a_pallet_to_end_combo = Combobox( middle_down_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
         self.a_pallet_to_end_combo.pack( side='right', padx=4)
         self.a_pallet_to_end_combo.current( self.i_selected_pallet_line)
@@ -307,7 +283,9 @@ class MyScbPalletWindow:
         self.a_pallet_to_all_combo.current( self.i_selected_pallet_line)
         self.a_pallet_to_all_combo.config( state="disabled")
 
-        # #### BOTTOM #####
+    # ####################### __scbw_scb_block_bottom ########################
+    def __scbw_scb_block_bottom( self, button_frame):
+        """ Create a SCB bottom dialog """
         # width size of a button is number of charracters 15 + 4 charracters
         if self.s_platform == "Darwin":
             a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
@@ -319,6 +297,48 @@ class MyScbPalletWindow:
             a_ok_btn.pack( side='right', padx=4, pady=4 )
             a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
+
+    # ####################### __scbw_scb_block ########################
+    def __scbw_scb_block( self, i_part_width, i_part_height):
+        """ Create a SCB dialog """
+        # Define the GUI
+        top_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.i_height, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
+        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_up_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_up_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_up_frame.pack_propagate( False)
+
+        up_middle_middle_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.UP_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        up_middle_middle_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        up_middle_middle_frame.pack_propagate( False)
+        middle_down_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_down_frame.pack_propagate( False)
+        middle_middle_frame = tk_gui.Frame( up_middle_middle_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        middle_middle_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_middle_frame.pack_propagate( False)
+
+        up_middle_down_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.DOWN_MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        up_middle_down_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        up_middle_down_frame.pack_propagate( False)
+        down_middle_down_frame = tk_gui.Frame( up_middle_down_frame, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
+        down_middle_down_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        down_middle_down_frame.pack_propagate( False)
+
+        button_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
+        button_frame.pack( side='bottom', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_down_frame.pack_propagate( False)
+
+        # #### TOP #####
+        self.__scbw_scb_block_top( top_frame, i_part_width, i_part_height)
+
+        # #### MIDDLE #####
+        self.__scbw_scb_block_middle_up( middle_up_frame, up_middle_middle_frame, middle_middle_frame, i_part_height)
+
+        self.__scbw_scb_block_middle_down( middle_down_frame, up_middle_down_frame, down_middle_down_frame, i_part_height)
+
+        # #### BOTTOM #####
+        self.__scbw_scb_block_bottom( button_frame)
 
     # ####################### __scbw_set_window_size ########################
     def __scbw_set_window_size( self):

@@ -2,17 +2,17 @@
 
 ## *Context*
 
-date :  jeu. 12 sept. 2024 23:58:23
+date :  sam. 21 juin 2025 15:14:31
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
-| Python | 3.12.5 |
-| PyInstaller | 6.10.0 |
-| Pylint | 3.2.7 |
-| Perl | 5.36.1 |
-| Bash | 5.2.21(1)-release |
+| Python | 3.12.10 |
+| PyInstaller | 6.14.1 |
+| Pylint | 3.3.7 |
+| Perl | 5.38.2 |
+| Bash | 5.2.37(1)-release |
 | **Project** |  |
-| scbeditor2 | 2.9.22.119 |
+| scbeditor2 | 2.9.25.121 |
 
 &nbsp;
 
@@ -71,14 +71,8 @@ Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
-*** Module src.my_import_window  
-
-src\my_import_window.py:188:4: R0914: Too many local variables (19/15) (too-many-locals)
-src\my_import_window.py:188:4: R0912: Too many branches (13/12) (too-many-branches)
-src\my_import_window.py:188:4: R0915: Too many statements (70/50) (too-many-statements)
-
-------------------------------------------------------------------
-Your code has been rated at 9.85/10 (previous run: 9.85/10, +0.00)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
@@ -123,8 +117,8 @@ Your code has been rated at 9.95/10 (previous run: 9.95/10, +0.00)
   
 *** Module src.my_main_window_icons_bar  
 
-src\my_main_window_icons_bar.py:262:4: R0912: Too many branches (15/12) (too-many-branches)
-src\my_main_window_icons_bar.py:316:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window_icons_bar.py:276:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window_icons_bar.py:330:4: R0912: Too many branches (15/12) (too-many-branches)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
@@ -140,7 +134,7 @@ Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
 
 src\my_main_window_image.py:601:4: R0914: Too many local variables (35/15) (too-many-locals)
 src\my_main_window_image.py:601:4: R0912: Too many branches (32/12) (too-many-branches)
-src\my_main_window_image.py:601:4: R0915: Too many statements (186/50) (too-many-statements)
+src\my_main_window_image.py:601:4: R0915: Too many statements (188/50) (too-many-statements)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.94/10 (previous run: 9.94/10, +0.00)
@@ -154,16 +148,11 @@ Your code has been rated at 9.94/10 (previous run: 9.94/10, +0.00)
   
 *** Module src.my_main_window_pallet  
 
-src\my_main_window_pallet.py:284:4: R0914: Too many local variables (34/15) (too-many-locals)
-src\my_main_window_pallet.py:284:4: R0912: Too many branches (27/12) (too-many-branches)
-src\my_main_window_pallet.py:284:4: R0915: Too many statements (179/50) (too-many-statements)
-src\my_main_window_pallet.py:679:4: R0912: Too many branches (20/12) (too-many-branches)
-src\my_main_window_pallet.py:679:4: R0915: Too many statements (65/50) (too-many-statements)
-src\my_main_window_pallet.py:814:4: R0914: Too many local variables (27/15) (too-many-locals)
-src\my_main_window_pallet.py:886:4: R0914: Too many local variables (16/15) (too-many-locals)
+src\my_main_window_pallet.py:356:4: R0915: Too many statements (103/50) (too-many-statements)
+src\my_main_window_pallet.py:827:4: R0914: Too many local variables (27/15) (too-many-locals)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.88/10 (previous run: 9.88/10, +0.00)
+Your code has been rated at 9.97/10 (previous run: 9.97/10, +0.00)
 
 &nbsp;
 
@@ -182,13 +171,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
-*** Module src.my_scb_window  
-
-src\my_scb_window.py:215:4: R0914: Too many local variables (16/15) (too-many-locals)
-src\my_scb_window.py:215:4: R0915: Too many statements (89/50) (too-many-statements)
-
-------------------------------------------------------------------
-Your code has been rated at 9.92/10 (previous run: 9.92/10, +0.00)
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 9.89/10, +0.11)
 
 &nbsp;
 
@@ -222,5 +206,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.960 / 10**
+**note = 9.979 / 10**
 
