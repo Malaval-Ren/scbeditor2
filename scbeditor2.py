@@ -5,7 +5,7 @@
 #
 # An application to do modification of bmp file to prepare convertion to a Apple IIGS pic file.
 #
-# Copyright (C) 2023-2024 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -63,7 +63,7 @@ from src.my_main_window import MyMainWindow
 # Owned
 __softname__ = constant.MY_APPLICATION_NAME
 __author__ = "Renaud Malaval"
-__copyright__ = "Copyright © 2023 … 2024, Disk Crack Band"
+__copyright__ = "Copyright © 2023 … 2025, Disk Crack Band"
 __credits__ = ["Frédéric Mure",
                "Patrice Afflatet",
                "Reion: https://www.flaticon.com/authors/reion",
@@ -73,9 +73,9 @@ __credits__ = ["Frédéric Mure",
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
 if s_check_platform == 'Linux':
-    __version__ = "2.9.23-121"
+    __version__ = "2.9.25-121"
 else:
-    __version__ = "2.9.23.121"
+    __version__ = "2.9.25.121"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"
