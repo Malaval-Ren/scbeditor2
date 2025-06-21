@@ -34,9 +34,13 @@ _Last review: June 21th, 2025, by Renaud Malaval_
 ## **Notes**
 
 - Windows 11 :
+Please, check it before install it, please  
+If your antivirus find some think, send me a mail, please  
+
+- Windows 10 :
 :warning: Microsoft Defender found **PUA:Win32/Packunwan** but I think that is an error  
 Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and on my hard drive  
-Please, check it before install it, svp  
+Please, check it before install it, please  
 If your antivirus find some think, send me a mail, please  
 
 - Linux Mint :
