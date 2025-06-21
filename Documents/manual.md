@@ -5,8 +5,8 @@
 ![Alt text](appIcon_T_256x256.png "scbeditor2")
 
 _Creation: March 2nd, 2024, by Renaud Malaval_  
-_Last review: September 1st, 2024, by Renaud Malaval_  
-_Version: 2.9.22.119_
+_Last review: June 21th, 2025, by Renaud Malaval_  
+_Version: 2.9.25.121_
 
 &nbsp;
 
@@ -18,13 +18,13 @@ _Version: 2.9.22.119_
   - [Main window](#main-window)
     - [Left vertical icons bar](#left-vertical-icons-bar)
     - [Picture part](#picture-part)
-      - [Under *Picture*](#under-picture)
-      - [Under *SCB*](#under-scb)
-      - [Under *Details*](#under-details)
+      - [Under _Picture_](#under-picture)
+      - [Under _SCB_](#under-scb)
+      - [Under _Details_](#under-details)
     - [Pallet part](#pallet-part)
-      - [Under *Pallet*](#under-pallet)
-      - [Under *Color*](#under-color)
-      - [Under *Zoom*](#under-zoom)
+      - [Under _Pallet_](#under-pallet)
+      - [Under _Color_](#under-color)
+      - [Under _Zoom_](#under-zoom)
 
 &nbsp;
 
@@ -35,7 +35,9 @@ _Version: 2.9.22.119_
 The goal of **SCB Editor II** is to prepare a .bmp file to be converted to .pic file for Apple IIGS.
 The bmp file is directly converted to be compatible with **SCB Editor II**.  
 A bmp 4 bits / pixels is converted to bmp 8 bits / pixels, the 16 colors pallet is copied 15 times to fill the 256 colors pallet.  
-Supported picture have 320 x 200 pixels size.  
+Supported picture:  
+  have 320 x 200 pixels size.  
+  have a maximimun of 16 colors per line.  
 You see the pallet used in your picture (number is in white)
 You could modify, copy color in the pallet.  
 You could copy a line of color to an another line.  
@@ -65,12 +67,12 @@ From the up icon to the down:
 
 ### Picture part
 
-#### Under *Picture*
+#### Under _Picture_
 
 Display the loaded picture, zoomed by 2.  
 Automatic click on the middle of the picture update all the interfaces.
 
-#### Under *SCB*
+#### Under _SCB_
 
 Display blue rectangle(s) to indicate the number of line using the same pallet.  
 For a bmp with bmp 4 bits or 8 bis / pixels the column is completely blue. We use only 16 colors just one pallet.  
@@ -78,7 +80,7 @@ Click on it to modify a group of line using the same pallet.
 You could cut it in two part group to use two pallet or to change the pallet of this group.  
 ![Alt text](change_scb.png "Change pallet usable by line scb")
 
-#### Under *Details*
+#### Under _Details_
 
 **File name**
   The name of the picture loaded
@@ -114,14 +116,14 @@ You could cut it in two part group to use two pallet or to change the pallet of 
 
 ### Pallet part
 
-#### Under *Pallet*
+#### Under _Pallet_
 
   The first column is the pallet number and become white when it is used.  
   The 256 colors are check box colors.  
   Each line is a pallet (after converted in .pic image).  
   Click on one of this check box update the interfaces.
 
-#### Under *Color*
+#### Under _Color_
 
   **Red**
     Color value is hexadecimal and decimal values.
@@ -156,7 +158,7 @@ You could cut it in two part group to use two pallet or to change the pallet of 
   **Copy line color** button
     Click on it to remember the color line selected. Click one off the pallet radio button to change it.
 
-#### Under *Zoom*
+#### Under _Zoom_
 
   The picture zoomed by 8.  
   Use the **4 arrows** button to select a pixel.  

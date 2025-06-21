@@ -4,7 +4,7 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
 _Creation: December 31th, 2023..2025, by Renaud Malaval_  
-_Last review: September 29th, 2024, by Renaud Malaval_
+_Last review: June 21th, 2025, by Renaud Malaval_
 
 ## Features
 
@@ -33,20 +33,17 @@ _Last review: September 29th, 2024, by Renaud Malaval_
 
 ## **Notes**
 
-- Windows 10 :
+- Windows 11 :
 :warning: Microsoft Defender found **PUA:Win32/Packunwan** but I think that is an error  
 Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and on my hard drive  
 Please, check it before install it, svp  
 If your antivirus find some think, send me a mail, please  
 
-- Windows 11 :
-:warning: Not tested  
-
 - Linux Mint :
 The **Debian** package .deb is created on Linux Mint Wilma (v22)  
 :warning: Not tested. The **Red Hat** package .rpm is converted by [Alien](https://joeyh.name/code/alien/)  
 
-- Mac OSx86 : 
+- Mac OSx86 :
 [Homebrew](https://brew.sh/)  
 
 - Create Release :
@@ -57,7 +54,7 @@ I have to create an ".venv" environment to simplify it
 ## **Tools**
 
 - [Python](https://www.python.org/) with Tcl/Tk 8.6.14
-  - Windows 10 : 3.12.5
+  - Windows 11 : 3.12.10
   - [Linux Mint v22](https://linuxmint.com/) : default release installed with this distribution : 3.12.3  
   - [Mac OSx86 10.15.7](https://apps.apple.com/fr/app/macos-catalina/id1466841314?mt=12) : 3.12.2
 - [Python modules](https://pypi.org/)
@@ -88,6 +85,3 @@ pip install -r requirements.txt
         windows  : py -m pip install pillow
 
 pip install -r requirements.txt
-
-
-

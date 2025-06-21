@@ -3,7 +3,7 @@
 
 ![Alt text](appIcon_T_256x256.png "scbeditor2")
 
-# **Catalog of project folders**
+## **Catalog of project folders**
 
 | O.S. | Folder name | Actions |
 |:-:|---|---|
@@ -18,7 +18,7 @@
 
 &nbsp;
 
-# **Catalog of project files**
+## **Catalog of project files**
 
 | O.S. | File name | Actions |
 |:-:|------|---|
@@ -27,9 +27,9 @@
 | ![Alt text](./logo_Windows_T_64x64.png) | appIcons_T_512x512.ico | Icone de l’application pour Windows 10 |
 |   | Catalog_Files.md | This file in folder ./Documents/ |
 | ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | deb_create.sh | Bash script to generate .deb and .rpm packages |
-| ![Alt text](./logo_Windows_T_64x64.png) ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | **Delivery.sh** | - Script bash pour builder l’application avec [PyInstaller](https://www.pyinstaller.org/) dans le dossier «\dist», dans chaque platforme supporter :<br>&ensp;- **Windows 10**<br>&ensp;- [**Linux Mint**](https://linuxmint.com/) (dos2unix ./Delivery.sh)<br>&ensp;- **MAC OS X** (dos2unix ./Delivery.sh)<br>- Il génère le dossier d'archive, contenant les fichiers du projet et les 3 applications, dans le dossier «..\Livraions\scbeditor2_v2.9.22.119» et le fichier «..\Livraions\scbeditor2_v2.9.22.119.7z».<br>Les 2 noms contiennent le numéro de version. |
+| ![Alt text](./logo_Windows_T_64x64.png) ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | **Delivery.sh** | - Script bash pour builder l’application avec [PyInstaller](https://www.pyinstaller.org/) dans le dossier «\dist», dans chaque platforme supporter :<br>&ensp;- **Windows 11**<br>&ensp;- [**Linux Mint**](https://linuxmint.com/) (dos2unix ./Delivery.sh)<br>&ensp;- **MAC OS X** (dos2unix ./Delivery.sh)<br>- Il génère le dossier d'archive, contenant les fichiers du projet et les 3 applications, dans le dossier «..\Livraions\scbeditor2_v2.9.25.121» et le fichier «..\Livraions\scbeditor2_v2.9.25.121.7z».<br>Les 2 noms contiennent le numéro de version. |
 | ![Alt text](./logo_Windows_T_64x64.png) ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Apple-rainbow_T_64x64.png) | Display_Version.sh | Extract and show the version form the file «scbeditor2_version.txt» |
-| ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | dmg_create.sh | Script bash pour générer le fichier de distribution «scbeditor2_v2.9.22.119.dmg» de l’application pour MAC OS X. le nom contient le numéro de version |
+| ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | dmg_create.sh | Script bash pour générer le fichier de distribution «scbeditor2_v2.9.25.121.dmg» de l’application pour MAC OS X. le nom contient le numéro de version |
 | ![Alt text](./logo_Apple-rainbow_T_64x64.png) | dmg_icon_T_512x512.icns | Icone de l’application pour Mac OS X du fichier «.dmg» |
 |   | GNU_GPLv3.txt | The licence for all this project |
 | ![Alt text](./logo_Windows_T_64x64.png) | Innosetup_begin.txt | File for InnoSetup, on go in... |
@@ -51,20 +51,20 @@
 
 &nbsp;
 
-# **Name of application by platform i.e. 2.9.22.119**
+## **Name of application by platform i.e. 2.9.25.121**
 
 | O.S. | Application name | Actions | Not available |
 |:-:|---|---|---|
-| ![Alt text](./logo_Apple-rainbow_T_64x64.png) | scbeditor2_v2.9.22.119.dmg | L’application pour Mac OS X 64bits | n/a |
-| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.22.119 | L’application pour Linux Mint 64bits | n/a |
-| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2-2.9.22.119.x86_64.rpm | Package for Linux Red Hat familly 64bits | n/a |
-| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.22.119_amd64.deb | Package for Linux Debian familly 64bits | n/a |
-| ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.22.119.exe | L’application pour Windows 10 64bits |
-| ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.22.119.install | Package for Windows 10 64bits |
+| ![Alt text](./logo_Apple-rainbow_T_64x64.png) | scbeditor2_v2.9.25.121.dmg | L’application pour Mac OS X 64bits | n/a |
+| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.25.121 | L’application pour Linux Mint 64bits | n/a |
+| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2-2.9.25.121.x86_64.rpm | Package for Linux Red Hat familly 64bits | n/a |
+| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.25.121_amd64.deb | Package for Linux Debian familly 64bits | n/a |
+| ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.25.121.exe | L’application pour Windows 11 64bits |
+| ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.25.121.install | Package for Windows 11 64bits |
 
 &nbsp;
 
-# **Tools**
+## **Tools**
 
 | O.S. | Open Source | Application name | Actions |
 |:---:|:-:|---|---|
