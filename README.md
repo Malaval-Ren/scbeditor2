@@ -3,7 +3,7 @@
 
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
-_Creation: December 31th, 2023..2024, by Renaud Malaval_  
+_Creation: December 31th, 2023..2025, by Renaud Malaval_  
 _Last review: September 29th, 2024, by Renaud Malaval_
 
 ## Features
