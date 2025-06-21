@@ -147,6 +147,20 @@ class MyMainWindowIconsBar:
                     a_image = None
                     s_filename = None
 
+                if a_image and s_filename:
+                    # Check if the image have a maximum of 16 colors per line
+                    for y in range(height):
+                        color_set = set()
+                        for x in range(width):
+                            color_index = a_image.getpixel((x, y))
+                            color_set.add(color_index)
+                        if len(color_set) > 16:
+                            self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors)."
+                            )
+                            a_image = None
+                            s_filename = None
+                            break
+
         return s_filename, a_image
 
     # ####################### __mwib_dump_pallet_bmp ########################
