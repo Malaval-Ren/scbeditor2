@@ -85,7 +85,7 @@ class MyMainWindowIconsBar:
         self.i_selected_pallet_in_main_windows = -1
 
     # ####################### __mwib_convert_bmp ########################
-    def __mwib_convert_bmp( self, s_filename, a_image):
+    def __mwib_convert_bmp( self, s_filename, a_image, b_do_all):
         """ Convert bmp 4 bpp to 8 bpp """
         # converted_bmp = Image.new( 'P', (320, 200), color=0)
         a_org_pal_list = a_image.getpalette()
@@ -93,10 +93,11 @@ class MyMainWindowIconsBar:
             converted_bmp = a_image.copy()
             a_conv_pal_list = converted_bmp.getpalette()
 
-            # Copy the 1st pallet at index 0 to all 1 .. 16
-            for _ in range( 1, 16, 1):
-                for i_index in range( 0, 48, 1):
-                    a_conv_pal_list.append( a_org_pal_list[i_index])
+            if b_do_all:
+                # Copy the 1st pallet at index 0 to all 1 .. 16
+                for _ in range( 1, 16, 1):
+                    for i_index in range( 0, 48, 1):
+                        a_conv_pal_list.append( a_org_pal_list[i_index])
 
             converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
             a_conv_pal_list = converted_bmp.getpalette()
@@ -123,12 +124,21 @@ class MyMainWindowIconsBar:
     def __mwib_load_check_bmp( self, s_filename):
         """ Check size and number of color in bmp """
         a_image = None
-        if s_filename:
-            print( '\nLoading : ' + s_filename)
+        print( '\nLoading : ' + s_filename)
+        # Open the image file
+        with Image.open( s_filename) as a_img:
+            a_image = a_img.copy()  # Load image data into memory
+            a_image.BITFIELDS = a_img.BITFIELDS  # Copy BITFIELD attribute from img to a_image
+            a_image.COMPRESSIONS = a_img.COMPRESSIONS  # Copy COMPRESSION attribute from img to a_image
+            a_image.pathname = s_filename  # Add custom attribute to the image object
+            a_image.format = a_img.format  # Add format attribute from img to a_image
+            a_image.format_description = a_img.format_description  # Add format description attribute from img to a_image
+
+        # Now the file is closed, but a_image is a full in-memory image
+        if a_image:
+            i_width, i_height = a_image.size
             # resize the original bmp from 320x200 to 640x400
-            a_image = Image.open( s_filename)
-            width, height = a_image.size
-            if width != 320 or height != 200:
+            if i_width != 320 or i_height != 200:
                 # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
                 self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
                 a_image = None
@@ -136,9 +146,12 @@ class MyMainWindowIconsBar:
             else:
                 a_pallet_list = a_image.getpalette()
                 if len( a_pallet_list) < 768:      # Less than 256 colors 2, 4 bpp
-                    i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "This bmp file don't have 256 colors (4 bpp).\nDo you agree improvement to 256 colors (8 bpp) and replace it?")
+                    i_result = self.c_alert_windows.aw_create_alert_window( 4, "Question", "This bmp file don't have 256 colors (4 bpp is 16 colors).\nDo you agree improvement it?\n- just 8 bpp (16 / 256 colors)\n- 8 bpp and copy pallet (256 colors)\nThis write it to update it.")
                     if i_result == 1:
-                        a_image = self.__mwib_convert_bmp( s_filename, a_image)
+                        a_image = self.__mwib_convert_bmp( s_filename, a_image, True)
+                    elif i_result == 3:
+                        a_image = self.__mwib_convert_bmp( s_filename, a_image, False)
+                        i_result = 3
                     else:
                         a_image = None
                         s_filename = None
@@ -149,14 +162,13 @@ class MyMainWindowIconsBar:
 
                 if a_image and s_filename:
                     # Check if the image have a maximum of 16 colors per line
-                    for y in range(height):
+                    for y in range(i_height):
                         color_set = set()
-                        for x in range(width):
+                        for x in range(i_width):
                             color_index = a_image.getpixel((x, y))
                             color_set.add(color_index)
                         if len(color_set) > 16:
-                            self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors)."
-                            )
+                            self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors).")
                             a_image = None
                             s_filename = None
                             break
@@ -253,11 +265,12 @@ class MyMainWindowIconsBar:
         if self.s_filename and self.a_original_image:
             self.c_the_log.add_string_to_log( 'Do import pallet of picture')
             s_filename = self.__mwib_select_load_bmp()
-            s_filename, a_image = self.__mwib_load_check_bmp( s_filename)
-            if s_filename and a_image:
-                self.w_front_window = MyImportPalletWindow( self.c_main_class, self.c_mains_image, self.mwib_get_get_path_filename())
-                self.w_front_window.ipw_create_import_window( a_image, self.a_original_image, self.i_selected_pallet_in_main_windows)
-                self.w_front_window = None
+            if s_filename:
+                s_filename, a_image = self.__mwib_load_check_bmp( s_filename)
+                if s_filename and a_image:
+                    self.w_front_window = MyImportPalletWindow( self.c_main_class, self.c_mains_image, self.mwib_get_get_path_filename())
+                    self.w_front_window.ipw_create_import_window( a_image, self.a_original_image, self.i_selected_pallet_in_main_windows)
+                    self.w_front_window = None
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/

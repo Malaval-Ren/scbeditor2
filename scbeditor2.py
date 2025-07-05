@@ -72,10 +72,11 @@ __credits__ = ["Frédéric Mure",
                ]
 __license__ = "GNU GPLv3"
 s_check_platform = platform.system()
+__version__ = "2.9.27"
 if s_check_platform == 'Linux':
-    __version__ = "2.9.25-121"
+    __version__ += "-125"
 else:
-    __version__ = "2.9.25.121"
+    __version__ += ".125"
 __maintainer__ = "Renaud Malaval"
 __contact__ = "renaud.malaval@free.fr"
 __status__ = "Production"
