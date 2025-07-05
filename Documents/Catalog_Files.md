@@ -57,7 +57,7 @@
 |:-:|---|---|---|
 | ![Alt text](./logo_Apple-rainbow_T_64x64.png) | scbeditor2_v2.9.27.125.dmg | L’application pour Mac OS X 64bits | n/a |
 | ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.27-125 | L’application pour Linux Mint 64bits | n/a |
-| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2-2.9.27.125.x86_64.rpm | Package for Linux Red Hat familly 64bits | n/a |
+| ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2-2.9.27-125.x86_64.rpm | Package for Linux Red Hat familly 64bits | n/a |
 | ![Alt text](./logo_Linux_T_64x64.png) | scbeditor2_2.9.27-125_amd64.deb | Package for Linux Debian familly 64bits | n/a |
 | ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.27.125.exe | L’application pour Windows 11 64bits |
 | ![Alt text](./logo_Windows_T_64x64.png) | scbeditor2_v2.9.27.125.install | Package for Windows 11 64bits |
