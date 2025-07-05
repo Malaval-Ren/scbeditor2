@@ -424,9 +424,29 @@ class MyMainWindow:
             if s_new_file_name[-4:] != ".bmp":
                 s_new_file_name = s_new_file_name + ".bmp"
 
+            old_file = s_new_file_name + ".old"
+            # If file exists, rename to .old
+            if os.path.exists( s_new_file_name):
+                if os.path.exists( old_file):
+                    os.remove( old_file)
+                os.rename( s_new_file_name, old_file)
+
             a_original_img = self.c_main_image.mwi_get_original_image()
             print( '\nSaving : ' + s_new_file_name)
-            a_original_img.save( s_new_file_name, 'BMP')
+            try:
+                a_original_img.save( s_new_file_name, 'BMP')
+                # Save succeeded, remove .old
+                if os.path.exists( old_file):
+                    os.remove( old_file)
+                print( "File saved successfully.")
+            except Exception as error:  # pylint: disable=broad-exception-caught
+                print( f"Error saving file: {error}")
+                # Restore original file on any error during save
+                if os.path.exists( old_file):
+                    if os.path.exists( s_new_file_name):
+                        os.remove( s_new_file_name)
+                    os.rename( old_file, s_new_file_name)
+                print( "Original file restored.")
 
     # ####################### mw_print_widget_under_mouse ########################
     def mw_print_widget_under_mouse( self, event):

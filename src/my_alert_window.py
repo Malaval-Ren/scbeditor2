@@ -49,8 +49,9 @@ class MyAlertWindow:
     # number is reasonable in this case these are all the icons of the main windows and the application icons
 
     answer_cancel = 0
-    answer_ok = 1
+    answer_all_ok = 1
     answer_other = 2
+    answer_bpp_ok = 3
 
     # ####################### __init__ ########################
     def __init__( self, c_the_main_window, list_application_info):
@@ -64,8 +65,8 @@ class MyAlertWindow:
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
         self.w_alert_window = None
-        self.i_height = 0
-        self.i_width = 0
+        self.i_height = 200
+        self.i_width = 500
         self.i_position_x = 0
         self.i_position_y = 0
         self.alert_background = 'darkgray'
@@ -78,7 +79,16 @@ class MyAlertWindow:
         # self.w_alert_window.destroy()
         self.w_alert_window.quit()
         self.c_the_log.add_string_to_log( 'Do alert close with ok')
-        self.answers = self.answer_ok
+        self.answers = self.answer_all_ok
+
+    # ####################### __aw_alert_ok_bpp_button ########################
+    def __aw_alert_ok_bpp_button( self):
+        """ Button ok of the alert window """
+        self.w_alert_window.grab_release()
+        # self.w_alert_window.destroy()
+        self.w_alert_window.quit()
+        self.c_the_log.add_string_to_log( 'Do alert close with ok')
+        self.answers = self.answer_bpp_ok
 
     # ####################### __aw_alert_cancel_button ########################
     def __aw_alert_cancel_button( self):
@@ -156,6 +166,51 @@ class MyAlertWindow:
 
         self.w_alert_window.update()
 
+
+    # ####################### __aw_choice_block ########################
+    # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
+    def __aw_choice_block( self, s_message):
+        """ Create a error dialog """
+        # global s_device_information
+        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
+        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
+        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+
+        # #### TOP LEFT #####
+        _a_error_photo = self.c_the_icons.get_question_photo()
+        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
+        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+
+        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+
+        # #### TOP RIGHT #####
+        a_font_label = font.Font( size=18)
+        # Configure column 2 to expand
+        top_left_frame.grid_columnconfigure(2, weight=1)
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
+
+        # #### BOTTOM #####
+        # width size of a button is number of charracters 15 + 2 charracters
+        if self.s_platform == "Darwin":
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_bpp_btn.pack( side='right', padx=2, pady=2 )
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn.pack( side='right', padx=2, pady=2 )
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn.pack( side='right', padx=2, pady=2 )
+        else:
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_bpp_btn.pack( side='right', padx=4, pady=4 )
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn.pack( side='right', padx=4, pady=4 )
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn.pack( side='right', padx=4, pady=4 )
+
+        self.w_alert_window.update()
+
     # ####################### __aw_warning_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
     def __aw_warning_block( self, s_message):
@@ -224,10 +279,12 @@ class MyAlertWindow:
         self.w_alert_window.update()
 
     # ####################### __aw_set_window_size ########################
-    def __aw_set_window_size( self):
+    def __aw_set_window_size( self, i_type):
         """ Set the size of the configuration windows """
         self.i_width = 500
         self.i_height = 200
+        if i_type == 4:
+            self.i_height += 10
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
 
@@ -283,10 +340,13 @@ class MyAlertWindow:
             self.__aw_question_block( s_message)
         elif i_type == 3:
             self.__aw_warning_block( s_message)
+        elif i_type == 4:
+            self.__aw_choice_block( s_message)
         else:
             self.__aw_alert_block( s_message)
+
         self.w_alert_window.update()
-        self.__aw_set_window_size()
+        self.__aw_set_window_size( i_type)
 
         self.w_alert_window.mainloop()
         self.w_alert_window.destroy()
