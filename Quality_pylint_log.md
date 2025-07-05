@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  sam. 21 juin 2025 15:14:31
+date :  sam. 5 juil. 2025 17:09:58
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -12,7 +12,7 @@ date :  sam. 21 juin 2025 15:14:31
 | Perl | 5.38.2 |
 | Bash | 5.2.37(1)-release |
 | **Project** |  |
-| scbeditor2 | 2.9.25.121 |
+| scbeditor2 | 2.9.27.125 |
 
 &nbsp;
 
@@ -100,13 +100,14 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
+>except Exception as error: pylint: disable=broad-exception-caught  
   
 *** Module src.my_main_window  
 
 src\my_main_window.py:231:4: R0915: Too many statements (64/50) (too-many-statements)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.95/10 (previous run: 9.95/10, +0.00)
+Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
 
 &nbsp;
 
@@ -117,11 +118,11 @@ Your code has been rated at 9.95/10 (previous run: 9.95/10, +0.00)
   
 *** Module src.my_main_window_icons_bar  
 
-src\my_main_window_icons_bar.py:276:4: R0912: Too many branches (15/12) (too-many-branches)
-src\my_main_window_icons_bar.py:330:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window_icons_bar.py:289:4: R0912: Too many branches (15/12) (too-many-branches)
+src\my_main_window_icons_bar.py:343:4: R0912: Too many branches (15/12) (too-many-branches)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.91/10 (previous run: 9.91/10, +0.00)
+Your code has been rated at 9.92/10 (previous run: 9.92/10, +0.00)
 
 &nbsp;
 
@@ -171,8 +172,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
--------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 9.89/10, +0.11)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
@@ -206,5 +207,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.979 / 10**
+**note = 9.980 / 10**
 

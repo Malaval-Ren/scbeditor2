@@ -5,8 +5,8 @@
 ![Alt text](appIcon_T_256x256.png "scbeditor2")
 
 _Creation: March 2nd, 2024, by Renaud Malaval_  
-_Last review: June 21th, 2025, by Renaud Malaval_  
-_Version: 2.9.25.121_
+_Last review: July 5th, 2025, by Renaud Malaval_  
+_Version: 2.9.27.125_
 
 &nbsp;
 
