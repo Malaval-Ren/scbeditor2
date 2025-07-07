@@ -214,42 +214,9 @@ class MyMainWindow:
         """ De selected an entry widget, when a button is clicked ie the pallet button """
         event.widget.focus_set()
 
-    # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
-    #
-    #   ######  #     # ######  #       ###  #####
-    #   #     # #     # #     # #        #  #     #
-    #   #     # #     # #     # #        #  #
-    #   ######  #     # ######  #        #  #
-    #   #       #     # #     # #        #  #
-    #   #       #     # #     # #        #  #     #
-    #   #        #####  ######  ####### ###  #####
-    #
-    # ##########################################################################################
-
-    # ####################### mw_create_main_window ########################
-    def mw_create_main_window( self):
-        """ Design the main windows """
-        b_vertical = True        # or False for futur feature with a preference dialog to chose the prefered mode
-        if b_vertical is True:
-            self.i_main_window_width += 100
-            if self.s_platform == "Linux":
-                self.i_main_window_height -= 100
-            elif self.s_platform == "Darwin":
-                self.i_main_window_height -= 100
-            elif self.s_platform == "Windows":
-                self.i_main_window_height -= 98
-            i_rect_x = 2
-            i_rect_y = 0
-            i_rect_width = 98
-            i_rect_height = self.i_main_window_height-4
-        else:
-            i_rect_x = 2
-            i_rect_y = 0
-            i_rect_width = self.i_main_window_width-4
-            i_rect_height = 98
-
-        # Set windows attribute
+    # ####################### __mw_set_windows_attribute ########################
+    def __mw_set_windows_attribute( self):
+        """ Set windows attribute """
         __s_windows_size_and_position = ( str( self.i_main_window_width) + 'x' + str( self.i_main_window_height) + '+' + str( self.i_main_window_x) + '+' + str( self.i_main_window_y) )
         self.w_tk_root.geometry( __s_windows_size_and_position)  # dimension + position x/y a l'ouverture
         self.w_tk_root.update()
@@ -262,28 +229,9 @@ class MyMainWindow:
         self.w_tk_root.title( self.a_list_application_info[0])
         self.w_tk_root.update()
 
-        # Create icons frame
-        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
-        a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
-        # Create picture frame
-        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if b_vertical is True:
-            a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
-        else:
-            a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
-        # Create pallet frame
-        a_pallet_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if b_vertical is True:
-            a_pallet_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
-        else:
-            a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
-        self.w_tk_root.update()
-        print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
-        print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
-        print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
-        print( "a_pallet_frame      : width= " + str( a_pallet_frame.winfo_width()) + " height= ", str( a_pallet_frame.winfo_height()))
-
-        # Create line or column 1 for action icons
+    # ####################### __mw_create_windows_part ########################
+    def __mw_create_windows_part( self, a_top_bar_frame, a_pic_frame, a_pallet_frame, b_vertical):
+        """ Create line or column 1 for action icons and line 2 for picture and line 3 for pallet """
         self.c_main_icon_bar = MyMainWindowIconsBar( self, self.w_tk_root, self.a_list_application_info, a_top_bar_frame)
         if b_vertical is True:
             self.c_main_icon_bar.mwib_create_left_bar_icons( 1)     # vertical on left
@@ -314,59 +262,128 @@ class MyMainWindow:
             # if self.a_work_img:
             #     self.__mw_print_widget_under_mouse( self.w_tk_root)
 
+    # ####################### __mw_update_pallet_button ########################
+    def __mw_update_pallet_button( self, i_element, i_index, s_red_green_blue) -> int:
+        """ Update the color button in the pallet """
+        a_color_btn_rad = self.c_main_pallet.mwp_get_pallet_btn( i_element)
+        if a_color_btn_rad:
+            # print( "mw_update_main_window() i_index = ", str( i_index))
+            config_pallet_bottom_with_arg = partial( self.c_main_pallet.mwp_color_btn_rad, int( i_index / 3))
+            a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
+            a_color_btn_rad.configure( background="#" + s_red_green_blue)
+            i_element += 1
+
+        return i_element
+
+
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   ######  #     # ######  #       ###  #####
+    #   #     # #     # #     # #        #  #     #
+    #   #     # #     # #     # #        #  #
+    #   ######  #     # ######  #        #  #
+    #   #       #     # #     # #        #  #
+    #   #       #     # #     # #        #  #     #
+    #   #        #####  ######  ####### ###  #####
+    #
+    # ##########################################################################################
+
+    # ####################### mw_create_main_window ########################
+    def mw_create_main_window( self):
+        """ Design the main windows """
+        b_vertical = True        # or False for futur feature with a preference dialog to chose the prefered mode
+
+        if b_vertical is True:
+            self.i_main_window_width += 100
+            if self.s_platform == "Linux":
+                self.i_main_window_height -= 100
+            elif self.s_platform == "Darwin":
+                self.i_main_window_height -= 100
+            elif self.s_platform == "Windows":
+                self.i_main_window_height -= 98
+            i_rect_x = 2
+            i_rect_y = 0
+            i_rect_width = 98
+            i_rect_height = self.i_main_window_height-4
+        else:
+            i_rect_x = 2
+            i_rect_y = 0
+            i_rect_width = self.i_main_window_width-4
+            i_rect_height = 98
+
+        self.__mw_set_windows_attribute()  # Set windows attribute
+
+        # Create icons frame
+        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
+        a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
+        # Create picture frame
+        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if b_vertical is True:
+            a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+        else:
+            a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+        # Create pallet frame
+        a_pallet_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if b_vertical is True:
+            a_pallet_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+        else:
+            a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+        self.w_tk_root.update()
+        print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
+        print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
+        print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
+        print( "a_pallet_frame      : width= " + str( a_pallet_frame.winfo_width()) + " height= ", str( a_pallet_frame.winfo_height()))
+
+        self.__mw_create_windows_part( a_top_bar_frame, a_pic_frame, a_pallet_frame, b_vertical)
 
     # ####################### mw_update_main_window ########################
     def mw_update_main_window( self, s_filename, a_work_img) -> bool:
         """ Load a picture and fill the interface """
+        b_return = False
         if s_filename and a_work_img:
             self.c_main_image.mwi_update_main_window_image( s_filename, a_work_img)
-
             # Update pallet radio buttons
             a_work_img = self.c_main_image.mwi_get_working_image()
             a_pallet_list = a_work_img.getpalette()
-            # Disabled for debug
-            # print( 'Pallet :')
             i_element = 0
             i_to = 0
-            # Disabled for debug
-            # for i_loop in range( 0, 16, 1):
+            i_number = 48
+            if len( a_pallet_list) < 48:
+                i_number = len( a_pallet_list) - (len( a_pallet_list) % 3)
+            b_stop = False
             for _ in range( 0, 16, 1):
                 i_from = i_to
-                i_to = i_to + 48
-                # Disabled for debug
-                # if i_loop < 10:
-                #     s_my_hex = "0" + str( i_loop) + " "
-                # else:
-                #     s_my_hex = str( i_loop) + " "
+                i_to += i_number
 
                 for i_index in range( i_from, i_to, 3):
-                    s_red = f'{a_pallet_list[ i_index]:02X}'
-                    s_green = f'{a_pallet_list[ i_index + 1]:02X}'
-                    s_blue = f'{a_pallet_list[ i_index + 2]:02X}'
-                    # Disabled for debug
-                    # s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
+                    if i_index + 2 >= len( a_pallet_list):
+                        b_stop = True
+                        break
 
-                    a_color_btn_rad = self.c_main_pallet.mwp_get_pallet_btn( i_element)
-                    # print( "mw_update_main_window() i_index = ", str( i_index))
-                    config_pallet_bottom_with_arg = partial( self.c_main_pallet.mwp_color_btn_rad, int( i_index / 3))
-                    a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
-                    a_color_btn_rad.configure( background="#" + s_red + s_green + s_blue)
-                    i_element += 1
+                    s_red_green_blue = f'{a_pallet_list[ i_index]:02X}' + f'{a_pallet_list[ i_index + 1]:02X}' + f'{a_pallet_list[ i_index + 2]:02X}'
+                    i_element = self.__mw_update_pallet_button( i_element, i_index, s_red_green_blue)
 
-                # Disabled for debug
-                # self.w_tk_root.update()
-                # print( s_my_hex)
+                if b_stop:
+                    break
+
+            # set to zero the color black on the rest of the pallet
+            i_to = i_index
+            s_red_green_blue = "#000000"
+            for i_index in range( i_to, 768, 3):
+                if i_index + 2 >= len( a_pallet_list):
+                    break
+
+                i_element = self.__mw_update_pallet_button( i_element, i_index, s_red_green_blue)
 
             self.c_main_pallet.mwp_update_color_number_vertical_used()
             self.w_tk_root.update()
             b_return = True
-        else:
-            b_return = False
 
         return b_return
 
     # ####################### mw_get_main_window ########################
-    def mw_get_main_window( self):
+    def mw_get_main_window( self) -> tk_gui.Tk:
         """ Return the window widget of the main window """
         return self.w_tk_root
 
@@ -400,12 +417,12 @@ class MyMainWindow:
         return self.c_main_icon_bar.mwib_get_get_pathname()
 
     # ####################### mw_get_application_info ########################
-    def mw_get_application_info( self):
+    def mw_get_application_info( self) -> list:
         """ Return about of app """
         return self.a_list_application_info
 
     # ####################### mw_set_pathname ########################
-    def mw_set_pathname( self, s_new_pathname) -> str:
+    def mw_set_pathname( self, s_new_pathname):
         """ Set last used pathname """
         self.s_init_pathname = s_new_pathname
 
@@ -439,7 +456,9 @@ class MyMainWindow:
                 if os.path.exists( old_file):
                     os.remove( old_file)
                 print( "File saved successfully.")
-            except Exception as error:  # pylint: disable=broad-exception-caught
+            # pylint: disable=broad-exception-caught
+            except Exception as error:
+                # pylint: enable=broad-exception-caught
                 print( f"Error saving file: {error}")
                 # Restore original file on any error during save
                 if os.path.exists( old_file):

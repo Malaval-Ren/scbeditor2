@@ -44,7 +44,6 @@ from .my_import_window import MyImportPalletWindow
 from .my_alert_window import MyAlertWindow
 from .my_progress_bar_window import MyProgressBarWindow
 
-# from .my_tools import mt_open_file, mt_get_path_separator
 from .my_tools import mt_open_file
 
 # __name__ = "MyMainWindowIconsBar"
@@ -84,32 +83,83 @@ class MyMainWindowIconsBar:
         self.imported_pallet_lst = []
         self.i_selected_pallet_in_main_windows = -1
 
+    # ####################### __mwib_ensure_bmp_extension ########################
+    def __mwib_ensure_bmp_extension(self, s_filename) -> str:
+        if not s_filename.lower().endswith( '.bmp'):
+            root, _ = os.path.splitext( s_filename)
+            return root + ".bmp"
+        return s_filename
+
+    # ####################### __mwib_get_copy_of_image ########################
+    def __mwib_get_copy_of_image( self, s_filename, a_image) -> Image:
+        """ Create a copy of the image with additional attributes """
+        a_new_image = a_image.copy()
+        if hasattr( a_image, "BITFIELDS"):
+            a_new_image.BITFIELDS = a_image.BITFIELDS  # Copy BITFIELD attribute from img to a_image
+        if hasattr( a_image, "COMPRESSIONS"):
+            a_new_image.COMPRESSIONS = a_image.COMPRESSIONS  # Copy COMPRESSION attribute from img to a_image
+        a_new_image.pathname = s_filename  # Add custom attribute to the image object
+        a_new_image.format = a_image.format  # Add format attribute from img to a_image
+        a_new_image.format_description = a_image.format_description  # Add format description attribute from img to a_image
+
+        return a_new_image
+
     # ####################### __mwib_convert_bmp ########################
-    def __mwib_convert_bmp( self, s_filename, a_image, b_do_all):
+    def __mwib_convert_bmp( self, s_filename, a_image, b_do_all) -> Image:
         """ Convert bmp 4 bpp to 8 bpp """
         # converted_bmp = Image.new( 'P', (320, 200), color=0)
         a_org_pal_list = a_image.getpalette()
-        if a_org_pal_list and len( a_org_pal_list) == 48:
-            converted_bmp = a_image.copy()
+        i_number_of_colors = len( a_org_pal_list)
+        if a_org_pal_list and i_number_of_colors:
+            converted_bmp = self.__mwib_get_copy_of_image( s_filename, a_image)
+            a_image = None  # Free the memory of the original image
             a_conv_pal_list = converted_bmp.getpalette()
 
             if b_do_all:
                 # Copy the 1st pallet at index 0 to all 1 .. 16
                 for _ in range( 1, 16, 1):
-                    for i_index in range( 0, 48, 1):
+                    for i_index in range( 0, i_number_of_colors, 1):
                         a_conv_pal_list.append( a_org_pal_list[i_index])
-
-            converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
-            a_conv_pal_list = converted_bmp.getpalette()
+                converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
+                a_conv_pal_list = converted_bmp.getpalette()
             # print( "\na_org_pal_list= " + str( len( a_org_pal_list)) + "   a_conv_pal_list= " + str( len( a_conv_pal_list)))
 
             # Debug : use an another name to save it and using it
             # s_path = os.path.dirname( s_filename)
-            # s_filename = s_path + mt_get_path_separator( self.s_platform) + "beach1.bmp"
+            # s_filename = s_path + os.sep + "beach1.bmp"
 
-            converted_bmp.save( s_filename, 'BMP')
-            a_image = Image.open( s_filename)
-            print( 'Upgraded to 8 bpp : ' + s_filename)
+            s_bmp_filename = self.__mwib_ensure_bmp_extension( s_filename)
+            old_file = s_bmp_filename + ".old"
+            # If file exists, rename to .old
+            if os.path.exists( s_bmp_filename):
+                if os.path.exists( old_file):
+                    os.remove( old_file)
+                os.rename( s_bmp_filename, old_file)
+
+            print( 'mwib_convert_bmp() : Saving : ' + s_bmp_filename)
+            try:
+                converted_bmp.save( s_bmp_filename, 'BMP')
+                # Save succeeded, remove .old
+                if os.path.exists( old_file):
+                    os.remove( old_file)
+                print( "mwib_convert_bmp() : File saved successfully.")
+            # pylint: disable=broad-exception-caught
+            except Exception as error:
+                # pylint: enable=broad-exception-caught
+                print( f"Error saving file: {error}")
+                # Restore original file on any error during save
+                if os.path.exists( old_file):
+                    if os.path.exists( s_bmp_filename):
+                        os.remove( s_bmp_filename)
+                    os.rename( old_file, s_bmp_filename)
+                print( "mwib_convert_bmp() : Original file restored.")
+
+            # Open the image file
+            with Image.open( s_bmp_filename) as a_img:
+                a_image = self.__mwib_get_copy_of_image( s_bmp_filename, a_img)
+
+            a_img = None
+            print( 'mwib_convert_bmp() : Upgraded to 8 bpp : ' + s_bmp_filename)
         else:
             self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
 
@@ -121,21 +171,17 @@ class MyMainWindowIconsBar:
         return mt_open_file( self.w_main_windows, self.c_main_class)
 
     # ####################### __mwib_load_check_bmp ########################
-    def __mwib_load_check_bmp( self, s_filename):
+    def __mwib_load_check_bmp( self, s_filename) -> tuple:
         """ Check size and number of color in bmp """
         a_image = None
-        print( '\nLoading : ' + s_filename)
+        print( 'mwib_load_check_bmp() : Loading : ' + s_filename)
         # Open the image file
         with Image.open( s_filename) as a_img:
-            a_image = a_img.copy()  # Load image data into memory
-            a_image.BITFIELDS = a_img.BITFIELDS  # Copy BITFIELD attribute from img to a_image
-            a_image.COMPRESSIONS = a_img.COMPRESSIONS  # Copy COMPRESSION attribute from img to a_image
-            a_image.pathname = s_filename  # Add custom attribute to the image object
-            a_image.format = a_img.format  # Add format attribute from img to a_image
-            a_image.format_description = a_img.format_description  # Add format description attribute from img to a_image
+            a_image = self.__mwib_get_copy_of_image( s_filename, a_img)
 
+        a_img = None  # Free the memory of the original image
         # Now the file is closed, but a_image is a full in-memory image
-        if a_image:
+        if a_image and s_filename:
             i_width, i_height = a_image.size
             # resize the original bmp from 320x200 to 640x400
             if i_width != 320 or i_height != 200:
@@ -151,7 +197,6 @@ class MyMainWindowIconsBar:
                         a_image = self.__mwib_convert_bmp( s_filename, a_image, True)
                     elif i_result == 3:
                         a_image = self.__mwib_convert_bmp( s_filename, a_image, False)
-                        i_result = 3
                     else:
                         a_image = None
                         s_filename = None
@@ -286,7 +331,7 @@ class MyMainWindowIconsBar:
     # ##########################################################################################
 
     # ####################### mwib_create_top_bar_icons ########################
-    def mwib_create_top_bar_icons( self, i_row_line):
+    def mwib_create_top_bar_icons( self, i_row_line) -> int:
         """ Design the top row for the main windows """
         # print( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
 
@@ -294,53 +339,38 @@ class MyMainWindowIconsBar:
         i_column = 0
         if self.s_platform == "Darwin":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
-
-        i_column += 1
-        if self.s_platform == "Darwin":
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_column += 1
-        if self.s_platform == "Darwin":
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_column += 1
-        if self.s_platform == "Darwin":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_column += 1
-        if self.s_platform == "Darwin":
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         elif self.s_platform == "Linux":
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+
+        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
+        i_column += 1
+        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_column += 1
+        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_column += 1
+        a_button_pallet.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_column += 1
         a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_row_line += 1
         return i_row_line
 
     # ####################### mwib_create_left_bar_icons ########################
-    def mwib_create_left_bar_icons( self, i_row_line):
+    def mwib_create_left_bar_icons( self, i_row_line) -> int:
         """ Design the left row for the main windows """
         # print( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
 
@@ -349,46 +379,31 @@ class MyMainWindowIconsBar:
         i_row_line = 0
         if self.s_platform == "Darwin":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
-
-        i_row_line += 1
-        if self.s_platform == "Darwin":
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_row_line += 1
-        if self.s_platform == "Darwin":
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_row_line += 1
-        if self.s_platform == "Darwin":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        elif self.s_platform == "Linux":
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        else:
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-
-        i_row_line += 1
-        if self.s_platform == "Darwin":
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         elif self.s_platform == "Linux":
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound="c", command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound="c", command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound="c", command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound="c", command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound="c", command=None, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+
+        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
+        i_row_line += 1
+        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_row_line += 1
+        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_row_line += 1
+        a_button_pallet.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_row_line += 1
         a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
 
         i_row_line += 1
@@ -416,17 +431,17 @@ class MyMainWindowIconsBar:
             self.c_mains_image.mwi_click_in_picture_center()
 
     # ####################### mwib_get_frame ########################
-    def mwib_get_frame( self):
+    def mwib_get_frame( self) -> object:
         """ Return frame to be able to add new elements """
         return self.a_top_frame_of_main_window
 
     # ####################### mwib_get_get_path_filename ########################
-    def mwib_get_get_path_filename( self):
+    def mwib_get_get_path_filename( self) -> str:
         """ Return thye complete file pathname of the last image loaded """
         return self.s_filename
 
     # ####################### mwib_get_get_pathname ########################
-    def mwib_get_get_pathname( self):
+    def mwib_get_get_pathname( self) -> str:
         """ Return the complete pathname of the last image loaded """
         if self.s_filename:
             s_pathname = os.path.dirname( os.path.abspath(self.s_filename))

@@ -379,9 +379,187 @@ class MyMainWindowImage:
                 # print( "width = " + str( width) + "  height = " + str( height) )
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
-                # s_filename = self.s_init_pathname + mt_get_path_separator( self.s_platform) + self.a_filename_lbl.cget( "text")
+                # s_filename = self.s_init_pathname + os.sep + self.a_filename_lbl.cget( "text")
                 self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), self.a_original_img)
                 self.mwi_click_in_picture_center( int( self.a_mouse_pos_x_input_var.get()), int( self.a_mouse_pos_y_input_var.get()))
+
+    # ####################### __mwi_top_line_with_titles ########################
+    def __mwi_top_line_with_titles( self, a_pic_frame, i_pic_frame_width):
+        """ Create the top line with title and separator """
+        a_top_separator_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=21)
+        a_pic_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
+        a_pic_sep_h0.place( x=0, y=10, relwidth=1.0)
+        a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pic_sep_lbl_h0.place( x=300, y=-1)
+        MyToolTip( widget=a_pic_sep_lbl_h0, text="Click on Picture to sea zoomed part")
+        a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pic_sep_lbl_h1.place( x=635, y=-1)
+        MyToolTip( widget=a_pic_sep_lbl_h1, text="Click on blue rectangle to manage SCB")
+        a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+        a_pic_sep_lbl_h2.place( x=640+200, y=-1)
+        MyToolTip( widget=a_pic_sep_lbl_h2, text="- Show filename\n- Arrows to roll picture pixels\n- Arrows to move cursor in picture\n- Set a pallet to a line\n- Show color used")
+        # self.w_tk_root.update()
+
+    # ####################### __mwi_left_picture_part ########################
+    def __mwi_left_picture_part( self, a_pic_frame, i_index_base_block):
+        """ Create the frame for the picture """
+        a_picture_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_picture_frame.place( x=0, y=21, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT)
+        if self.s_platform == "Linux":
+            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
+        else:
+            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
+        self.a_picture_lbl.grid( row=i_index_base_block, column=0)
+        self.a_picture_lbl.bind( '<Button>', self.__mwi_click_on_picture)
+        self.a_picture_lbl.bind( '<Motion>', self.c_main_windows.mw_print_widget_under_mouse)
+
+    # ####################### _mwi_center_scb_part ########################
+    def __mwi_center_scb_part( self, a_pic_frame):
+        """ Create SCB frame to draw rectangle to present SCB """
+        a_scb_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_scb_frame.place( x=644, y=21, width=24, height=constant.PICTURE_HEIGHT)
+        self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+        self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
+        self.a_scb_cnvs.bind( "<Button-1>", self.mwi_change_pallet)
+
+    # ####################### _mwi_right_details_top_left_part ########################
+    def __mwi_right_details_top_left_part( self, a_pic_frame, i_width):
+        """ Create the left part of the details frame """
+        a_filename_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_filename_frame.place( x=672, y=21, width=int(i_width/2), height=48)
+        i_index_base_block = 0
+        a_pic_sep_lbl_h2 = Label( a_filename_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h2.pack( fill="both", ipady=1)
+        i_index_base_block += 1
+        self.a_filename_lbl = Label( a_filename_frame, text="   ", background='light grey', foreground='black')
+        self.a_filename_lbl.pack( fill="both", ipady=1)
+
+        a_mouse_live_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_mouse_live_frame.place( x=672, y=21+48, width=int(i_width/2), height=60)
+        i_index_base_block = 0
+        a_pic_sep_lbl_h3 = Label( a_mouse_live_frame, text="Mouse live position", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=4, sticky='ew')
+        i_index_base_block += 1
+        a_pic_sep_lbl_h4 = Label( a_mouse_live_frame, text="X ", width=4, height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='ew')
+        self.a_mouse_live_pos_x = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
+        self.a_mouse_live_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=2, sticky='ew')
+        a_pic_sep_lbl_h4 = Label( a_mouse_live_frame, text="Y ", width=4, height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='ew')
+        self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
+        self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
+
+    # ####################### __mwi_right_details_top_right_part ########################
+    def __mwi_right_details_top_right_part( self, a_pic_frame, i_width):
+        """ Create the right part of the details frame arrows """
+        a_roll_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_roll_title_frame.place( x=672+int(i_width/2)+2, y=24, width=int(i_width/2)-2, height=16)
+        a_pic_sep_lbl_h7 = Label( a_roll_title_frame, text="Roll image", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h7.pack( fill="both", ipady=1)
+
+        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+24, width=int(i_width/2)-2, height=70+12)
+        if self.s_platform == "Darwin":
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_up_btn.place( x=6+56+6, y=5, width=56) # height = 26
+        if self.s_platform == "Darwin":
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_left_btn.place( x=6, y=5+17, width=56)
+        if self.s_platform == "Darwin":
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_rigth_btn.place( x=6+56+6+56+6, y=5+17, width=56)
+        if self.s_platform == "Darwin":
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
+        self.a_roll_down_btn.place( x=6+56+6, y=5+26+4+4, width=56)
+
+    # ####################### __mwi_right_details_up_left_part ########################
+    def __mwi_right_details_up_left_part( self, a_pic_frame, i_width):
+        """ Create the left part of the details frame """
+        a_mouse_click_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_mouse_click_frame.place( x=672, y=21+48+62, width=int(i_width/2), height=116)
+        i_index_base_block = 0
+        a_pic_sep_lbl_h3 = Label( a_mouse_click_frame, text="Mouse click position", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=2, sticky='ew')
+        i_index_base_block += 1
+        a_pic_sep_lbl_h5 = Label( a_mouse_click_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
+        # font='-weight bold'
+        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
+        self.a_mouse_pos_x.grid( row=i_index_base_block, column=3, padx=4, pady=2)
+        self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
+        self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
+        self.a_pos_x_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
+        self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
+        i_index_base_block += 1
+        a_pic_sep_lbl_h4 = Label( a_mouse_click_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
+        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
+        self.a_mouse_pos_y.grid( row=i_index_base_block, column=3, padx=4, pady=2)
+        self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
+        self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
+        self.a_pos_y_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
+        self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
+        i_index_base_block += 1
+        a_pic_sep_lbl_h5 = Label( a_mouse_click_frame, text="Color offset", width=17, background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=2, sticky='ew')
+        self.a_color_lbl = Label( a_mouse_click_frame, text="   ", background='light grey', foreground='black')
+        self.a_color_lbl.grid( row=i_index_base_block, column=4, columnspan=1, padx=4, pady=2, sticky='ew')
+
+    # ####################### __mwi_right_details_up_right_part ########################
+    def __mwi_right_details_up_right_part( self, a_pic_frame, i_width):
+        """ Create the right part of the details frame arrows """
+        a_arrow_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_arrow_title_frame.place( x=672+int(i_width/2)+2, y=21+48+51, width=int(i_width/2)-2, height=16)
+        a_pic_sep_lbl_h8 = Label( a_arrow_title_frame, text="Move cursor", background=constant.BACKGROUD_COLOR_UI)
+        a_pic_sep_lbl_h8.pack( fill="both", ipady=1)
+
+        a_arrow_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+72, width=int(i_width/2)-2, height=70)
+        if self.s_platform == "Darwin":
+            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_y_btn.place( x=6+56+6, y=5, width=56) # height = 26
+        if self.s_platform == "Darwin":
+            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_less_x_btn.place( x=6, y=5+17, width=56)
+        if self.s_platform == "Darwin":
+            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_x_btn.place( x=6+56+6+56+6, y=5+17, width=56)
+        if self.s_platform == "Darwin":
+            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
+        elif self.s_platform == "Linux":
+            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
+        else:
+            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
+        self.a_more_y_btn.place( x=6+56+6, y=5+26+4+4, width=56)
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -429,22 +607,22 @@ class MyMainWindowImage:
             print( 'mw_on_single_key() : key= ' + s_key )
 
     # ####################### get_original_image ########################
-    def mwi_get_original_image( self):
+    def mwi_get_original_image( self) -> ImageTk.PhotoImage:
         """ get original image the base bmp to the apple II GS resolution """
         return self.a_original_img
 
     # ####################### get_working_image ########################
-    def mwi_get_working_image( self):
+    def mwi_get_working_image( self) -> ImageTk.PhotoImage:
         """ get the resize and resised working image """
         return self.a_work_img
 
     # ####################### get_mouse_pos_x_var ########################
-    def mwi_get_mouse_pos_x_var( self):
+    def mwi_get_mouse_pos_x_var( self) -> int:
         """ get a_mouse_pos_x_input_var """
         return int( self.a_mouse_pos_x_input_var.get())
 
     # ####################### get_mouse_pos_y_var ########################
-    def mwi_get_mouse_pos_y_var( self):
+    def mwi_get_mouse_pos_y_var( self) -> int:
         """ get a_mouse_pos_y_input_var """
         return int( self.a_mouse_pos_y_input_var.get())
 
@@ -600,171 +778,23 @@ class MyMainWindowImage:
     # ####################### mw_picture_zone ########################
     def mwi_picture_zone( self, a_pic_frame, i_pic_frame_width, c_icon_bar):
         """ Frame with the picture to left, and details to right """
-        s_platform = platform.system()
+
         self.c_main_icon_bar = c_icon_bar
         i_index_base_block = 0
-        a_top_separator_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=21)
-        a_pic_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
-        a_pic_sep_h0.place( x=0, y=10, relwidth=1.0)
-        a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h0.place( x=300, y=0)
-        MyToolTip( widget=a_pic_sep_lbl_h0, text="Click on Picture to sea zoomed part")
-        a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h1.place( x=635, y=0)
-        MyToolTip( widget=a_pic_sep_lbl_h1, text="Click on blue rectangle to manage SCB")
-        a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h2.place( x=640+200, y=0)
-        MyToolTip( widget=a_pic_sep_lbl_h2, text="- Show filename\n- Arrows to roll picture pixels\n- Arrows to move cursor in picture\n- Set a pallet to a line\n- Show color used")
-        # self.w_tk_root.update()
+        self.__mwi_top_line_with_titles( a_pic_frame, i_pic_frame_width)
 
         i_index_base_block += 2
-        a_picture_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_picture_frame.place( x=0, y=21, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT)
-        if s_platform == "Linux":
-            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
-        else:
-            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
-        self.a_picture_lbl.grid( row=i_index_base_block, column=0)
-        self.a_picture_lbl.bind( '<Button>', self.__mwi_click_on_picture)
-        self.a_picture_lbl.bind( '<Motion>', self.c_main_windows.mw_print_widget_under_mouse)
-
-        # Create SCB frame to draw rectangle to present SCB
-        a_scb_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_scb_frame.place( x=644, y=21, width=24, height=constant.PICTURE_HEIGHT)
-
-        self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-        self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
-        self.a_scb_cnvs.bind( "<Button-1>", self.mwi_change_pallet)
+        self.__mwi_left_picture_part( a_pic_frame, i_index_base_block)
+        self.__mwi_center_scb_part( a_pic_frame)
 
         # Create details frame
         i_width = i_pic_frame_width - ( 640 + 24 + 10)
 
-        a_filename_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_filename_frame.place( x=672, y=21, width=int(i_width/2), height=48)
-        i_index_base_block = 0
-        a_pic_sep_lbl_h2 = Label( a_filename_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h2.pack( fill="both", ipady=1)
-        i_index_base_block += 1
-        self.a_filename_lbl = Label( a_filename_frame, text="   ", background='light grey', foreground='black')
-        self.a_filename_lbl.pack( fill="both", ipady=1)
+        self.__mwi_right_details_top_left_part( a_pic_frame, i_width)
+        self.__mwi_right_details_top_right_part( a_pic_frame, i_width)
 
-        a_mouse_live_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_mouse_live_frame.place( x=672, y=21+48, width=int(i_width/2), height=60)
-        i_index_base_block = 0
-        a_pic_sep_lbl_h3 = Label( a_mouse_live_frame, text="Mouse live position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=4, sticky='ew')
-        i_index_base_block += 1
-        a_pic_sep_lbl_h4 = Label( a_mouse_live_frame, text="X ", width=4, height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, padx=4, pady=4, sticky='ew')
-        self.a_mouse_live_pos_x = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
-        self.a_mouse_live_pos_x.grid( row=i_index_base_block, column=2, padx=4, pady=2, sticky='ew')
-        a_pic_sep_lbl_h4 = Label( a_mouse_live_frame, text="Y ", width=4, height=1, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=3, padx=4, pady=4, sticky='ew')
-        self.a_mouse_live_pos_y = Label( a_mouse_live_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, height=1, background='light grey', foreground='black')
-        self.a_mouse_live_pos_y.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='ew')
-
-        a_roll_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_roll_title_frame.place( x=672+int(i_width/2)+2, y=24, width=int(i_width/2)-2, height=16)
-        a_pic_sep_lbl_h7 = Label( a_roll_title_frame, text="Roll image", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h7.pack( fill="both", ipady=1)
-
-        a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+24, width=int(i_width/2)-2, height=70+12)
-        if self.s_platform == "Darwin":
-            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_up_btn.place( x=6+56+6, y=5, width=56) # height = 26
-        if self.s_platform == "Darwin":
-            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_roll_left_btn = Button( a_roll_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_roll_left_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_left_btn.place( x=6, y=5+17, width=56)
-        if self.s_platform == "Darwin":
-            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_roll_rigth_btn = Button( a_roll_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_roll_right_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_rigth_btn.place( x=6+56+6+56+6, y=5+17, width=56)
-        if self.s_platform == "Darwin":
-            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_roll_down_btn = Button( a_roll_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_roll_down_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=400, repeatinterval=100)
-        self.a_roll_down_btn.place( x=6+56+6, y=5+26+4+4, width=56)
-
-        a_mouse_click_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_mouse_click_frame.place( x=672, y=21+48+62, width=int(i_width/2), height=116)
-        i_index_base_block = 0
-        a_pic_sep_lbl_h3 = Label( a_mouse_click_frame, text="Mouse click position", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=2, sticky='ew')
-        i_index_base_block += 1
-        a_pic_sep_lbl_h5 = Label( a_mouse_click_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
-        # font='-weight bold'
-        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
-        self.a_mouse_pos_x.grid( row=i_index_base_block, column=3, padx=4, pady=2)
-        self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
-        self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
-        self.a_pos_x_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
-        self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
-        i_index_base_block += 1
-        a_pic_sep_lbl_h4 = Label( a_mouse_click_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
-        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
-        self.a_mouse_pos_y.grid( row=i_index_base_block, column=3, padx=4, pady=2)
-        self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
-        self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
-        self.a_pos_y_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
-        self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
-        i_index_base_block += 1
-        a_pic_sep_lbl_h5 = Label( a_mouse_click_frame, text="Color offset", width=17, background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=3, padx=4, pady=2, sticky='ew')
-        self.a_color_lbl = Label( a_mouse_click_frame, text="   ", background='light grey', foreground='black')
-        self.a_color_lbl.grid( row=i_index_base_block, column=4, columnspan=1, padx=4, pady=2, sticky='ew')
-
-        a_arrow_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_arrow_title_frame.place( x=672+int(i_width/2)+2, y=21+48+51, width=int(i_width/2)-2, height=16)
-        a_pic_sep_lbl_h8 = Label( a_arrow_title_frame, text="Move cursor", background=constant.BACKGROUD_COLOR_UI)
-        a_pic_sep_lbl_h8.pack( fill="both", ipady=1)
-
-        a_arrow_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+72, width=int(i_width/2)-2, height=70)
-        if self.s_platform == "Darwin":
-            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_y_btn.place( x=6+56+6, y=5, width=56) # height = 26
-        if self.s_platform == "Darwin":
-            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_less_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_left_arrow_photo(), command=self.__mwi_less_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_less_x_btn.place( x=6, y=5+17, width=56)
-        if self.s_platform == "Darwin":
-            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_more_x_btn = Button( a_arrow_frame, image=self.c_the_icons.get_right_arrow_photo(), command=self.__mwi_more_x_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_x_btn.place( x=6+56+6+56+6, y=5+17, width=56)
-        if self.s_platform == "Darwin":
-            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
-        elif self.s_platform == "Linux":
-            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100, highlightcolor='white', highlightbackground='black')
-        else:
-            self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
-        self.a_more_y_btn.place( x=6+56+6, y=5+26+4+4, width=56)
+        self.__mwi_right_details_up_left_part( a_pic_frame, i_width)
+        self.__mwi_right_details_up_right_part( a_pic_frame, i_width)
 
         # Future feature to have color BMP: RGB are 0..255 and PIC RGB are 0..15
         # a_color_chart_frame = Frame( a_pic_frame, padx=0, pady=0, background='green')     # background='darkgray' or 'light grey'
@@ -776,6 +806,7 @@ class MyMainWindowImage:
         # a_pallet_rdx_btn = Radiobutton( a_color_chart_frame, text="PIC", variable=None, value=2, command=None, background=constant.BACKGROUD_COLOR_UI, font=font.Font( size=8))
         # a_pallet_rdx_btn.grid( row=0, column=2, padx=4, pady=4, sticky='w')
 
+        # Create pallet line frame to set the pallet line number
         a_pallet_scb_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_pallet_scb_frame.place( x=672, y=21+48+62+118, width=i_width, height=64)
         i_index_base_block = 0
@@ -798,6 +829,7 @@ class MyMainWindowImage:
             a_change_scb_btn = Button( a_pallet_scb_frame, text='Change pallet line number', command=self.__mwi_change_scb_line, width=21, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_scb_btn.place( x=2, y=30, width=152)
 
+        # Create the bar chart frame
         a_bar_chart_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_bar_chart_frame.place( x=672, y=21+(constant.PICTURE_HEIGHT-104), width=i_width, height=88)
         a_bar_chart_comment_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
@@ -810,7 +842,7 @@ class MyMainWindowImage:
         a_font_label = font.Font( size=6)
         for i_loop in range( 0, 16, 1):
             a_label = Label(a_bar_chart_comment_frame, text=str( i_loop), width=2, justify='left', background=constant.BACKGROUD_COLOR_UI, font=a_font_label)
-            if s_platform == "Linux":
+            if self.s_platform == "Linux":
                 a_label.grid( row=1, column=i_index_base_column, padx=5, pady=0, sticky='w')
             else:
                 a_label.grid( row=1, column=i_index_base_column, padx=4, pady=0, sticky='w')

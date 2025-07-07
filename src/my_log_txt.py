@@ -34,8 +34,6 @@ import io
 
 from datetime import datetime
 
-from .my_tools import mt_get_path_separator
-
 # __name__ = "MyLogText"
 
 # ###############################################################################################
@@ -63,13 +61,12 @@ class MyLogText:
     _instance = None
 
     # ####################### __new__ ########################
-    def __new__( cls, list_application_info=None):
+    def __new__( cls, list_application_info=None) -> 'MyLogText':
         """ Instantiate a singleton class """
         if MyLogText._instance is None:
             MyLogText._instance = object.__new__( cls)
             MyLogText._a_list_application_info = list_application_info
             MyLogText.s_platform = ''
-            MyLogText.s_separator = ''
             MyLogText._s_log_file_pathname = ''
             MyLogText._s_log_file_name = list_application_info[0]
             MyLogText._instance._b_sealed = False
@@ -79,30 +76,27 @@ class MyLogText:
     # ####################### __init__ ########################
     def __init__( self, list_application_info=None):
         """ Find and configure process available to write a log text file """
-        if self._instance._b_sealed:
-            return
+        if not self._instance._b_sealed:
+            self._a_list_application_info = list_application_info
+            self.__s_log_text = ""
+            self.s_platform = platform.system()
 
-        self._a_list_application_info = list_application_info
-        self.__s_log_text = ""
-        self.s_platform = platform.system()
-        self.s_separator = mt_get_path_separator( self.s_platform)
-
-        # Replace ' ' by character '_'
-        self._s_log_file_name = self._s_log_file_name.replace( ' ', '_', 2)
-        # print( '__init__() : _s_log_file_name     = ' + self._s_log_file_name + '\n')
-
-        if self.set_log_pathname() is False:
-            # print( '__init__() : _s_log_file_pathname = ' + self._s_log_file_pathname + '\n')
-            pass
-        else:
-            print( '__init__() : Failed to create pathname')
-
-        if self.set_log_filename() is False:
+            # Replace ' ' by character '_'
+            self._s_log_file_name = self._s_log_file_name.replace( ' ', '_', 2)
             # print( '__init__() : _s_log_file_name     = ' + self._s_log_file_name + '\n')
-            pass
-        else:
-            print( '__init__() : Failed to create filename')
-        self._instance._b_sealed = True
+
+            if self.set_log_pathname() is False:
+                # print( '__init__() : _s_log_file_pathname = ' + self._s_log_file_pathname + '\n')
+                pass
+            else:
+                print( '__init__() : Failed to create pathname')
+
+            if self.set_log_filename() is False:
+                # print( '__init__() : _s_log_file_name     = ' + self._s_log_file_name + '\n')
+                pass
+            else:
+                print( '__init__() : Failed to create filename')
+            self._instance._b_sealed = True
 
     # ####################### add_log ########################
     def add_log( self, s_text):
@@ -124,7 +118,7 @@ class MyLogText:
         self.__s_log_text = ""
 
     # ####################### set_log_pathname ########################
-    def set_log_pathname( self):
+    def set_log_pathname( self) -> bool:
         """ Set the pathname to store the text file """
         b_error = True
         if self.s_platform == "Windows":
@@ -149,7 +143,7 @@ class MyLogText:
         return b_error
 
     # ####################### set_log_filename ########################
-    def set_log_filename( self):
+    def set_log_filename( self) -> bool:
         """ Set the file name of the text file """
         # date and time object containing current date and time
         a_now = datetime.now()
@@ -162,22 +156,22 @@ class MyLogText:
     # ####################### __set_pathname_win ########################
     def __set_pathname_win( self):
         """ Set pathname for Windows platform """
-        self._s_log_file_pathname = os.getcwd() + self.s_separator
+        self._s_log_file_pathname = os.getcwd() + os.sep
 
     # ####################### __set_pathname_hidden_win ########################
     def __set_pathname_hidden_win( self):
         """ Set pathname for Windows platform """
-        self._s_log_file_pathname = os.path.join( os.path.expanduser('~'), self.s_separator, 'AppData', self.s_separator, 'Local', self.s_separator, "Schneider Electric", self.s_separator)
+        self._s_log_file_pathname = os.path.join( os.path.expanduser('~'), os.sep, 'AppData', os.sep, 'Local', os.sep, "Disk Crack Band", os.sep)
 
     # ####################### __set_pathname_mac_os ########################
     def __set_pathname_mac_os( self):
         """ Set pathname for Mac OS platform """
-        self._s_log_file_pathname = os.path.join( os.path.expanduser('~'), self.s_separator, 'Documents', self.s_separator)
+        self._s_log_file_pathname = os.path.join( os.path.expanduser('~'), os.sep, 'Documents', os.sep)
 
     # ####################### __set_pathname_linux ########################
     def __set_pathname_linux( self):
         """ Set pathname for Linux platform """
-        self._s_log_file_pathname = os.getcwd() + self.s_separator
+        self._s_log_file_pathname = os.getcwd() + os.sep
 
     # ####################### __write_file_win ########################
     def __write_file_win( self):

@@ -132,58 +132,60 @@ class MyMainWindowPallet:
             # print( "mw_restore_old_color() i_offset = ", str( i_number))
             self.mwp_color_btn_rad( i_number)
 
+    # ####################### __mwp_format_color_entry_int ########################
+    def __mwp_format_color_entry_int( self, i_value) -> str:
+        """ Format the color entry to be sure it is 2 chars long, add a leading zero if needed """
+        if int( i_value) > 15:
+            s_return_value = f'{int( i_value):X}'
+        else:
+            s_return_value = f'0{int( i_value):X}'
+
+        return s_return_value
+
+    # ####################### __mwp_format_color_entry_str ########################
+    def __mwp_format_color_entry_str( self, s_value) -> str:
+        """ Format the color entry to be sure it is 2 chars long, add a leading zero if needed """
+        if len( s_value) != 2:
+            s_return_value = "0" + s_value
+        else:
+            s_return_value = s_value
+
+        return s_return_value
+
     # ####################### __mwp_update_red_entry ########################
     def __mwp_update_red_entry( self, i_value):
         """" Scale is moving update red : entry in hex, label in dec and color of new color label """
         # print( "mv_update_red_entry()")
-        if int( i_value) > 15:
-            s_red = f'{int( i_value):X}'
-        else:
-            s_red = f'0{int( i_value):X}'
+        s_red = self.__mwp_format_color_entry_int( i_value)
         self.a_red_input_var.set( s_red)
         self.a_red_ntr_dec_lbl.configure( text=i_value)
-        s_green = self.a_green_input_var.get()
-        if len( s_green) != 2:
-            s_green = "0" + s_green
-        s_blue = self.a_blue_input_var.get()
-        if len( s_blue) != 2:
-            s_blue = "0" + s_blue
+
+        s_green = self.__mwp_format_color_entry_str( self.a_green_input_var.get())
+        s_blue = self.__mwp_format_color_entry_str( self.a_blue_input_var.get())
         self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
 
     # ####################### __mwp_update_green_entry ########################
     def __mwp_update_green_entry( self, i_value):
         """" Scale is moving update green : entry in hex, label in dec and color of new color label """
         # print( "mv_update_green_entry()")
-        if int( i_value) > 15:
-            s_green = f'{ int(i_value):X}'
-        else:
-            s_green = f'0{ int(i_value):X}'
+        s_green = self.__mwp_format_color_entry_int( i_value)
         self.a_green_input_var.set( s_green)
         self.a_green_ntr_dec_lbl.configure( text=i_value)
-        s_red = self.a_red_input_var.get()
-        if len( s_red) != 2:
-            s_red = "0" + s_red
-        s_blue = self.a_blue_input_var.get()
-        if len( s_blue) != 2:
-            s_blue = "0" + s_blue
+
+        s_red = self.__mwp_format_color_entry_str( self.a_red_input_var.get())
+        s_blue = self.__mwp_format_color_entry_str( self.a_blue_input_var.get())
         self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
 
     # ####################### __mwp_update_blue_entry ########################
     def __mwp_update_blue_entry( self, i_value):
         """" Scale is moving update blue : entry in hex, label in dec and color of new color label """
         # print( "mv_update_blue_entry()")
-        if int( i_value) > 15:
-            s_blue= f'{int( i_value):X}'
-        else:
-            s_blue= f'0{int( i_value):X}'
+        s_blue = self.__mwp_format_color_entry_int( i_value)
         self.a_blue_input_var.set( s_blue)
         self.a_blue_ntr_dec_lbl.configure( text=i_value)
-        s_red = self.a_red_input_var.get()
-        if len( s_red) != 2:
-            s_red = "0" + s_red
-        s_green = self.a_green_input_var.get()
-        if len( s_green) != 2:
-            s_green = "0" + s_green
+
+        s_red = self.__mwp_format_color_entry_str( self.a_red_input_var.get())
+        s_green = self.__mwp_format_color_entry_str( self.a_green_input_var.get())
         self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
 
     # ####################### __mwp_entry_red_focus_in ########################
@@ -276,7 +278,7 @@ class MyMainWindowPallet:
     # ##########################################################################################
 
     # ####################### get_from_pal_btn_lst_color ########################
-    def get_from_pal_btn_lst_color(self, i_offset):
+    def get_from_pal_btn_lst_color(self, i_offset) -> str:
         """ Frame with the pallet button to left, and details to right """
         return self.a_pallet_button_lst[i_offset].cget( 'bg')
 
@@ -352,10 +354,31 @@ class MyMainWindowPallet:
             i_index_base_column = 0
             i_index_base_block += 1
 
-    # ####################### __mwp_pallet_zone_right ########################
-    def __mwp_pallet_zone_right( self, a_color_bottom_frame, a_pallet_bottom_btn_frame):
-        """ Frame with the pallet bottom button to left, and details to right """
-        i_index_base_block = 0
+    # ####################### __mwp_pallet_zone_center_up_button ########################
+    def __mwp_pallet_zone_center_up_button( self, a_color_bottom_frame, i_index_base_block, i_index_base_block_for_old_button) -> int:
+        """ Move declaration of old button to be able to focus color entry in a loop with the key 'tab' """
+        set_color_in_pallet_with_arg = partial( self.__mwp_set_color_in_pallet, -1)
+        if self.s_platform == "Darwin":
+            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=1, sticky='ew')
+            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=5, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
+            self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
+        else:
+            if self.s_platform == "Linux":
+                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
+                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
+            else:
+                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
+            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=7, height=1, relief='raised', background='light grey')
+            self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
+
+        i_index_base_block += 1
+        return i_index_base_block
+
+    # ####################### __mwp_pallet_zone_center_up ########################
+    def __mwp_pallet_zone_center_up( self, a_color_bottom_frame, i_index_base_block) -> int:
+        """ Frame with the pallet colors label left, and color display to right """
         a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
         a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
@@ -407,24 +430,13 @@ class MyMainWindowPallet:
         self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
         self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
-        # move declaration of old button to be able to focus color entry in a loop with the key 'tab'
-        set_color_in_pallet_with_arg = partial( self.__mwp_set_color_in_pallet, -1)
-        if self.s_platform == "Darwin":
-            a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=2, pady=1, sticky='ew')
-            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=5, height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
-            self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=2, pady=0, sticky='ewns')
-        else:
-            if self.s_platform == "Linux":
-                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
-            else:
-                a_change_color_btn = Button( a_color_bottom_frame, text='Set color', command=set_color_in_pallet_with_arg, width=14, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
-                a_change_color_btn.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1, sticky='ew')
-            self.a_color_old_btn = Button( a_color_bottom_frame, text='', command=self.__mwp_restore_old_color, width=7, height=1, relief='raised', background='light grey')
-            self.a_color_old_btn.grid( row=i_index_base_block_for_old_button, rowspan=3, column=3, columnspan=1, padx=4, pady=1, sticky='ewns')
+        i_index_base_block = self.__mwp_pallet_zone_center_up_button( a_color_bottom_frame, i_index_base_block, i_index_base_block_for_old_button)
 
-        i_index_base_block += 1
+        return i_index_base_block
+
+    # ####################### __mwp_pallet_zone_center_down ########################
+    def __mwp_pallet_zone_center_down( self, a_color_bottom_frame, i_index_base_block) -> int:
+        """ Frame with the pallet color scroller, line of labels title and labels """
         # , borderwidth=0, compound="center", highlightthickness=0
         self.a_color_slider = Scale( a_color_bottom_frame, from_=0, to=255, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor=constant.BACKGROUD_COLOR_UI)
         self.a_color_slider.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=4, sticky='ew')
@@ -446,6 +458,11 @@ class MyMainWindowPallet:
         self.a_btn_y_lbl.grid( row=i_index_base_block, column=3, padx=4, sticky='ew')
 
         i_index_base_block += 1
+        return i_index_base_block
+
+    # ####################### __mwp_pallet_zone_right ########################
+    def __mwp_pallet_zone_right( self, a_pallet_bottom_btn_frame, i_index_base_block):
+        """ Frame with the pallet details to right """
         if self.s_platform == "Darwin":
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
@@ -509,7 +526,9 @@ class MyMainWindowPallet:
         else:
             a_pallet_bottom_btn_frame.place( x=572, y=256, width=self.i_main_window_width - 572, height=40 )
 
-        self.__mwp_pallet_zone_right( a_color_bottom_frame, a_pallet_bottom_btn_frame)
+        i_index_base_block = self.__mwp_pallet_zone_center_up( a_color_bottom_frame, 0)
+        i_index_base_block = self.__mwp_pallet_zone_center_down( a_color_bottom_frame, i_index_base_block)
+        self.__mwp_pallet_zone_right( a_pallet_bottom_btn_frame, i_index_base_block)
         # self.w_tk_root.update()
 
     # ####################### mwp_red_max_of_two_chars_and_filter ########################
@@ -550,16 +569,11 @@ class MyMainWindowPallet:
             b_result = True
         elif s_reason == "key":
             # print( "key")
-            if 'a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9':
-                if len( s_before) > 2:
-                    b_result = False
-                else:
-                    b_result = True
+            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
+                b_result = True
             else:
                 # print( "manage value")
-                if s_call.isprintable() or s_call.isspace():
-                    b_result = False
-                else:
+                if not s_call.isprintable() or not s_call.isspace():
                     print( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
@@ -606,18 +620,11 @@ class MyMainWindowPallet:
             b_result = True
         elif s_reason == "key":
             # print( "key")
-            if 'a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9':
-                if len( s_before) > 2:
-                    b_result = False
-                else:
-                    b_result = True
-            else:
-                # print( "manage value")
-                if s_call.isprintable() or s_call.isspace():
-                    b_result = False
-                else:
-                    print( mt_hexlify_byte_string( b's_call', ":"))
-                    b_result = True
+            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
+                b_result = True
+            elif not s_call.isprintable() or not s_call.isspace():
+                print( mt_hexlify_byte_string( b's_call', ":"))
+                b_result = True
         else:
             # print( "does nothing")
             b_result = True
@@ -662,16 +669,11 @@ class MyMainWindowPallet:
             b_result = True
         elif s_reason == "key":
             # print( "key")
-            if 'a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9':
-                if len( s_before) > 2:
-                    b_result = False
-                else:
-                    b_result = True
+            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
+                b_result = True
             else:
                 # print( "manage value")
-                if s_call.isprintable() or s_call.isspace():
-                    b_result = False
-                else:
+                if not s_call.isprintable() or not s_call.isspace():
                     print( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
@@ -700,18 +702,9 @@ class MyMainWindowPallet:
                 i_red = a_pallet_list[i_tmp_number]
                 i_green = a_pallet_list[i_tmp_number + 1]
                 i_blue = a_pallet_list[i_tmp_number + 2]
-                if int( i_red) > 15:
-                    s_red = f'{int( i_red):X}'
-                else:
-                    s_red = f'0{int( i_red):X}'
-                if int( i_green) > 15:
-                    s_green = f'{int( i_green):X}'
-                else:
-                    s_green = f'0{int( i_green):X}'
-                if int( i_blue) > 15:
-                    s_blue = f'{int( i_blue):X}'
-                else:
-                    s_blue = f'0{int( i_blue):X}'
+                s_red = self.__mwp_format_color_entry_int( i_red)
+                s_green = self.__mwp_format_color_entry_int( i_green)
+                s_blue = self.__mwp_format_color_entry_int( i_blue)
 
                 self.a_red_input_var.set( s_red)                            # hex string
                 self.a_red_ntr_dec_lbl.configure( text=str( i_red))         # int to string
@@ -823,6 +816,40 @@ class MyMainWindowPallet:
 
             self.w_tk_root.update()
 
+    # ####################### __mwp_swap_color_in_pallet_end ########################
+    def __mwp_swap_color_in_pallet_end( self, i_a_from, a_original_img, i_b_index):
+        """ Swap color value in pallet  """
+        i_scb = int( i_a_from / 16)
+        # Update the picture offset for all line with the same SCB
+        for i_picture_line_y in range( 0, 200, 1):
+            # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
+            for i_loop in range( 0, 320, 1):
+                i_first_color_offset = a_original_img.getpixel( ( i_loop, i_picture_line_y))
+                if i_scb == int(i_first_color_offset / 16): # check the SCB
+                    # swap offset of color in this line
+                    if i_first_color_offset == i_a_from:
+                        a_original_img.putpixel( ( i_loop, i_picture_line_y), i_b_index)
+                    elif i_first_color_offset == i_b_index:
+                        a_original_img.putpixel( ( i_loop, i_picture_line_y), i_a_from)
+                else:
+                    break
+
+        self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
+        self.mwp_color_btn_rad( i_b_index)
+
+        i_click_pos_x = self.c_main_image.mwi_get_mouse_pos_x_var()
+        i_click_pos_y = self.c_main_image.mwi_get_mouse_pos_y_var()
+        a_work_img = self.c_main_image.mwi_get_working_image()
+        i_offset = a_work_img.getpixel( (i_click_pos_x, i_click_pos_y))
+
+        # Draw bar chart for colors in usage in a line
+        self.c_main_image.mwi_draw_bar_chart( i_offset, i_click_pos_y)
+
+        # Display zoom of a part of the picture
+        self.mwp_draw_zoom_square( i_click_pos_x, i_click_pos_y)
+
+        self.w_tk_root.update()
+
     # ####################### __mwp_swap_color_in_pallet ########################
     def __mwp_swap_color_in_pallet( self, i_a_from, i_b_new_index):
         """ Swap color value in a pallet  """
@@ -840,13 +867,9 @@ class MyMainWindowPallet:
             a_pallet_list = a_original_img.getpalette()
 
             i_a_pallet_from     = i_a_from * 3
-            s_a_red             = f'{a_pallet_list[ i_a_pallet_from]:02X}'
-            s_a_green           = f'{a_pallet_list[ i_a_pallet_from + 1]:02X}'
-            s_a_blue            = f'{a_pallet_list[ i_a_pallet_from + 2]:02X}'
+            s_a_red_green_blue  = f'{a_pallet_list[ i_a_pallet_from]:02X}' + f'{a_pallet_list[ i_a_pallet_from + 1]:02X}' + f'{a_pallet_list[ i_a_pallet_from + 2]:02X}'
             i_b_pallet_index    = i_b_index * 3
-            s_b_red             = f'{a_pallet_list[ i_b_pallet_index]:02X}'
-            s_b_green           = f'{a_pallet_list[ i_b_pallet_index + 1]:02X}'
-            s_b_blue            = f'{a_pallet_list[ i_b_pallet_index + 2]:02X}'
+            s_b_red_green_blue  = f'{a_pallet_list[ i_b_pallet_index]:02X}' + f'{a_pallet_list[ i_b_pallet_index + 1]:02X}' + f'{a_pallet_list[ i_b_pallet_index + 2]:02X}'
             # Swap the color in pallet
             i_temp_red                           = a_pallet_list[ i_a_pallet_from]
             i_temp_green                         = a_pallet_list[ i_a_pallet_from + 1]
@@ -861,39 +884,10 @@ class MyMainWindowPallet:
             a_original_img.putpalette( a_pallet_list, rawmode='RGB')
 
             # ready when color modification will be done
-            a_a_pallet_button.configure( background= "#" + s_b_red + s_b_green + s_b_blue)
-            a_b_pallet_button.configure( background= "#" + s_a_red + s_a_green + s_a_blue)
+            a_a_pallet_button.configure( background= "#" + s_b_red_green_blue)
+            a_b_pallet_button.configure( background= "#" + s_a_red_green_blue)
 
-            i_scb = int( i_a_from / 16)
-            # Update the picture offset for all line with the same SCB
-            for i_picture_line_y in range( 0, 200, 1):
-                # - parse a line to get the bigger index of a pallet to compute the right line of color to use (SCB)
-                for i_loop in range( 0, 320, 1):
-                    i_first_color_offset = a_original_img.getpixel( ( i_loop, i_picture_line_y))
-                    if i_scb == int(i_first_color_offset / 16): # check the SCB
-                        # swap offset of color in this line
-                        if i_first_color_offset == i_a_from:
-                            a_original_img.putpixel( ( i_loop, i_picture_line_y), i_b_index)
-                        elif i_first_color_offset == i_b_index:
-                            a_original_img.putpixel( ( i_loop, i_picture_line_y), i_a_from)
-                    else:
-                        break
-
-            self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
-            self.mwp_color_btn_rad( i_b_index)
-
-            i_click_pos_x = self.c_main_image.mwi_get_mouse_pos_x_var()
-            i_click_pos_y = self.c_main_image.mwi_get_mouse_pos_y_var()
-            a_work_img = self.c_main_image.mwi_get_working_image()
-            i_offset = a_work_img.getpixel( (i_click_pos_x, i_click_pos_y))
-
-            # Draw bar chart for colors in usage in a line
-            self.c_main_image.mwi_draw_bar_chart( i_offset, i_click_pos_y)
-
-            # Display zoom of a part of the picture
-            self.mwp_draw_zoom_square( i_click_pos_x, i_click_pos_y)
-
-            self.w_tk_root.update()
+            self.__mwp_swap_color_in_pallet_end( i_a_from, a_original_img, i_b_index)
 
     # ####################### __mwp_set_line_in_pallet ########################
     def __mwp_set_line_in_pallet( self, i_line_number_to, i_color_line_to_copy_offset_from):
@@ -981,11 +975,17 @@ class MyMainWindowPallet:
     # ####################### mwp_get_pallet_btn ########################
     def mwp_get_pallet_btn( self, i_element) -> Radiobutton:
         """ Return the color of the button radio """
+        if i_element < 0 or i_element >= len(self.a_pallet_button_lst):
+            # print( "mwp_get_pallet_btn() i_element out of range: ", str( i_element))
+            return None
         return self.a_pallet_button_lst[i_element]
 
     # ####################### mwp_get_pallet_horizontal_lbl ########################
     def mwp_get_pallet_horizontal_lbl( self, i_element) -> Label:
         """ Return the label for horizontal list of number of column """
+        if i_element < 0 or i_element >= len(self.a_pallet_horizontal_number_lst):
+            # print( "mwp_get_pallet_horizontal_lbl() i_element out of range: ", str( i_element))
+            return None
         return self.a_pallet_horizontal_number_lst[i_element]
 
     # ####################### mwp_reset_around_cursor ########################

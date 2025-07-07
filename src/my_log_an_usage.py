@@ -62,7 +62,7 @@ class MyLogAnUsage:
     _instance = None
 
     # ####################### __new__ ########################
-    def __new__( cls, list_application_info=None, s_storage=None):
+    def __new__( cls, list_application_info=None, s_storage=None) -> 'MyLogAnUsage':
         """ Instantiate a singleton class """
         if MyLogAnUsage._instance is None:
             MyLogAnUsage._instance = object.__new__( cls)
@@ -79,14 +79,13 @@ class MyLogAnUsage:
     # ####################### __init__ ########################
     def __init__( self, list_application_info=None, s_storage=None):
         """ Find and configure process available to send a log mail """
-        if self._instance._b_sealed:
-            return
-        self.s_log_text = ""
-        self.s_log_latest_text = ""
-        self.s_platform = platform.system()
-        self.list_application_info = list_application_info
-        self.set_log_mode( s_storage)
-        self._instance._b_sealed = True
+        if not self._instance._b_sealed:
+            self.s_log_text = ""
+            self.s_log_latest_text = ""
+            self.s_platform = platform.system()
+            self.list_application_info = list_application_info
+            self.set_log_mode( s_storage)
+            self._instance._b_sealed = True
 
     # ####################### __add_log ########################
     def __add_log( self, s_text):
@@ -95,7 +94,7 @@ class MyLogAnUsage:
             self.s_log_text = self.s_log_text + s_text + '\n'
 
     # ####################### set_log_mode ########################
-    def get_last_log( self):
+    def get_last_log( self) -> str:
         """ Return last log added """
         return self.s_log_latest_text
 
