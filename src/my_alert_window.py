@@ -101,13 +101,8 @@ class MyAlertWindow:
 
     # ####################### __aw_alert_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
-    def __aw_error_block( self, s_message):
+    def __aw_error_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_error_photo()
@@ -130,13 +125,8 @@ class MyAlertWindow:
 
     # ####################### __aw_question_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
-    def __aw_question_block( self, s_message):
+    def __aw_question_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
@@ -169,13 +159,8 @@ class MyAlertWindow:
 
     # ####################### __aw_choice_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
-    def __aw_choice_block( self, s_message):
+    def __aw_choice_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
@@ -213,13 +198,8 @@ class MyAlertWindow:
 
     # ####################### __aw_warning_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
-    def __aw_warning_block( self, s_message):
+    def __aw_warning_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_warning_photo()
@@ -247,13 +227,8 @@ class MyAlertWindow:
 
     # ####################### __aw_alert_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
-    def __aw_alert_block( self, s_message):
+    def __aw_alert_block( self, s_message, top_frame, button_frame):
         """ Create a alert dialog """
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
@@ -334,16 +309,22 @@ class MyAlertWindow:
         else:
             self.w_alert_window.title( ' Alert ')
 
+        # global s_device_information
+        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
+        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
+        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+
         if i_type == 1:
-            self.__aw_error_block( s_message)
+            self.__aw_error_block( s_message, top_frame, button_frame)
         elif i_type == 2:
-            self.__aw_question_block( s_message)
+            self.__aw_question_block( s_message, top_frame, button_frame)
         elif i_type == 3:
-            self.__aw_warning_block( s_message)
+            self.__aw_warning_block( s_message, top_frame, button_frame)
         elif i_type == 4:
-            self.__aw_choice_block( s_message)
+            self.__aw_choice_block( s_message, top_frame, button_frame)
         else:
-            self.__aw_alert_block( s_message)
+            self.__aw_alert_block( s_message, top_frame, button_frame)
 
         self.w_alert_window.update()
         self.__aw_set_window_size( i_type)
