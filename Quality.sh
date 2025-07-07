@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.25'
+version='1.27'
 
 # definition all colors and styles to use with an echo
 
@@ -170,7 +170,11 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]
 then
     python_version=$(python3 --version)
     pyinstaller_version=$(pyinstaller --version)
-	perl_version=""
+	temp=$(pylint --version)
+	# Get from string the version
+	pylint_version=${temp:7:6}
+	temp=$(perl -v)
+	perl_version=${temp:44:6}
 	bash_version="${BASH_VERSION}"
 else
     echo -e $IRed "Unknown OS" $Color_Off

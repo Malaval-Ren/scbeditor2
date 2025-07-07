@@ -133,10 +133,10 @@ class MyAboutWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_about_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_about_ok_button, relief='raised', background=self.about_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_about_ok_button, relief='raised', background=self.about_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
         self.w_about_window.update()
 

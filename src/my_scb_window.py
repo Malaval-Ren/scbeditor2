@@ -288,14 +288,14 @@ class MyScbPalletWindow:
         """ Create a SCB bottom dialog """
         # width size of a button is number of charracters 15 + 4 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__scbw_scb_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_ok_button, relief='raised', background=self.scb_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__scbw_scb_ok_button, relief='raised', background=self.scb_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__scbw_scb_cancel_button, relief='raised', background=self.scb_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
     # ####################### __scbw_scb_block ########################

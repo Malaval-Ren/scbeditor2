@@ -386,18 +386,24 @@ class MyMainWindowImage:
     # ####################### __mwi_top_line_with_titles ########################
     def __mwi_top_line_with_titles( self, a_pic_frame, i_pic_frame_width):
         """ Create the top line with title and separator """
-        a_top_separator_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=21)
+        a_top_separator_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
+        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=24)
         a_pic_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
         a_pic_sep_h0.place( x=0, y=10, relwidth=1.0)
         a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h0.place( x=300, y=-1)
+        a_pic_sep_lbl_h0.place( x=300, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h0, text="Click on Picture to sea zoomed part")
         a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h1.place( x=635, y=-1)
+        if self.s_platform == 'Linux':
+            a_pic_sep_lbl_h1.place( x=637, y=0)
+        else:
+            a_pic_sep_lbl_h1.place( x=632, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h1, text="Click on blue rectangle to manage SCB")
         a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pic_sep_lbl_h2.place( x=640+200, y=-1)
+        if self.s_platform == 'Linux':
+            a_pic_sep_lbl_h2.place( x=640+224, y=0)
+        else:
+            a_pic_sep_lbl_h2.place( x=640+200, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h2, text="- Show filename\n- Arrows to roll picture pixels\n- Arrows to move cursor in picture\n- Set a pallet to a line\n- Show color used")
         # self.w_tk_root.update()
 
@@ -405,7 +411,7 @@ class MyMainWindowImage:
     def __mwi_left_picture_part( self, a_pic_frame, i_index_base_block):
         """ Create the frame for the picture """
         a_picture_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_picture_frame.place( x=0, y=21, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT)
+        a_picture_frame.place( x=0, y=24, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT)
         if self.s_platform == "Linux":
             self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
         else:
@@ -418,7 +424,7 @@ class MyMainWindowImage:
     def __mwi_center_scb_part( self, a_pic_frame):
         """ Create SCB frame to draw rectangle to present SCB """
         a_scb_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_scb_frame.place( x=644, y=21, width=24, height=constant.PICTURE_HEIGHT)
+        a_scb_frame.place( x=644, y=24, width=24, height=constant.PICTURE_HEIGHT)
         self.a_scb_cnvs = Canvas( a_scb_frame, width=24, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         self.a_scb_cnvs.grid( row=0, column=0, sticky='ewns')
         self.a_scb_cnvs.bind( "<Button-1>", self.mwi_change_pallet)
@@ -427,7 +433,7 @@ class MyMainWindowImage:
     def __mwi_right_details_top_left_part( self, a_pic_frame, i_width):
         """ Create the left part of the details frame """
         a_filename_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_filename_frame.place( x=672, y=21, width=int(i_width/2), height=48)
+        a_filename_frame.place( x=672, y=24, width=int(i_width/2), height=48)
         i_index_base_block = 0
         a_pic_sep_lbl_h2 = Label( a_filename_frame, text="File name", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h2.pack( fill="both", ipady=1)
@@ -436,7 +442,7 @@ class MyMainWindowImage:
         self.a_filename_lbl.pack( fill="both", ipady=1)
 
         a_mouse_live_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_mouse_live_frame.place( x=672, y=21+48, width=int(i_width/2), height=60)
+        a_mouse_live_frame.place( x=672, y=24+48, width=int(i_width/2), height=60)
         i_index_base_block = 0
         a_pic_sep_lbl_h3 = Label( a_mouse_live_frame, text="Mouse live position", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=4, sticky='ew')
@@ -459,7 +465,7 @@ class MyMainWindowImage:
         a_pic_sep_lbl_h7.pack( fill="both", ipady=1)
 
         a_roll_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_roll_frame.place( x=672+int(i_width/2)+2, y=21+24, width=int(i_width/2)-2, height=70+12)
+        a_roll_frame.place( x=672+int(i_width/2)+2, y=24+24, width=int(i_width/2)-2, height=70+12)
         if self.s_platform == "Darwin":
             self.a_roll_up_btn = Button( a_roll_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_roll_up_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=400, repeatinterval=100)
         elif self.s_platform == "Linux":
@@ -493,7 +499,7 @@ class MyMainWindowImage:
     def __mwi_right_details_up_left_part( self, a_pic_frame, i_width):
         """ Create the left part of the details frame """
         a_mouse_click_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_mouse_click_frame.place( x=672, y=21+48+62, width=int(i_width/2), height=116)
+        a_mouse_click_frame.place( x=672, y=24+48+62, width=int(i_width/2), height=116)
         i_index_base_block = 0
         a_pic_sep_lbl_h3 = Label( a_mouse_click_frame, text="Mouse click position", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h3.grid( row=i_index_base_block, column=1, columnspan=4, padx=4, pady=2, sticky='ew')
@@ -526,12 +532,12 @@ class MyMainWindowImage:
     def __mwi_right_details_up_right_part( self, a_pic_frame, i_width):
         """ Create the right part of the details frame arrows """
         a_arrow_title_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_arrow_title_frame.place( x=672+int(i_width/2)+2, y=21+48+51, width=int(i_width/2)-2, height=16)
+        a_arrow_title_frame.place( x=672+int(i_width/2)+2, y=24+48+51, width=int(i_width/2)-2, height=16)
         a_pic_sep_lbl_h8 = Label( a_arrow_title_frame, text="Move cursor", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h8.pack( fill="both", ipady=1)
 
         a_arrow_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_arrow_frame.place( x=672+int(i_width/2)+2, y=21+48+72, width=int(i_width/2)-2, height=70)
+        a_arrow_frame.place( x=672+int(i_width/2)+2, y=24+48+72, width=int(i_width/2)-2, height=70)
         if self.s_platform == "Darwin":
             self.a_less_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_up_arrow_photo(), command=self.__mwi_less_y_value_clicked, width=50, height=20, relief='raised', highlightbackground='light grey', repeatdelay=500, repeatinterval=100)
         elif self.s_platform == "Linux":
@@ -780,10 +786,11 @@ class MyMainWindowImage:
         """ Frame with the picture to left, and details to right """
 
         self.c_main_icon_bar = c_icon_bar
-        i_index_base_block = 0
+        # i_index_base_block = 0
         self.__mwi_top_line_with_titles( a_pic_frame, i_pic_frame_width)
+        # self.w_tk_root.update()
 
-        i_index_base_block += 2
+        i_index_base_block = 2
         self.__mwi_left_picture_part( a_pic_frame, i_index_base_block)
         self.__mwi_center_scb_part( a_pic_frame)
 

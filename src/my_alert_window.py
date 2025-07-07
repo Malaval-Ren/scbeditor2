@@ -107,10 +107,10 @@ class MyAlertWindow:
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_error_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
@@ -119,7 +119,7 @@ class MyAlertWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
+        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
 
@@ -131,10 +131,10 @@ class MyAlertWindow:
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
@@ -144,14 +144,14 @@ class MyAlertWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
@@ -165,10 +165,10 @@ class MyAlertWindow:
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
@@ -180,18 +180,18 @@ class MyAlertWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_bpp_btn.pack( side='right', padx=2, pady=2 )
-            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
             a_ok_bpp_copy_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_bpp_btn.pack( side='right', padx=4, pady=4 )
-            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
             a_ok_bpp_copy_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound="c", command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
@@ -204,10 +204,10 @@ class MyAlertWindow:
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_warning_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
@@ -217,10 +217,10 @@ class MyAlertWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
@@ -233,10 +233,10 @@ class MyAlertWindow:
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_about_photo.width(), height=_a_about_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
+        a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_alert_text_label = Label( top_left_frame, text=s_message, background='light grey', foreground='black', anchor='center')  # background='darkgray' or 'light grey' == self.about_background
@@ -245,10 +245,10 @@ class MyAlertWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound="c", command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
@@ -260,6 +260,9 @@ class MyAlertWindow:
         self.i_height = 200
         if i_type == 4:
             self.i_height += 10
+            if self.s_platform == "Linux":
+                self.i_height += 38
+
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
 
@@ -311,9 +314,9 @@ class MyAlertWindow:
 
         # global s_device_information
         top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         if i_type == 1:
             self.__aw_error_block( s_message, top_frame, button_frame)

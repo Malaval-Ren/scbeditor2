@@ -264,37 +264,28 @@ class MyMainWindowPallet:
             if self.i_color_line_to_copy_offset == -1:
                 self.i_color_line_to_copy_offset = int( self.a_btn_x_lbl.cget( "text"))
 
-    # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
-    #
-    #   ######  #     # ######  #       ###  #####
-    #   #     # #     # #     # #        #  #     #
-    #   #     # #     # #     # #        #  #
-    #   ######  #     # ######  #        #  #
-    #   #       #     # #     # #        #  #
-    #   #       #     # #     # #        #  #     #
-    #   #        #####  ######  ####### ###  #####
-    #
-    # ##########################################################################################
 
-    # ####################### get_from_pal_btn_lst_color ########################
-    def get_from_pal_btn_lst_color(self, i_offset) -> str:
-        """ Frame with the pallet button to left, and details to right """
-        return self.a_pallet_button_lst[i_offset].cget( 'bg')
-
-    # ####################### mwp_pallet_zone_top ########################
-    def __mwp_pallet_zone_top( self, a_top_separator_frame):
+    # ####################### __mwp_top_line_with_titles ########################
+    def __mwp_top_line_with_titles( self, a_bottom_frame, i_pic_frame_width):
         """ Top frame with the pallet button to left, and details to right """
+        a_top_separator_frame = Frame( a_bottom_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
+        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=24)
         a_pallet_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
         a_pallet_sep_h0.place( x=0, y=10, relwidth=1.0)
         a_pallet_sep_lbl_h0 = Label( a_top_separator_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
         a_pallet_sep_lbl_h0.place( x=280, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h0, text="Click to select a color in a pallet")
         a_pallet_sep_lbl_h1 = Label( a_top_separator_frame, text="Color", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pallet_sep_lbl_h1.place( x=660, y=0)
+        if self.s_platform == 'Linux':
+            a_pallet_sep_lbl_h1.place( x=680, y=0)
+        else:
+            a_pallet_sep_lbl_h1.place( x=660, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h1, text="Edit a color to modify it")
         a_pallet_sep_lbl_h2 = Label( a_top_separator_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        a_pallet_sep_lbl_h2.place( x=640+270, y=0)
+        if self.s_platform == 'Linux':
+            a_pallet_sep_lbl_h2.place( x=640+320, y=0)
+        else:
+            a_pallet_sep_lbl_h2.place( x=640+270, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h2, text="Show zoom around the last click on the picture")
 
     # ####################### mwp_pallet_zone_top ########################
@@ -339,13 +330,13 @@ class MyMainWindowPallet:
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
                 if self.s_platform == "Darwin":        # highlightbackground option, and its focused color with highlightcolor
-                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=14, height=4, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=14, height=4, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 elif self.s_platform == "Linux":
-                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 else:
-                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = 0, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=8, height=1, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=4, pady=2)
                 self.a_pallet_button_lst.append( a_button_color)
                 i_index_base_column += 1
@@ -379,16 +370,20 @@ class MyMainWindowPallet:
     # ####################### __mwp_pallet_zone_center_up ########################
     def __mwp_pallet_zone_center_up( self, a_color_bottom_frame, i_index_base_block) -> int:
         """ Frame with the pallet colors label left, and color display to right """
-        a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='black')
-        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
-        a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
-        a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=1)
-        # the text is the cursor style on the middle of the label
-        self.a_zoom_lbl = Label( a_color_bottom_frame, image=None, text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
-        if self.s_platform in [ "Darwin", "Linux" ]:
-            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=4, pady=1, sticky='ewns')
+        if self.s_platform == 'Linux':
+            i_pad_y=0
         else:
-            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=1, sticky='ewns')
+            i_pad_y=1
+        a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='black')
+        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y)
+        a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
+        a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=i_pad_y)
+        # the text is the cursor style on the middle of the label
+        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
+        if self.s_platform in [ "Darwin", "Linux" ]:
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=i_pad_y+8, sticky='ewn')
+        else:
+            self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=i_pad_y, sticky='ewn')
         self.a_zoom_lbl.bind( '<Button>', self.__mwp_click_on_picture_zoom)
 
         i_index_base_block += 1
@@ -399,16 +394,16 @@ class MyMainWindowPallet:
         self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
         self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="New", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=1, sticky='ew')
+        a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Old", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
+        a_offset_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
 
         i_index_base_block += 1
         i_index_base_block_for_old_button = i_index_base_block
         a_color_name_lbl = Label( a_color_bottom_frame, text="Green", background=constant.BACKGROUD_COLOR_UI, foreground='black')
-        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
+        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y)
         self.a_the_color_new_lbl = Label( a_color_bottom_frame, text="", width=8, background=constant.LIGHT_COLOR_UI, foreground='black')
-        self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=3, column=2, columnspan=1, padx=4, pady=1, sticky='ewns')
+        self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=3, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ewns')
 
         i_index_base_block += 1
         green_okay_command = self.w_tk_root.register( self.mwp_green_max_of_two_chars_and_filter)
@@ -420,7 +415,7 @@ class MyMainWindowPallet:
 
         i_index_base_block += 1
         a_color_name_lbl = Label( a_color_bottom_frame, text="Blue", background=constant.BACKGROUD_COLOR_UI, foreground='black')
-        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1)
+        a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y)
 
         i_index_base_block += 1
         blue_okay_command = self.w_tk_root.register( self.mwp_blue_max_of_two_chars_and_filter)
@@ -438,16 +433,21 @@ class MyMainWindowPallet:
     def __mwp_pallet_zone_center_down( self, a_color_bottom_frame, i_index_base_block) -> int:
         """ Frame with the pallet color scroller, line of labels title and labels """
         # , borderwidth=0, compound="center", highlightthickness=0
+        if self.s_platform == 'Linux':
+            i_pad_y=0
+        else:
+            i_pad_y=4
+
         self.a_color_slider = Scale( a_color_bottom_frame, from_=0, to=255, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor=constant.BACKGROUD_COLOR_UI)
-        self.a_color_slider.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=4, sticky='ew')
+        self.a_color_slider.grid( row=i_index_base_block, column=0, columnspan=4, padx=4, pady=0, sticky='ew')
 
         i_index_base_block += 1
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=1, sticky='ew')
+        a_offset_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Pallet Y", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=1, sticky='ew')
+        a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Offset X", background=constant.BACKGROUD_COLOR_UI)
-        a_offset_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=1, sticky='ew')
+        a_offset_lbl.grid( row=i_index_base_block, column=3, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
 
         i_index_base_block += 1
         self.a_btn_offset_lbl = Label( a_color_bottom_frame, text="   ", background='light grey', foreground='black')
@@ -474,13 +474,13 @@ class MyMainWindowPallet:
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
         elif self.s_platform == "Linux":
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-            a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=4, sticky='w')
+            a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
             a_swap_color_btn = Button( a_pallet_bottom_btn_frame, text="Swap color", command=self.__mwp_swap_a_color, width=len("Swap color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-            a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=2, pady=4, sticky='w')
+            a_swap_color_btn.grid( row=i_index_base_block, column=1, padx=2, pady=0, sticky='w')
             a_copy_line_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy line color", command=self.__mwp_copy_line_color, width=len("Copy line color")-4, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=4, sticky='w')
+            a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
-            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=4, sticky='w')
+            a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
         else:
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
@@ -491,23 +491,38 @@ class MyMainWindowPallet:
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='w')
 
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   ######  #     # ######  #       ###  #####
+    #   #     # #     # #     # #        #  #     #
+    #   #     # #     # #     # #        #  #
+    #   ######  #     # ######  #        #  #
+    #   #       #     # #     # #        #  #
+    #   #       #     # #     # #        #  #     #
+    #   #        #####  ######  ####### ###  #####
+    #
+    # ##########################################################################################
+
+    # ####################### get_from_pal_btn_lst_color ########################
+    def get_from_pal_btn_lst_color(self, i_offset) -> str:
+        """ Frame with the pallet button to left, and details to right """
+        return self.a_pallet_button_lst[i_offset].cget( 'bg')
+
     # ####################### mwp_pallet_zone ########################
     def mwp_pallet_zone( self, i_pic_frame_width, a_bottom_frame, c_main_image, c_main_icon_bar):
         """ Frame with the pallet button to left, and details to right """
         self.c_main_image = c_main_image
         self.c_main_icon_bar = c_main_icon_bar
-        a_top_separator_frame = Frame( a_bottom_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=21)
-
-        self.__mwp_pallet_zone_top( a_top_separator_frame)
+        self.__mwp_top_line_with_titles( a_bottom_frame, i_pic_frame_width)
         # self.w_tk_root.update()
 
         # Create pallet button left frame
         a_pallet_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_pallet_bottom_frame.place( x=0, y=20, width=590, height=276 )
+            a_pallet_bottom_frame.place( x=0, y=24, width=590, height=276 )
         else:
-            a_pallet_bottom_frame.place( x=0, y=20, width=570, height=276 )
+            a_pallet_bottom_frame.place( x=0, y=24, width=570, height=276 )
 
         self.__mwp_pallet_zone_left( a_pallet_bottom_frame)
         # self.w_tk_root.update()
@@ -515,16 +530,16 @@ class MyMainWindowPallet:
         # Create color button right frame
         a_color_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         if self.s_platform == "Darwin":
-            a_color_bottom_frame.place( x=592, y=20, width=self.i_main_window_width - 592, height=276-12 )
+            a_color_bottom_frame.place( x=592, y=24, width=self.i_main_window_width - 592, height=276-12 )
         else:
-            a_color_bottom_frame.place( x=572, y=20, width=self.i_main_window_width - 572, height=276-40 )
+            a_color_bottom_frame.place( x=572, y=24, width=self.i_main_window_width - 572, height=276-40 )
 
         # Create botom button frame
-        a_pallet_bottom_btn_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pallet_bottom_btn_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
         if self.s_platform == "Darwin":
-            a_pallet_bottom_btn_frame.place( x=592, y=266, width=self.i_main_window_width - 592, height=40 )
+            a_pallet_bottom_btn_frame.place( x=592, y=276, width=self.i_main_window_width - 592, height=38 )
         else:
-            a_pallet_bottom_btn_frame.place( x=572, y=256, width=self.i_main_window_width - 572, height=40 )
+            a_pallet_bottom_btn_frame.place( x=572, y=266, width=self.i_main_window_width - 572, height=38 )
 
         i_index_base_block = self.__mwp_pallet_zone_center_up( a_color_bottom_frame, 0)
         i_index_base_block = self.__mwp_pallet_zone_center_down( a_color_bottom_frame, i_index_base_block)

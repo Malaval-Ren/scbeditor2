@@ -79,7 +79,7 @@ class MyMainWindow:
         # Size of the main windows
         if self.s_platform == "Linux":
             self.i_main_window_width = 1120
-            self.i_main_window_height = 830
+            self.i_main_window_height = 838
         elif self.s_platform == "Darwin":
             self.i_main_window_width = 1150
             self.i_main_window_height = 834

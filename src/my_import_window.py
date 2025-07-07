@@ -259,14 +259,14 @@ class MyImportPalletWindow:
         """ Create an import palet dialog bottom part"""
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__ipw_import_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_btn.pack( side='right', padx=2, pady=2 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__ipw_import_cancel_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_ok_button, relief='raised', background=self.import_background)
+            a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__ipw_import_ok_button, relief='raised', background=self.import_background)
             a_ok_btn.pack( side='right', padx=4, pady=4 )
-            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound="c", command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
+            a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 4, compound='center', command=self.__ipw_import_cancel_button, relief='raised', background=self.import_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
     # ####################### __ipw_import_block ########################
