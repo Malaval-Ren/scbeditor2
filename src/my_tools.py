@@ -85,24 +85,8 @@ def mt_force_exit_application( i_error, c_the_log=None):
 
     sys.exit( int( i_error))
 
-# ####################### mt_get_path_separator ########################
-def mt_get_path_separator( s_platform):
-    """ Return the separator for pathname """
-    if s_platform == "":
-        s_separator = ""
-    elif s_platform == "Linux":
-        s_separator = "/"
-    elif s_platform == "Windows":
-        s_separator = "\\"
-    elif s_platform == 'Darwin':
-        s_separator = "/"
-    else:
-        s_separator = ""
-
-    return s_separator
-
 # ####################### mt_colored_string ########################
-def mt_colored_string( red, green, blue, text):
+def mt_colored_string( red, green, blue, text) -> str:
     """ Do color print in bash shell and visual studio code """
     s_color = "\033[38;2;{};{};{}m{} \033[38;2;255;255;255m"
     return s_color.format( red, green, blue, text)
@@ -113,7 +97,7 @@ def mt_get_memory_used( a_class):
     print( 'get_memory_used() : self\t= ', str( sys.getsizeof( a_class)))
 
 # ####################### mt_open_file ########################
-def mt_open_file( w_main_windows, a_caller_class):
+def mt_open_file( w_main_windows, a_caller_class) -> str:
     """ Return the selected picture file or None """
     s_filename = None
     s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
@@ -126,7 +110,7 @@ def mt_open_file( w_main_windows, a_caller_class):
     return s_filename
 
 # ####################### mt_save_file ########################
-def mt_save_file( w_main_windows, a_caller_class, s_original_filename):
+def mt_save_file( w_main_windows, a_caller_class, s_original_filename) -> str:
     """ Return the selected picture file or None """
     s_filename = None
     s_filename = filedialog.asksaveasfilename( parent=w_main_windows, initialfile=s_original_filename, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
@@ -152,4 +136,5 @@ def mt_hexlify_byte_string( byte_string, delim="%") -> str:
         ret_val += ('0123456789ABCDEF'[int( int_val / 16)])
         ret_val += ('0123456789ABCDEF'[int( int_val % 16)])
         ret_val += delim
+
     return ret_val[:-1]
