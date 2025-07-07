@@ -175,6 +175,23 @@ pyz = PYZ(
     a.zipped_data,
     cipher=block_cipher
 )
+
+a.datas += [('ScbEditorII_T_16x16.png','images\\ScbEditorII_T_16x16.png', "DATA")]
+a.datas += [('ScbEditorII_b_T_81x81.png','images\\ScbEditorII_b_T_81x81.png', "DATA")]
+a.datas += [('openfile_b_T_81x81.png','images\\openfile_b_T_81x81.png', "DATA")]
+a.datas += [('savefile_b_T_81x81.png','images\\savefile_b_T_81x81.png', "DATA")]
+a.datas += [('color-pallet_b_T_81x81.png','images\\color-pallet_b_T_81x81.png', "DATA")]
+a.datas += [('curseur_b_T_81x81.png','images\\curseur_b_T_81x81.png', "DATA")]
+a.datas += [('preferences_b_T_81x81.png','images\\preferences_b_T_81x81.png', "DATA")]
+a.datas += [('fr_France_T_81x81.png','images\\fr_France_T_81x81.png', "DATA")]
+a.datas += [('error_T_81x81.png','images\\error_T_81x81.png', "DATA")]
+a.datas += [('question2_T_81x81.png','images\\question2_T_81x81.png', "DATA")]
+a.datas += [('Warning_T_81x81.png','images\\Warning_T_81x81.png', "DATA")]
+a.datas += [('Arrow_Right_T_16x16.png','images\\Arrow_Right_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Left_T_16x16.png','images\\Arrow_Left_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Up_T_16x16.png','images\\Arrow_Up_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Down_T_16x16.png','images\\Arrow_Down_T_16x16.png', "DATA")]
+
 exe = EXE(
     pyz,
     a.scripts,

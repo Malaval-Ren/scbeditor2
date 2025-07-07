@@ -318,17 +318,17 @@ class MyMainWindow:
         a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
         a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
         # Create picture frame
-        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
         if b_vertical is True:
-            a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+            a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+4)  # fill :  must be 'none', 'x', 'y', or 'both'
         else:
-            a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+8)  # fill :  must be 'none', 'x', 'y', or 'both'
+            a_pic_frame.place( x=2, y=98, width=self.i_main_window_width-4, height=constant.PICTURE_HEIGHT+20+4)  # fill :  must be 'none', 'x', 'y', or 'both'
         # Create pallet frame
-        a_pallet_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        a_pallet_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
         if b_vertical is True:
-            a_pallet_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+            a_pallet_frame.place( x=100, y=2+constant.PICTURE_HEIGHT+20+4, width=self.i_main_window_width-104, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         else:
-            a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+22+8, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
+            a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+20+4, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         self.w_tk_root.update()
         print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
         print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
