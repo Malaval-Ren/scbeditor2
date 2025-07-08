@@ -76,13 +76,13 @@ class MyIconPictures:
     def _resource_path( self, s_relative_path) -> str:
         """ Get absolute path to resource, works for dev and for PyInstaller """
         s_pictures_folder = None
-        # pylint: disable=protected-access
-        if hasattr(sys, '_MEIPASS'):
+        if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 			# PyInstaller creates a temp folder and stores path in _MEIPASS
-            s_pictures_folder = os.path.join( sys._MEIPASS, s_relative_path)
+            # pylint: disable=protected-access
+            s_pictures_folder = os.path.join( sys._MEIPASS, os.path.basename( s_relative_path))
+            # pylint: enable=protected-access
         else:
             s_pictures_folder = os.path.join( os.path.abspath("."), s_relative_path)
-        # pylint: enable=protected-access
 
         return s_pictures_folder
 
