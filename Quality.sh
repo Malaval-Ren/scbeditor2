@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.27'
+version='1.29'
 
 # definition all colors and styles to use with an echo
 
@@ -156,6 +156,7 @@ then
 	temp=$(perl -v)
 	perl_version=${temp:44:6}
 	bash_version="${BASH_VERSION}"
+	os_version="${OSTYPE}"
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     python_version=$(python3 --version)
@@ -166,16 +167,33 @@ then
 	temp=$(perl -v)
 	perl_version=${temp:44:6}
 	bash_version="${BASH_VERSION}"
+	os_version="${OSTYPE}"
 elif [[ "$OSTYPE" == "linux-gnu"* ]]
 then
     python_version=$(python3 --version)
     pyinstaller_version=$(pyinstaller --version)
+	# Get from string multi line the version
 	temp=$(pylint --version)
-	# Get from string the version
-	pylint_version=${temp:7:6}
+	firstLine=$(sed -n "1{p;q}" <<<"$temp")
+	refLineLen=${#firstLine}
+	refLineLen=$refLineLen-7
+	pylint_version=${temp:7:$refLineLen}
 	temp=$(perl -v)
 	perl_version=${temp:44:6}
 	bash_version="${BASH_VERSION}"
+	if [ -f /etc/os-release ]
+	then
+		. /etc/os-release
+		os_version="${NAME} ${VERSION}"
+	else
+		temp=$(lsb_release -d | cut -f2)
+		if [ -! z "${temp}" ]
+		then
+			os_version=$temp
+		else
+			os_version="${BASH_VERSION}"
+		fi
+	fi
 else
     echo -e $IRed "Unknown OS" $Color_Off
     exit $ERROR_SH_OS
@@ -194,6 +212,7 @@ echo -e "| PyInstaller |" "$pyinstaller_version"" |" >> "$pylint_log"
 echo -e "| Pylint |" "$pylint_version"" |" >> "$pylint_log"
 echo -e "| Perl |" "$perl_version"" |" >> "$pylint_log"
 echo -e "| Bash |" "$bash_version"" |" >> "$pylint_log"
+echo -e "| System |" "$os_version"" |" >> "$pylint_log"
 
 echo -e $BGreen $pyInstall_Name $Color_Off
 echo -e $Green "Date                :" $(date) $Color_Off
@@ -218,12 +237,13 @@ else
     exit $ERROR_SH_OS
 fi
 
-echo -e $Green "OS Type             :" "$OSTYPE" $Color_Off
+echo -e $Green "OS Type             :" "$os_version" $Color_Off
 echo -e $Green "Current Folder      :" "$currentFolder" $Color_Off
 echo
 
-echo -e $Green "Get version from    :" "./"$pyInstall_Name"_version.txt" $Color_Off
-pyInstall_fileVersion="./"$pyInstall_Name"_Version.txt"
+pyInstall_fileVersion="./"$pyInstall_Name"_version.txt"
+echo -e $Green "Get version from    :" $pyInstall_fileVersion $Color_Off
+
 if [ -f "$pyInstall_fileVersion" ]
 then
     temp=$(grep -F "$pyInstall_getVersion" "$pyInstall_fileVersion")

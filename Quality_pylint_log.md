@@ -2,16 +2,19 @@
 
 ## *Context*
 
-date :  lun. 07 juil. 2025 17:39:22 CEST
+date :  mar. 08 juil. 2025 09:05:42 CEST
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
 | Python | Python 3.12.3 |
 | PyInstaller | 6.14.2 |
-| Pylint | 3.3.7
- |
+| Pylint | 3.3.7 |
 | Perl | 5.38.2 |
 | Bash | 5.2.21(1)-release |
+| System | Linux Mint 22.1 (Xia) |
+| **Project** |  |
+| scbeditor2 | 2.9.27.125 |
+
 &nbsp;
 
 ## *./src/my_main_window.py*
@@ -72,7 +75,7 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window_pallet  
 
-src/my_main_window_pallet.py:1:0: C0302: Too many lines in module (1013/1000) (too-many-lines)
+src/my_main_window_pallet.py:1:0: C0302: Too many lines in module (1014/1000) (too-many-lines)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.98/10 (previous run: 9.98/10, +0.00)
@@ -95,8 +98,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
--------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 9.94/10, +0.06)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
