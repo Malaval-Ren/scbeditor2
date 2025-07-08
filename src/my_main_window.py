@@ -349,6 +349,7 @@ class MyMainWindow:
             i_element = 0
             i_to = 0
             i_number = 48
+            i_index = 0
             if len( a_pallet_list) < 48:
                 i_number = len( a_pallet_list) - (len( a_pallet_list) % 3)
             b_stop = False
