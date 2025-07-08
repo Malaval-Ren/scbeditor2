@@ -332,9 +332,9 @@ if [[ -f "$pyInstallSpec" ]]
 then
     echo -e $IGreen "Delete spec file    :" "$pyInstallSpec" $Color_Off
     rm -f $pyInstallSpec
+    echo
 fi
 
-echo
 if [[ "$OSTYPE" == "msys" ]]
 then
     # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
@@ -375,7 +375,7 @@ then
     if [[ -f "$pyInstallSpec_Linux" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Linux
-        pyInstall_Parameter="-y --clean --log-level DEBUG --onefile --version-file "$pyInstall_fileVersion" -i ./appIcon_x64_T_256x256.gif "$pyInstall_Name".py"
+        pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
         # pyInstall_Parameter="--onefile -y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Linux $Color_Off
@@ -438,6 +438,8 @@ echo
 if [ $? -eq 0 ]
 then
     echo -e $BGreen "pyinstaller is DONE" $Color_Off
+#    echo
+#    cat $pyInstallSpec
     echo
     if [[ "$OSTYPE" == "msys" ]]
     then

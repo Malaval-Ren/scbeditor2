@@ -3,172 +3,19 @@
 block_cipher = None
 
 a = Analysis(
-            ['scbeditor2.py'],
-            pathex=['/home/renaud/Documents/Python/scbeditor2/scbeditor2', '/home/renaud/Documents/Python/scbeditor2/scbeditor2/src'],
-            binaries=[],
-            datas=[],
-            hiddenimports=[],
-            hookspath=[],
-            runtime_hooks=[],
-            excludes=[
-                'altgraph',
-                'apt-clone',
-                'apturl',
-                'astroid',
-                'async-timeout',
-                'attrs',
-                'Automat',
-                'bcrypt',
-                'beautifulsoup4',
-                'blinker',
-                'Brlapi',
-                'Brotli',
-                'catfish',
-                'certifi',
-                'chardet',
-                'click',
-                'colorama',
-                'command-not-found',
-                'configobj',
-                'constantly',
-                'contourpy',
-                'crudini',
-                'cryptography',
-                'cupshelpers',
-                'cycler',
-                'dbus-python',
-                'defer',
-                'dill',
-                'distro',
-                'distro-info',
-                'eyeD3',
-                'filelock',
-                'fonttools',
-                'gitdb',
-                'GitPython',
-                'html5lib',
-                'httplib2',
-                'hyperlink',
-                'idna',
-                'ifaddr',
-                'IMDbPY',
-                'importlib-metadata',
-                'incremental',
-                'iniparse',
-                'isort',
-                'jeepney',
-                'keyring',
-                'kiwisolver',
-                'launchpadlib',
-                'lazr.restfulclient',
-                'lazr.uri',
-                'lazy-object-proxy',
-                'louis',
-                'lxml',
-                'macaroonbakery',
-                'Mako',
-                'MarkupSafe',
-                'matplotlib',
-                'mccabe',
-                'meld',
-                'more-itertools',
-                'mutagen',
-                'nemo-emblems',
-                'netaddr',
-                'netifaces',
-                'numpy',
-                'oauthlib',
-                'onboard',
-                'packaging',
-                'PAM',
-                'pexpect',
-                'pip',
-                'platformdirs',
-                'Pmw',
-                'protobuf',
-                'psutil',
-                'ptyprocess',
-                'pyasn1',
-                'pyasn1-modules',
-                'pycairo',
-                'pycryptodomex',
-                'pycups',
-                'pycurl',
-                'pyelftools',
-                'PyGObject',
-                'PyHamcrest',
-                'PyICU',
-                'pyinotify',
-                'pyinstaller',
-                'pyinstaller-hooks-contrib',
-                'PyJWT',
-                'pylint',
-                'pymacaroons',
-                'pymodbus',
-                'PyNaCl',
-                'pyOpenSSL',
-                'pyparsing',
-                'pyparted',
-                'pypi',
-                'pyRFC3339',
-                'pyserial' 
-                'pyserial-asyncio',
-                'PySide2',
-                'python-apt',
-                'python-dateutil',
-                'python-debian',
-                'python-gnupg',
-                'python-magic',
-                'python-xlib',
-                'pythonping',
-                'pytz',
-                'pyxattr',
-                'pyxdg',
-                'PyYAML',
-                'qrcode',
-                'reportlab',
-                'requests',
-                'requests-file',
-                'requests-unixsocket',
-                'screen-resolution-extra',
-                'SecretStorage',
-                'service-identity',
-                'setproctitle',
-                'setuptools',
-                'shiboken2',
-                'six',
-                'smmap',
-                'soupsieve',
-                'systemd-python',
-                'tinycss2',
-                'tldextract',
-                'tomli',
-                'tomlkit',
-                'ttkthemes',
-                'ttkwidgets',
-                'Twisted',
-                'typing_extensions',
-                'ubuntu-drivers-common',
-                'ubuntu-pro-client',
-                'ufw',
-                'Unidecode',
-                'urllib3',
-                'wadllib',
-                'webencodings',
-                'websockets',
-                'wheel',
-                'wrapt',
-                'xdg',
-                'xkit',
-                'xlrd',
-                'yt-dlp',
-                'zipp',
-                'zope.interface',
-            ],
-            win_no_prefer_redirects=False,
-            win_private_assemblies=False,
-            cipher=block_cipher,
-            noarchive=False
+    ['scbeditor2.py'],
+    pathex=['/home/renaud/Documents/Python/scbeditor2/scbeditor2', '/home/renaud/Documents/Python/scbeditor2/scbeditor2/src'],
+    binaries=[],
+    datas=[],
+    hiddenimports=['PIL._tkinter_finder'],
+    hookspath=[],
+    runtime_hooks=[],
+    excludes=[],
+    win_no_prefer_redirects=False,
+    win_private_assemblies=False,
+    cipher=block_cipher,
+    noarchive=False,
+    optimize=1
 )
 pyz = PYZ(
     a.pure,
@@ -176,30 +23,30 @@ pyz = PYZ(
     cipher=block_cipher
 )
 
-a.datas += [('ScbEditorII_T_16x16.png','images\\ScbEditorII_T_16x16.png', "DATA")]
-a.datas += [('ScbEditorII_b_T_81x81.png','images\\ScbEditorII_b_T_81x81.png', "DATA")]
-a.datas += [('openfile_b_T_81x81.png','images\\openfile_b_T_81x81.png', "DATA")]
-a.datas += [('savefile_b_T_81x81.png','images\\savefile_b_T_81x81.png', "DATA")]
-a.datas += [('color-pallet_b_T_81x81.png','images\\color-pallet_b_T_81x81.png', "DATA")]
-a.datas += [('curseur_b_T_81x81.png','images\\curseur_b_T_81x81.png', "DATA")]
-a.datas += [('preferences_b_T_81x81.png','images\\preferences_b_T_81x81.png', "DATA")]
-a.datas += [('fr_France_T_81x81.png','images\\fr_France_T_81x81.png', "DATA")]
-a.datas += [('error_T_81x81.png','images\\error_T_81x81.png', "DATA")]
-a.datas += [('question2_T_81x81.png','images\\question2_T_81x81.png', "DATA")]
-a.datas += [('Warning_T_81x81.png','images\\Warning_T_81x81.png', "DATA")]
-a.datas += [('Arrow_Right_T_16x16.png','images\\Arrow_Right_T_16x16.png', "DATA")]
-a.datas += [('Arrow_Left_T_16x16.png','images\\Arrow_Left_T_16x16.png', "DATA")]
-a.datas += [('Arrow_Up_T_16x16.png','images\\Arrow_Up_T_16x16.png', "DATA")]
-a.datas += [('Arrow_Down_T_16x16.png','images\\Arrow_Down_T_16x16.png', "DATA")]
+a.datas += [('ScbEditorII_T_16x16.png','./images/ScbEditorII_T_16x16.png', "DATA")]
+a.datas += [('ScbEditorII_b_T_81x81.png','./images/ScbEditorII_b_T_81x81.png', "DATA")]
+a.datas += [('openfile_b_T_81x81.png','./images/openfile_b_T_81x81.png', "DATA")]
+a.datas += [('savefile_b_T_81x81.png','./images/savefile_b_T_81x81.png', "DATA")]
+a.datas += [('color-pallet_b_T_81x81.png','./images/color-pallet_b_T_81x81.png', "DATA")]
+a.datas += [('curseur_b_T_81x81.png','./images/curseur_b_T_81x81.png', "DATA")]
+a.datas += [('preferences_b_T_81x81.png','./images/preferences_b_T_81x81.png', "DATA")]
+a.datas += [('fr_France_T_81x81.png','./images/fr_France_T_81x81.png', "DATA")]
+a.datas += [('error_T_81x81.png','./images/error_T_81x81.png', "DATA")]
+a.datas += [('question2_T_81x81.png','./images/question2_T_81x81.png', "DATA")]
+a.datas += [('Warning_T_81x81.png','./images/Warning_T_81x81.png', "DATA")]
+a.datas += [('Arrow_Right_T_16x16.png','./images/Arrow_Right_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Left_T_16x16.png','./images/Arrow_Left_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Up_T_16x16.png','./images/Arrow_Up_T_16x16.png', "DATA")]
+a.datas += [('Arrow_Down_T_16x16.png','./images/Arrow_Down_T_16x16.png', "DATA")]
 
 exe = EXE(
     pyz,
     a.scripts,
     a.binaries,
     a.datas,
-    [],
+    [('O', None, 'OPTION')],
     name='scbeditor2',
-    debug=False,
+    debug=True,
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
