@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.91'
+version='1.93'
 
 # definition all colors and styles to use with an echo
 
@@ -344,7 +344,7 @@ then
     if [[ -f "$pyInstallSpec_Windows" ]]
     then
         pyInstallSpec_Src=$pyInstallSpec_Windows
-        # pyInstall_Parameter="-y --noupx --clean --version-file ""'$pyInstall_fileVersion'"" -i './appIcon_T_512x512.ico' './""$pyInstall_Name"".py'"
+        # pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
         pyInstall_Parameter="-y --clean --log-level DEBUG "$pyInstallSpec
     else
         echo -e $IRed "File does not exist :" $pyInstallSpec_Windows $Color_Off
@@ -438,8 +438,6 @@ echo
 if [ $? -eq 0 ]
 then
     echo -e $BGreen "pyinstaller is DONE" $Color_Off
-#    echo
-#    cat $pyInstallSpec
     echo
     if [[ "$OSTYPE" == "msys" ]]
     then
@@ -450,6 +448,13 @@ then
             then
                 echo
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
+                exit $ERROR_SH_FAILED
+            fi
+            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
+            if [ $i_number_of_picture -ne 15 ]
+            then
+                echo
+                echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
             mv $pyInstall_dist"/"$pyInstall_Name".exe" $pyInstall_dist"/"$pyInstall_Name$pyInstall_version".exe"
@@ -465,6 +470,13 @@ then
             then
                 echo -e $Yellow "Not found" "./"$pyInstall_dist"/"$pyInstall_Name $Color_Off
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
+                exit $ERROR_SH_FAILED
+            fi
+            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
+            if [ $i_number_of_picture -ne 15 ]
+            then
+                echo
+                echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
             mv "./"$pyInstall_dist"/"$pyInstall_Name "./"$pyInstall_dist"/"$pyInstall_Name$pyInstall_version
