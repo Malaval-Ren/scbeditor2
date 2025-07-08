@@ -99,23 +99,33 @@ class MyAlertWindow:
         self.c_the_log.add_string_to_log( 'Do alert close with cancel')
         self.answers = self.answer_cancel
 
-    # ####################### __aw_alert_block ########################
+    # ####################### __aw_alert_frame ########################
+    def __aw_alert_frame( self, top_frame) -> tk_gui.Frame:
+        """ Create the same frame for all dialog """
+        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background)   # darkgray or light grey or self.alert_background
+        top_left_frame.pack( side='left', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.grid_rowconfigure( 1, weight=1)
+        top_left_frame.grid_columnconfigure( 1, weight=1)
+        top_left_frame.grid_columnconfigure( 2, weight=1)
+
+        return top_left_frame
+
+    # ####################### __aw_error_block ########################
     # URL : https://stackoverflow.com/questions/53827364/how-to-create-a-multiple-labels-dynamically-in-tkinter
     def __aw_error_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_error_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame = self.__aw_alert_frame( top_frame)
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=320, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
-        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='w')
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
@@ -130,16 +140,15 @@ class MyAlertWindow:
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame = self.__aw_alert_frame( top_frame)
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=320, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
-        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='w')
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
@@ -164,8 +173,7 @@ class MyAlertWindow:
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame = self.__aw_alert_frame( top_frame)
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
@@ -203,16 +211,15 @@ class MyAlertWindow:
 
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_warning_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_error_photo.width(), height=_a_error_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame = self.__aw_alert_frame( top_frame)
 
         a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=320, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
-        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='w')
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
@@ -232,15 +239,14 @@ class MyAlertWindow:
 
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background, width=_a_about_photo.width(), height=_a_about_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame = self.__aw_alert_frame( top_frame)
 
         a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_alert_text_label = Label( top_left_frame, text=s_message, background='light grey', foreground='black', anchor='center')  # background='darkgray' or 'light grey' == self.about_background
-        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ewns')
+        a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
@@ -314,9 +320,11 @@ class MyAlertWindow:
 
         # global s_device_information
         top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
         button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+
+        print( f"Alert type: {i_type}, message: {s_message}")
 
         if i_type == 1:
             self.__aw_error_block( s_message, top_frame, button_frame)
