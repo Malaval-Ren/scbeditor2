@@ -77,7 +77,7 @@ class MyMainWindowIconsBar:
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
         self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)
-        self.s_filename = None
+        self.s_filename = ''
         self.a_original_image = None
         self.c_mains_image = None
         self.imported_pallet_lst = []

@@ -99,26 +99,26 @@ def mt_get_memory_used( a_class):
 # ####################### mt_open_file ########################
 def mt_open_file( w_main_windows, a_caller_class) -> str:
     """ Return the selected picture file or None """
-    s_filename = None
+    s_filename = ''
     s_filename = filedialog.askopenfilename( parent=w_main_windows, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
     if s_filename and s_filename != "":
         a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
     else:
-        s_filename = None
-        # return # user cancelled; stop this method
+        # user cancelled; stop this method
+        s_filename = ''
 
     return s_filename
 
 # ####################### mt_save_file ########################
 def mt_save_file( w_main_windows, a_caller_class, s_original_filename) -> str:
     """ Return the selected picture file or None """
-    s_filename = None
+    s_filename = ''
     s_filename = filedialog.asksaveasfilename( parent=w_main_windows, initialfile=s_original_filename, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
     if s_filename and s_filename != "":
         a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
     else:
-        s_filename = None
-        # return # user cancelled; stop this method
+        # user cancelled; stop this method
+        s_filename = ''
 
     return s_filename
 

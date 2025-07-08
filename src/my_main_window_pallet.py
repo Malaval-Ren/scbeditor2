@@ -379,7 +379,7 @@ class MyMainWindowPallet:
         a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=i_pad_y)
         # the text is the cursor style on the middle of the label
-        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='circle', borderwidth=2, compound="center", highlightthickness=2)
+        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='target', borderwidth=2, compound="center", highlightthickness=2)
         if self.s_platform in [ "Darwin", "Linux" ]:
             self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=i_pad_y+8, sticky='ewn')
         else:

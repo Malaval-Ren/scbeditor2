@@ -274,11 +274,11 @@ class MyImportPalletWindow:
         """ Create an import palet dialog """
         # global s_device_information
         top_frame = tk_gui.Frame( self.w_import_window, width=320, height=self.TOP_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_frame = tk_gui.Frame( self.w_import_window, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        middle_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        middle_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_import_window, height=self.BOTTOM_FRAME_HEIGHT, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP #####
         self.__ipw_import_block_top( a_image, top_frame)

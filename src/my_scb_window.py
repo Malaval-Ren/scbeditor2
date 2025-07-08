@@ -76,7 +76,7 @@ class MyScbPalletWindow:
         self.a_work_img                     = None
 
         self.a_original_part_image          = None
-        self.s_original_filename            = None
+        self.s_original_filename            = ''
         self.a_list_device_combo            : list = None
         self.i_index_in_a_scb_cnvs_rect_lst = 0
 
@@ -303,7 +303,7 @@ class MyScbPalletWindow:
         """ Create a SCB dialog """
         # Define the GUI
         top_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.i_height, relief='flat', background=constant.BACKGROUD_COLOR_UI)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_up_frame = tk_gui.Frame( self.w_scb_window, width=self.i_width, height=self.MIDDLE_FRAME_HEIGHT, relief='flat', background=constant.BACKGROUD_COLOR_UI)
         middle_up_frame.pack( side='top', fill='both')   # fill :  must be 'none', 'x', 'y', or 'both'
         middle_up_frame.pack_propagate( False)

@@ -114,9 +114,9 @@ class MyProgressBarWindow:
 
         # global s_device_information
         top_frame = tk_gui.Frame( self.w_progres_bar_window, relief='flat', background=self.progres_bar_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_progres_bar_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP #####
         a_font_label = font.Font( size=12)

@@ -86,14 +86,14 @@ class MyAboutWindow:
         """ Create a about dialog """
         # global s_device_information
         top_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=self.about_background)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
-        button_frame.pack( side='bottom', fill='x', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
         top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.about_background, width=_a_about_photo.width(), height=_a_about_photo.height())   # darkgray or light grey
-        top_left_frame.pack( side='left', fill='y', expand='no')   # fill :  must be 'none', 'x', 'y', or 'both'
+        top_left_frame.pack( side='left', fill='y', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=self.about_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4)
