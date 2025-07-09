@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.93'
+version='1.95'
 
 # definition all colors and styles to use with an echo
 
@@ -196,10 +196,27 @@ else
     exit $ERROR_SH_OS
 fi
 
-echo -e $IGreen "OS Type             :" "$OSTYPE" $Color_Off
-echo -e $IGreen "Current Folder      :" "$currentFolder" $Color_Off
-
+echo -e $IGreen "OS type             :" "$OSTYPE" $Color_Off
+echo -e $IGreen "Current folder      :" "$currentFolder" $Color_Off
+# Date of the day at format YYYY-MM-DD
+nouvelle_date=$(date +%F)
+# Remplace value in file
+sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
+# Utilise sed pour capturer les 4 numéros et increase last number by +1
+sed -E -i.bak -e '
+/^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
+    s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
+}
+' "$pyInstall_fileVersion"
+# Get new version to display it
+nouvelle_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+echo -e $IGreen "Version             :" "$nouvelle_version" $Color_Off
+# git update file in local
+git add ./scbeditor2_version.txt
+git commit -m "update BuildDate and ProductVersion field"
 echo
+
 # store arguments in a special array 
 args=("$@") 
 # get number of elements 
@@ -257,7 +274,6 @@ else
     then
         echo
         echo -e $Green "in file             :" $currentFolder"/"$pyInstall_Name"_version.txt" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name".py" $Color_Off
         echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name".desktop" $Color_Off
         echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name"_osx.spec" $Color_Off
         echo
