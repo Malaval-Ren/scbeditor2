@@ -135,10 +135,10 @@ class MyMainWindowImage:
     # ####################### __mwi_click_on_picture ########################
     def __mwi_click_on_picture( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
-        # print( "mw_click_on_picture()  ", event)
+        # self.c_the_log.add_string_to_log( "mw_click_on_picture()  ", event)
         self.c_main_pallet.mwp_entry_black_focus_out()
         if self.a_work_img:
-            # print( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
+            # self.c_the_log.add_string_to_log( "i_pos_x= " + str( event.x) + "   i_pos_y= " + str( event.y))
             i_pos_x = max( event.x, 0)
             i_pos_x = min( event.x, constant.PICTURE_WIDTH - 1)
             i_pos_y = max( event.y, 0)
@@ -170,7 +170,7 @@ class MyMainWindowImage:
             # Select the radio button color in the pallet
             self.c_main_pallet.mwp_select_color_rad_btn( i_offset)
 
-            # print( "mw_click_on_picture() i_offset = ", str( i_offset))
+            # self.c_the_log.add_string_to_log( "mw_click_on_picture() i_offset = ", str( i_offset))
             self.c_main_pallet.mwp_color_btn_rad( i_offset)
 
             # Display zoom of a part of the picture
@@ -226,7 +226,7 @@ class MyMainWindowImage:
     def __mwi_roll_up_clicked( self):
         """ Roll the picture The line 0 go to line 199 """
         if self.a_original_img:     # self.a_work_img
-            print( "Move to up")
+            self.c_the_log.add_string_to_log( "Move to up")
             xsize, ysize = self.a_original_img.size
             delta = 1
             part_line = self.a_original_img.crop( (0, 0, xsize, delta))         # copy 1 row the 0
@@ -242,7 +242,7 @@ class MyMainWindowImage:
     def __mwi_roll_down_clicked( self):
         """ Roll the picture The line 199 go to line 0 """
         if self.a_work_img:
-            print( "Move to down")
+            self.c_the_log.add_string_to_log( "Move to down")
             xsize, ysize = self.a_original_img.size
             delta = 1
             part_line = self.a_original_img.crop( (0, 199, xsize, ysize))       # copy 1 row the 199
@@ -258,7 +258,7 @@ class MyMainWindowImage:
     def __mwi_roll_left_clicked( self):
         """ Roll the picture the column 0 go to colum 319 """
         if self.a_original_img:
-            print( "Move to left")
+            self.c_the_log.add_string_to_log( "Move to left")
             xsize, ysize = self.a_original_img.size
             delta = 1
             part_column = self.a_original_img.crop( (0, 0, delta, ysize))       # copy 1 column the 0
@@ -274,7 +274,7 @@ class MyMainWindowImage:
     def __mwi_roll_right_clicked( self):
         """ Roll the picture the column 319 go to colum 0 """
         if self.a_original_img:
-            print( "Move to right")
+            self.c_the_log.add_string_to_log( "Move to right")
             xsize, ysize = self.a_original_img.size
             delta = 1
             part_column = self.a_original_img.crop( (319, 0, xsize, ysize))     # copy 1 column the 319
@@ -298,19 +298,19 @@ class MyMainWindowImage:
     def __mwi_entry_mouse_x_focus_in( self, _):
         """ entry mouse pos X take the focus """
         self.w_tk_root.unbind( "<Key>")
-        print( "mv_entry_mouse_x_focus_in()")
+        self.c_the_log.add_string_to_log( "mv_entry_mouse_x_focus_in()")
 
     # ####################### __mv_entry_mouse_y_focus_in ########################
     def __mwi_entry_mouse_y_focus_in( self, _):
         """ entry mouse pos Y take the focus """
         self.w_tk_root.unbind( "<Key>")
-        print( "mv_entry_mouse_y_focus_in()")
+        self.c_the_log.add_string_to_log( "mv_entry_mouse_y_focus_in()")
 
     # ####################### __mv_entry_mouse_x_y_focus_out ########################
     def __mwi_entry_mouse_x_y_focus_out( self, _):
         """ entry mouse pos X or Y loose the focus """
         self.w_tk_root.bind( "<Key>" , self.mwi_on_single_key)
-        print( "mv_entry_mouse_x_y_focus_out()")
+        self.c_the_log.add_string_to_log( "mv_entry_mouse_x_y_focus_out()")
 
     # ####################### __mwi_set_max_len_to_four_chars_and_filter ########################
     def __mwi_set_max_len_to_four_chars_and_filter( self, i_action, s_string_apres, s_insert) -> bool:
@@ -326,12 +326,12 @@ class MyMainWindowImage:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        print( " i_action       %d = ", str( i_action))
-        # print( "i_position     %i = ", str( i_position))
-        # print( "s_string_avant %P = ", s_string_avant)
-        print( " s_string_apres %s = ", s_string_apres)
-        print( " s_insert       %S = ", s_insert)
-        # print( "a_name         %W = ", s_name)
+        self.c_the_log.add_string_to_log( " i_action       %d = " + str( i_action))
+        # self.c_the_log.add_string_to_log( "i_position     %i = " + str( i_position))
+        # self.c_the_log.add_string_to_log( "s_string_avant %P = " + s_string_avant)
+        self.c_the_log.add_string_to_log( " s_string_apres %s = " + s_string_apres)
+        self.c_the_log.add_string_to_log( " s_insert       %S = " + s_insert)
+        # self.c_the_log.add_string_to_log( "a_name         %W = " + s_name)
 
         if 'a' <= s_insert <= 'f':
         # if s_insert >= 'a' and s_insert <= 'f':
@@ -349,10 +349,10 @@ class MyMainWindowImage:
                 if len( s_string_apres) + 1 < 16:
                     b_result = True
             else:
-                # print( '__mwi_set_max_len_to_four_chars_and_filter() : autre')
+                # self.c_the_log.add_string_to_log( '__mwi_set_max_len_to_four_chars_and_filter() : autre')
                 b_result = True
         else:
-            print( '__mwi_set_max_len_to_four_chars_and_filter() : key= ' + str( s_insert) )
+            self.c_the_log.add_string_to_log( '__mwi_set_max_len_to_four_chars_and_filter() : key= ' + str( s_insert) )
 
         return b_result
 
@@ -364,7 +364,7 @@ class MyMainWindowImage:
             i_current_pallet_number = int( self.a_scb_lbl.cget( "text"))
             i_new_pallet_number = int( self.a_line_slider.get())
             if i_current_pallet_number != i_new_pallet_number:
-                # print( " Convert the index." )
+                # self.c_the_log.add_string_to_log( " Convert the index." )
                 if i_current_pallet_number > i_new_pallet_number:
                     i_delta = (i_new_pallet_number - i_current_pallet_number) * 16
                 else:
@@ -376,7 +376,7 @@ class MyMainWindowImage:
                     self.a_original_img.putpixel( ( i_index, i_line_number), i_current_index)
 
                 # width, height = self.a_original_img.size
-                # print( "width = " + str( width) + "  height = " + str( height) )
+                # self.c_the_log.add_string_to_log( "width = " + str( width) + "  height = " + str( height) )
                 # self.a_work_img.save( self.s_filename, 'BMP')
                 # self.a_work_img = Image.open( self.s_filename)
                 # s_filename = self.s_init_pathname + os.sep + self.a_filename_lbl.cget( "text")
@@ -589,13 +589,13 @@ class MyMainWindowImage:
     # ####################### mw_on_single_key ########################
     def mwi_on_single_key( self, event):
         """ Method manage arrow key press for the main windows """
-        # print( "mw_on_single_key() ", event)
+        # self.c_the_log.add_string_to_log( "mw_on_single_key() ", event)
         # a_widget = event.widget
-        # print( "mw_on_single_key() ", a_widget)
-        # print( "mw_on_single_key() ", a_widget._name)
-        # print( "mw_on_single_key() ", str( a_widget.winfo_id()))
+        # self.c_the_log.add_string_to_log( "mw_on_single_key() ", a_widget)
+        # self.c_the_log.add_string_to_log( "mw_on_single_key() ", a_widget._name)
+        # self.c_the_log.add_string_to_log( "mw_on_single_key() ", str( a_widget.winfo_id()))
 
-        # print( "focus is:", root.focus_get())
+        # self.c_the_log.add_string_to_log( "focus is:", root.focus_get())
         if event.keysym == "Left":
             self.a_less_x_btn.invoke()
         elif event.keysym == "Right":
@@ -610,7 +610,7 @@ class MyMainWindowImage:
         #     self.a_more_y_btn.invoke()
         else:
             s_key = event.char
-            print( 'mw_on_single_key() : key= ' + s_key )
+            self.c_the_log.add_string_to_log( 'mw_on_single_key() : key= ' + s_key )
 
     # ####################### get_original_image ########################
     def mwi_get_original_image( self) -> ImageTk.PhotoImage:
@@ -655,7 +655,7 @@ class MyMainWindowImage:
     # ####################### mwi_draw_bar_chart ########################
     def mwi_draw_bar_chart( self, i_offset, i_position_y):
         """ Draw bar chart for colors in usage in a line """
-        # print( "mwi_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
+        # self.c_the_log.add_string_to_log( "mwi_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
         self.a_bar_chart_cnvs.delete( "all")
         a_usage_color_rry = array.array( 'i')
         a_usage_color_rry = [1] * 16
@@ -690,7 +690,7 @@ class MyMainWindowImage:
     def mwi_draw_scb_bar( self, i_color_offset):
         """ Draw the bar with rectangles to display all the SCB usage """
         i_pallet_number = int( i_color_offset / 16) * 16
-        # print( "mwi_draw_scb_bar() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        # self.c_the_log.add_string_to_log( "mwi_draw_scb_bar() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         self.a_scb_cnvs.delete( "all")
         self.a_scb_cnvs_rect_lst.clear()
         i_rect_begin = -1
@@ -709,13 +709,13 @@ class MyMainWindowImage:
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
             self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
-        # print( "mwi_draw_scb_bar() Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+        # self.c_the_log.add_string_to_log( "mwi_draw_scb_bar() Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
 
     # ####################### mwi_count_number_of_scb ########################
     def mwi_count_number_of_scb( self, i_color_offset) -> int:
         """ Draw the bar with rectangles to display all the SCB usage """
         i_pallet_number = int( i_color_offset / 16) * 16
-        # print( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        # self.c_the_log.add_string_to_log( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         i_counter = 0
         i_rect_begin = -1
         for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
@@ -733,7 +733,7 @@ class MyMainWindowImage:
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
             i_counter += 1
-        # print( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
+        # self.c_the_log.add_string_to_log( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
         return i_counter
 
     # ####################### mw_update_main_window ########################
@@ -748,7 +748,7 @@ class MyMainWindowImage:
             # disabled its for debug
             # for i_loop in range( 0, 60, 1):
             #     i_pallet_offset = self.a_work_img.getpixel( (0,i_loop))
-            #     print( str(i_loop) + " i_pallet_Offset = " + str(i_pallet_offset) + "  pal= " + str(int(i_pallet_offset/16)) + " ndx= " + str( i_pallet_offset - (int(i_pallet_offset/16)) * 16))
+            #     self.c_the_log.add_string_to_log( str(i_loop) + " i_pallet_Offset = " + str(i_pallet_offset) + "  pal= " + str(int(i_pallet_offset/16)) + " ndx= " + str( i_pallet_offset - (int(i_pallet_offset/16)) * 16))
 
             self.a_render = ImageTk.PhotoImage( self.a_work_img)
             self.a_picture_lbl.config( image=self.a_render)
@@ -766,8 +766,8 @@ class MyMainWindowImage:
         """ Click on the SCB """
         if self.a_original_img and self.a_work_img:
             self.c_the_log.add_string_to_log( 'Do scb editor pallet')
-            # print( "clicked at", event.x, event.y)
-            # print( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+            # self.c_the_log.add_string_to_log( "clicked at", event.x, event.y)
+            # self.c_the_log.add_string_to_log( "Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
 
             b_click_in_scb_rect = False
             for i_loop in range( 0, len( self.a_scb_cnvs_rect_lst), 1):

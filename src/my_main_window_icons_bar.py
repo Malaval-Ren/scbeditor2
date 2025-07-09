@@ -122,7 +122,7 @@ class MyMainWindowIconsBar:
                         a_conv_pal_list.append( a_org_pal_list[i_index])
                 converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
                 a_conv_pal_list = converted_bmp.getpalette()
-            # print( "\na_org_pal_list= " + str( len( a_org_pal_list)) + "   a_conv_pal_list= " + str( len( a_conv_pal_list)))
+            # self.c_the_log.add_string_to_log( "\na_org_pal_list= " + str( len( a_org_pal_list)) + "   a_conv_pal_list= " + str( len( a_conv_pal_list)))
 
             # Debug : use an another name to save it and using it
             # s_path = os.path.dirname( s_filename)
@@ -136,30 +136,30 @@ class MyMainWindowIconsBar:
                     os.remove( old_file)
                 os.rename( s_bmp_filename, old_file)
 
-            print( 'mwib_convert_bmp() : Saving : ' + s_bmp_filename)
+            self.c_the_log.add_string_to_log( 'mwib_convert_bmp() : Saving : ' + s_bmp_filename)
             try:
                 converted_bmp.save( s_bmp_filename, 'BMP')
                 # Save succeeded, remove .old
                 if os.path.exists( old_file):
                     os.remove( old_file)
-                print( "mwib_convert_bmp() : File saved successfully.")
+                self.c_the_log.add_string_to_log( "mwib_convert_bmp() : File saved successfully.")
             # pylint: disable=broad-exception-caught
             except Exception as error:
                 # pylint: enable=broad-exception-caught
-                print( f"Error saving file: {error}")
+                self.c_the_log.add_string_to_log( f"Error saving file: {error}")
                 # Restore original file on any error during save
                 if os.path.exists( old_file):
                     if os.path.exists( s_bmp_filename):
                         os.remove( s_bmp_filename)
                     os.rename( old_file, s_bmp_filename)
-                print( "mwib_convert_bmp() : Original file restored.")
+                self.c_the_log.add_string_to_log( "mwib_convert_bmp() : Original file restored.")
 
             # Open the image file
             with Image.open( s_bmp_filename) as a_img:
                 a_image = self.__mwib_get_copy_of_image( s_bmp_filename, a_img)
 
             a_img = None
-            print( 'mwib_convert_bmp() : Upgraded to 8 bpp : ' + s_bmp_filename)
+            self.c_the_log.add_string_to_log( 'mwib_convert_bmp() : Upgraded to 8 bpp : ' + s_bmp_filename)
         else:
             self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
 
@@ -174,7 +174,7 @@ class MyMainWindowIconsBar:
     def __mwib_load_check_bmp( self, s_filename) -> tuple:
         """ Check size and number of color in bmp """
         a_image = None
-        print( 'mwib_load_check_bmp() : Loading : ' + s_filename)
+        self.c_the_log.add_string_to_log( 'mwib_load_check_bmp() : Loading : ' + s_filename)
         # Open the image file
         with Image.open( s_filename) as a_img:
             a_image = self.__mwib_get_copy_of_image( s_filename, a_img)
@@ -188,7 +188,7 @@ class MyMainWindowIconsBar:
                 # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
                 self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
                 a_image = None
-                s_filename = None
+                s_filename = ''
             else:
                 a_pallet_list = a_image.getpalette()
                 if len( a_pallet_list) < 768:      # Less than 256 colors 2, 4 bpp
@@ -199,11 +199,11 @@ class MyMainWindowIconsBar:
                         a_image = self.__mwib_convert_bmp( s_filename, a_image, False)
                     else:
                         a_image = None
-                        s_filename = None
+                        s_filename = ''
                 elif len( a_pallet_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
                     self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
                     a_image = None
-                    s_filename = None
+                    s_filename = ''
 
                 if a_image and s_filename:
                     # Check if the image have a maximum of 16 colors per line
@@ -215,7 +215,7 @@ class MyMainWindowIconsBar:
                         if len(color_set) > 16:
                             self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors).")
                             a_image = None
-                            s_filename = None
+                            s_filename = ''
                             break
 
         return s_filename, a_image
@@ -225,7 +225,7 @@ class MyMainWindowIconsBar:
     #     """ dump the pallet of the current image a_work_img """
     #     if self.a_original_image:
     #         a_pallet_list = self.a_original_image.getpalette()
-    #         print( 'Pallet :')
+    #         self.c_the_log.add_string_to_log( 'Pallet :')
     #         i_to = 0
     #         for i_loop in range( 0, 16, 1):
     #             i_from = i_to
@@ -241,17 +241,18 @@ class MyMainWindowIconsBar:
     #                 s_blue = f'{a_pallet_list[ i_index + 2]:02X}'
     #                 s_my_hex = s_my_hex + "#" + s_red + s_green + s_blue + " "
 
-    #             print( s_my_hex)
+    #             self.c_the_log.add_string_to_log( s_my_hex)
 
     # ####################### __mwib_validate_scb_in_bmp ########################
     def __mwib_validate_scb_in_bmp( self):
         """ Check bitmap to synchronize all lines to use right scb """
+        self.c_the_log.add_string_to_log( 'Do mwib_validate_scb_in_bmp')
 
         self.w_front_window = MyProgressBarWindow( self.c_main_class, self.a_list_application_info)
         self.w_front_window.pbw_create_progres_bar_window( 200, "BMP pallet checking", "Check bitmap to synchronize all lines to use right SCB.")
-        # print()
+        # self.c_the_log.add_string_to_log( '\n')
         # self.__dump_pallet_bmp()
-        # print()
+        # self.c_the_log.add_string_to_log( '\n')
         # a_pallet_list = self.a_original_image.getpalette()
 
         self.w_front_window.pbw_progress_bar_start()
@@ -269,21 +270,21 @@ class MyMainWindowIconsBar:
 
             if int( i_big_index / 16) != int( i_small_index / 16):
                 # - re-pare the line to upgrade each index to have the same SCB on all the line
-                # print( "#" + f"{i_picture_line_y:03d}" + " i_big_index   = " + str( i_big_index) + " line  Y = " + str( int( i_big_index / 16)) + " index X = " + str( i_big_index - int( i_big_index / 16) * 16) + \
+                # self.c_the_log.add_string_to_log( "#" + f"{i_picture_line_y:03d}" + " i_big_index   = " + str( i_big_index) + " line  Y = " + str( int( i_big_index / 16)) + " index X = " + str( i_big_index - int( i_big_index / 16) * 16) + \
                 #     " at pox X = " + str( i_big_pos_x) )
-                # print( "    " + " i_small_index = " + str( i_small_index) + " line  Y = " + str( int( i_small_index / 16)) + " index X = " + str( i_small_index - int( i_small_index / 16) * 16) + \
+                # self.c_the_log.add_string_to_log( "    " + " i_small_index = " + str( i_small_index) + " line  Y = " + str( int( i_small_index / 16)) + " index X = " + str( i_small_index - int( i_small_index / 16) * 16) + \
                 #     " at pox X = " + str( i_small_pos_x) )
                 for i_index in range( 0, 320, 1):
                     i_current_index = self.a_original_image.getpixel( ( i_index, i_picture_line_y))
                     if int( i_current_index / 16) != int( i_big_index / 16):
-                        # print( "    " + str( i_current_index) )
+                        # self.c_the_log.add_string_to_log( "    " + str( i_current_index) )
                         while int( i_current_index / 16) != int( i_big_index / 16):
                             i_current_index += 16
                         if int( i_current_index / 16) == int( i_big_index / 16):
-                            # print( "    " + str( i_current_index) )
+                            # self.c_the_log.add_string_to_log( "    " + str( i_current_index) )
                             self.a_original_image.putpixel( ( i_index, i_picture_line_y), i_current_index)
                         else:
-                            print( "BUG : index is after the big i_big_index")
+                            self.c_the_log.add_string_to_log( "BUG : index is after the big i_big_index")
 
         self.w_front_window.pbw_progress_bar_stop()
         self.w_front_window = None
@@ -333,7 +334,7 @@ class MyMainWindowIconsBar:
     # ####################### mwib_create_top_bar_icons ########################
     def mwib_create_top_bar_icons( self, i_row_line) -> int:
         """ Design the top row for the main windows """
-        # print( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
+        # self.c_the_log.add_string_to_log( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
 
         s_button_style = 'flat'
         i_column = 0
@@ -372,7 +373,7 @@ class MyMainWindowIconsBar:
     # ####################### mwib_create_left_bar_icons ########################
     def mwib_create_left_bar_icons( self, i_row_line) -> int:
         """ Design the left row for the main windows """
-        # print( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
+        # self.c_the_log.add_string_to_log( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
 
         s_button_style = 'flat'
         i_column = 0
@@ -410,11 +411,11 @@ class MyMainWindowIconsBar:
         return i_row_line
 
     # ####################### mwib_open_box ########################
-    def mwib_open_box( self, filepathname=None):
+    def mwib_open_box( self, s_filepathname=''):
         """ Button load of the main window """
         self.c_the_log.add_string_to_log( 'Do load picture')
-        if filepathname:
-            self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( filepathname)
+        if s_filepathname:
+            self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( s_filepathname)
         else:
             self.s_filename = self.__mwib_select_load_bmp()
             self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( self.s_filename)

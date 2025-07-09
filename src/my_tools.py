@@ -68,9 +68,9 @@ class MyExitWithRelaunch( ):
         if '.exe' in self.argv[0]:
             os.execl( self.argv[0], *self.argv)
         else:
-            # print( "argv was", sys.argv)
-            # print( "sys.executable was", sys.executable)
-            # print( "restart now")
+            # self.c_the_log.add_string_to_log( "argv was", sys.argv)
+            # self.c_the_log.add_string_to_log( "sys.executable was", sys.executable)
+            # self.c_the_log.add_string_to_log( "restart now")
             os.execv( sys.executable, ['python'] + self.argv)
 
 # ###############################################################################################

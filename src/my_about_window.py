@@ -104,20 +104,17 @@ class MyAboutWindow:
 
         # #### TOP RIGHT #####
         __s_0_part = self.a_list_application_info[0] + '\n'
-        __s_1_part = 'Version' + '\t' + self.a_list_application_info[5] + '\n' + \
-            '\n' + \
+        __s_1_part = 'Version' + '\t' + self.a_list_application_info[5] + ' (' + self.a_list_application_info[8] + ')\n\n' + \
             'Author' + '\t'
-        __s_3_part = '\n' + \
-            'Thanks to\n'
+        __s_3_part = '\nThanks to\n'
         __s_4_part = \
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
             '  ' + self.a_list_application_info[3][2] + '\n' + \
             '  ' + self.a_list_application_info[3][3] + '\n' + \
             '  ' + self.a_list_application_info[3][4] + '\n'
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
-        __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved' + '\n' + \
-            '\n' + \
-            'eMail' + '\t' + self.a_list_application_info[7] + '\n'
+        __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved\n\n' + \
+            'eMail' + '\t' + self.a_list_application_info[6] + '\n'
 
         a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
@@ -166,7 +163,7 @@ class MyAboutWindow:
         self.w_about_window.resizable( False, False)
         self.w_about_window.iconphoto( True, self.c_the_icons.get_app_photo())
 
-        print( '\npw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
+        self.c_the_log.add_string_to_log( '\npw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -184,8 +181,7 @@ class MyAboutWindow:
     # ####################### aw_create_about_window ########################
     def aw_create_about_window( self):
         """ Design the about box dialog """
-        print()
-        print( 'aw_create_about_window() : ' )
+        self.c_the_log.add_string_to_log( '\naw_create_about_window() : ' )
         w_parent_window = self.c_the_main_window.mw_get_main_window()
 
         self.w_about_window = Toplevel( w_parent_window)
@@ -210,7 +206,7 @@ class MyAboutWindow:
 
         self.w_about_window.mainloop()
         # w_parent_window.focus_set()
-        # print ('pw_create_preference_window() : exit' )
+        # self.c_the_log.add_string_to_log( 'pw_create_preference_window() : exit' )
 
     # ####################### pw_close_preference_window ########################
     def aw_close_preference_window( self):

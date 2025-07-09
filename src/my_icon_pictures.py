@@ -145,8 +145,8 @@ class MyIconPictures:
     #     """log the size of a photo"""
     #     if self.w_windows_parent is not None:
     #         # __s_dimensions = "Image size is\t%dx%d pixels\n" % (a_photo.width(), a_photo.height())
-    #         # print( "log_size_of_photo() : " + __s_dimensions)
-    #         print( "log_size_of_photo() : Image size is\t" + str( a_photo.width()) + 'x' + str( a_photo.height()) + " pixels\n" )
+    #         # self.c_the_log.add_string_to_log( "log_size_of_photo() : " + __s_dimensions)
+    #         self.c_the_log.add_string_to_log( "log_size_of_photo() : Image size is\t" + str( a_photo.width()) + 'x' + str( a_photo.height()) + " pixels\n" )
 
     # ####################### get_app_photo ########################
     def get_app_photo( self) -> PhotoImage:

@@ -41,7 +41,7 @@ from PIL import ImageTk
 
 
 import src.my_constants as constant
-# from .my_log_an_usage import MyLogAnUsage
+from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 from .my_tools import mt_hexlify_byte_string
@@ -71,6 +71,7 @@ class MyMainWindowPallet:
         self.i_main_window_x = 20
         self.i_main_window_y = 20
         self.w_tk_root.background = constant.BACKGROUD_COLOR_UI
+        self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( self.w_tk_root)
         self.s_platform = platform.system()
         # Size of the main windows
@@ -129,7 +130,7 @@ class MyMainWindowPallet:
         """ This button restore the old color same as the pallette button clicked """
         if self.c_main_image.mwi_get_original_image():
             i_number = int( self.a_btn_offset_lbl.cget( "text"))
-            # print( "mw_restore_old_color() i_offset = ", str( i_number))
+            # self.c_the_log.add_string_to_log( "mw_restore_old_color() i_offset = ", str( i_number))
             self.mwp_color_btn_rad( i_number)
 
     # ####################### __mwp_format_color_entry_int ########################
@@ -155,7 +156,7 @@ class MyMainWindowPallet:
     # ####################### __mwp_update_red_entry ########################
     def __mwp_update_red_entry( self, i_value):
         """" Scale is moving update red : entry in hex, label in dec and color of new color label """
-        # print( "mv_update_red_entry()")
+        # self.c_the_log.add_string_to_log( "mv_update_red_entry()")
         s_red = self.__mwp_format_color_entry_int( i_value)
         self.a_red_input_var.set( s_red)
         self.a_red_ntr_dec_lbl.configure( text=i_value)
@@ -167,7 +168,7 @@ class MyMainWindowPallet:
     # ####################### __mwp_update_green_entry ########################
     def __mwp_update_green_entry( self, i_value):
         """" Scale is moving update green : entry in hex, label in dec and color of new color label """
-        # print( "mv_update_green_entry()")
+        # self.c_the_log.add_string_to_log( "mv_update_green_entry()")
         s_green = self.__mwp_format_color_entry_int( i_value)
         self.a_green_input_var.set( s_green)
         self.a_green_ntr_dec_lbl.configure( text=i_value)
@@ -179,7 +180,7 @@ class MyMainWindowPallet:
     # ####################### __mwp_update_blue_entry ########################
     def __mwp_update_blue_entry( self, i_value):
         """" Scale is moving update blue : entry in hex, label in dec and color of new color label """
-        # print( "mv_update_blue_entry()")
+        # self.c_the_log.add_string_to_log( "mv_update_blue_entry()")
         s_blue = self.__mwp_format_color_entry_int( i_value)
         self.a_blue_input_var.set( s_blue)
         self.a_blue_ntr_dec_lbl.configure( text=i_value)
@@ -221,7 +222,7 @@ class MyMainWindowPallet:
     # ####################### __mwp_click_on_picture_zoom ########################
     def __mwp_click_on_picture_zoom( self, _):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
-        # print( "mw_click_on_picture()  ", event)
+        # self.c_the_log.add_string_to_log( "mw_click_on_picture()  ", event)
         self.mwp_entry_black_focus_out()
         a_original_img = self.c_main_image.mwi_get_original_image()
         if a_original_img:
@@ -562,37 +563,37 @@ class MyMainWindowPallet:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        # print( "mwp_red_max_of_two_chars_and_filter() ")
-        # print( f"i_action  d : {i_action}")
-        # print( f"s_before  P : {s_before}")
-        # print( f"s_after   s : {s_after}")
-        # print( f"s_call    S : {s_call}")
-        # print( f"s_value   v : {s_value}")
-        # print( f"s_reason  V : {s_reason}")
-        # print( f"s_name    W : {s_name}")
+        # self.c_the_log.add_string_to_log( "mwp_red_max_of_two_chars_and_filter() ")
+        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
+        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
+        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
+        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
+        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
+        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
+        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
-        # print( "widget      = ", a_widget)
+        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
 
         b_result = False
         if s_reason == "focusin":
-            # print( "focusin set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
             self.__mwp_entry_red_focus_in( None)
             b_result = True
         elif s_reason == "focusout":
-            # print( "focusout set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
             self.__mwp_entry_red_focus_in( None)
             b_result = True
         elif s_reason == "key":
-            # print( "key")
+            # self.c_the_log.add_string_to_log( "key")
             if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
                 b_result = True
             else:
-                # print( "manage value")
+                # self.c_the_log.add_string_to_log( "manage value")
                 if not s_call.isprintable() or not s_call.isspace():
-                    print( mt_hexlify_byte_string( b's_call', ":"))
+                    self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
-            # print( "does nothing")
+            # self.c_the_log.add_string_to_log( "does nothing")
             b_result = True
 
         return b_result
@@ -613,35 +614,35 @@ class MyMainWindowPallet:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        # print( "mwp_green_max_of_two_chars_and_filter() ")
-        # print( f"i_action  d : {i_action}")
-        # print( f"s_before  P : {s_before}")
-        # print( f"s_after   s : {s_after}")
-        # print( f"s_call    S : {s_call}")
-        # print( f"s_value   v : {s_value}")
-        # print( f"s_reason  V : {s_reason}")
-        # print( f"s_name    W : {s_name}")
+        # self.c_the_log.add_string_to_log( "mwp_green_max_of_two_chars_and_filter() ")
+        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
+        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
+        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
+        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
+        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
+        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
+        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
-        # print( "widget      = ", a_widget)
+        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
 
         b_result = False
         if s_reason == "focusin":
-            # print( "focusin set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
             self.__mwp_entry_green_focus_in( None)
             b_result = True
         elif s_reason == "focusout":
-            # print( "focusout set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
             self.__mwp_entry_green_focus_in( None)
             b_result = True
         elif s_reason == "key":
-            # print( "key")
+            # self.c_the_log.add_string_to_log( "key")
             if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
                 b_result = True
             elif not s_call.isprintable() or not s_call.isspace():
-                print( mt_hexlify_byte_string( b's_call', ":"))
+                self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
                 b_result = True
         else:
-            # print( "does nothing")
+            # self.c_the_log.add_string_to_log( "does nothing")
             b_result = True
 
         return b_result
@@ -662,37 +663,37 @@ class MyMainWindowPallet:
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
         """
-        # print( "mwp_blue_max_of_two_chars_and_filter() ")
-        # print( f"i_action  d : {i_action}")
-        # print( f"s_before  P : {s_before}")
-        # print( f"s_after   s : {s_after}")
-        # print( f"s_call    S : {s_call}")
-        # print( f"s_value   v : {s_value}")
-        # print( f"s_reason  V : {s_reason}")
-        # print( f"s_name    W : {s_name}")
+        # self.c_the_log.add_string_to_log( "mwp_blue_max_of_two_chars_and_filter() ")
+        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
+        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
+        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
+        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
+        # prself.c_the_log.add_string_to_lognt( f"s_value   v : {s_value}")
+        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
+        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
         # a_widget = self.w_tk_root.nametowidget( s_name)
-        # print( "widget      = ", a_widget)
+        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
 
         b_result = False
         if s_reason == "focusin":
-            # print( "focusin set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
             self.__mwp_entry_blue_focus_in( None)
             b_result = True
         elif s_reason == "focusout":
-            # print( "focusout set value to Slider, new label and old button")
+            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
             self.__mwp_entry_blue_focus_in( None)
             b_result = True
         elif s_reason == "key":
-            # print( "key")
+            # self.c_the_log.add_string_to_log( "key")
             if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
                 b_result = True
             else:
-                # print( "manage value")
+                # self.c_the_log.add_string_to_log( "manage value")
                 if not s_call.isprintable() or not s_call.isspace():
-                    print( mt_hexlify_byte_string( b's_call', ":"))
+                    self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
                     b_result = True
         else:
-            # print( "does nothing")
+            # self.c_the_log.add_string_to_log( "does nothing")
             b_result = True
 
         return b_result
@@ -707,11 +708,11 @@ class MyMainWindowPallet:
         """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
         self.mwp_entry_black_focus_out()
         if self.c_main_image.mwi_get_original_image():
-            # print( "mwp_color_btn_rad() i_number       = ", str( i_number))
+            # self.c_the_log.add_string_to_log( "mwp_color_btn_rad() i_number       = ", str( i_number))
             a_pallet_list = self.c_main_image.mwi_get_original_image().getpalette()
-            # print( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
+            # self.c_the_log.add_string_to_log( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
             if (i_number * 3) > len( a_pallet_list):
-                print( "mwp_color_btn_rad() i_number = ", str( i_number) + " a_pallet_list = " + str( len( a_pallet_list)) + " FAILED" )
+                self.c_the_log.add_string_to_log( "mwp_color_btn_rad() i_number = " + str( i_number) + " a_pallet_list = " + str( len( a_pallet_list)) + " FAILED" )
             else:
                 i_tmp_number = i_number * 3
                 i_red = a_pallet_list[i_tmp_number]
@@ -730,7 +731,7 @@ class MyMainWindowPallet:
                 self.a_the_color_new_lbl.configure( background= "#" + s_red + s_green + s_blue)
                 self.a_color_old_btn.configure( background= "#" + s_red + s_green + s_blue)
                 __i_complete = int( i_number / 16)
-                # print( f'number= {i_number} -> complete= {__i_complete} rest= {i_number - ( __i_complete * 16)}')
+                # self.c_the_log.add_string_to_log( f'number= {i_number} -> complete= {__i_complete} rest= {i_number - ( __i_complete * 16)}')
                 self.a_btn_offset_lbl.configure( text=str( i_number))                   # label under Offset
                 if i_number > 15:
                     self.a_btn_x_lbl.configure( text=str( __i_complete))                # label under Pallet Y
@@ -799,21 +800,21 @@ class MyMainWindowPallet:
                 i_index = int( self.a_btn_offset_lbl.cget( "text"))
             else:
                 i_index = i_new_index
-            # print( "i_index    = ", str( i_index))
+            # self.c_the_log.add_string_to_log( "i_index    = ", str( i_index))
             a_pallet_button = self.a_pallet_button_lst[i_index]
             # ready when color modification will be done
-            # print( "btn: red   = ", s_red, "  green = ", s_green, "  blue  = ", s_blue)
+            # self.c_the_log.add_string_to_log( "btn: red   = ", s_red, "  green = ", s_green, "  blue  = ", s_blue)
             a_pallet_button.configure( background= "#" + s_red + s_green + s_blue)
             # Update the picture pallet
             a_pallet_list = a_original_img.getpalette()
-            # print( "btn: red   = ", self.a_red_ntr_dec_lbl.cget( "text"), "  green = ", self.a_green_ntr_dec_lbl.cget( "text"), "  blue  = ", self.a_blue_ntr_dec_lbl.cget( "text"))
+            # self.c_the_log.add_string_to_log( "btn: red   = ", self.a_red_ntr_dec_lbl.cget( "text"), "  green = ", self.a_green_ntr_dec_lbl.cget( "text"), "  blue  = ", self.a_blue_ntr_dec_lbl.cget( "text"))
             # i_index is a number of radio button and the pallete is 3 int for RGB so I do a * 3
             i_pallet_index = i_index * 3
-            # print( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index+1]), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
+            # self.c_the_log.add_string_to_log( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index+1]), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
             a_pallet_list[ i_pallet_index] = int( self.a_red_ntr_dec_lbl.cget( "text"))
             a_pallet_list[ i_pallet_index+1] = int( self.a_green_ntr_dec_lbl.cget( "text"))
             a_pallet_list[ i_pallet_index+2] = int( self.a_blue_ntr_dec_lbl.cget( "text"))
-            # print( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index]+1), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
+            # self.c_the_log.add_string_to_log( "pal: red   = ", str( a_pallet_list[ i_pallet_index]), "  green = ", str( a_pallet_list[ i_pallet_index]+1), "  blue  = ", str( a_pallet_list[ i_pallet_index+2]))
             a_original_img.putpalette( a_pallet_list, rawmode='RGB')
             self.c_main_windows.mw_update_main_window( self.c_main_icon_bar.mwib_get_get_path_filename(), a_original_img)
             self.mwp_color_btn_rad( i_index)
@@ -910,11 +911,11 @@ class MyMainWindowPallet:
         a_original_img = self.c_main_image.mwi_get_original_image()
         if a_original_img:
             a_pallet_list = a_original_img.getpalette()
-            # print( "pallet From " + str(i_color_line_to_copy_offset_from) + " To " + str(i_line_number_to))
+            # self.c_the_log.add_string_to_log( "pallet From " + str(i_color_line_to_copy_offset_from) + " To " + str(i_line_number_to))
             i_destination = i_line_number_to * 16 * 3
             i_source = i_color_line_to_copy_offset_from * 16 * 3
             #i_target = i_source + (16 * 3)
-            # print( "i_destination " + str(i_destination) + " : i_source " + str(i_source) + " i_target " + str( i_source + (16 * 3) ) + " diff= " + str(i_target-i_source))
+            # self.c_the_log.add_string_to_log( "i_destination " + str(i_destination) + " : i_source " + str(i_source) + " i_target " + str( i_source + (16 * 3) ) + " diff= " + str(i_target-i_source))
 
             i_element = i_line_number_to * 16
             i_from = 0
@@ -948,7 +949,7 @@ class MyMainWindowPallet:
     # ####################### mwp_draw_zoom_square ########################
     def mwp_draw_zoom_square( self, i_position_x, i_position_y):
         """ Draw the zoom square part * 8 of the picture """
-        # print( "mwp_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
+        # self.c_the_log.add_string_to_log( "mwp_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
         i_contour = 26
 
         i_box_top = (i_position_x - i_contour, i_position_y - i_contour, i_position_x + i_contour, i_position_y + i_contour)
@@ -991,7 +992,7 @@ class MyMainWindowPallet:
     def mwp_get_pallet_btn( self, i_element) -> Radiobutton:
         """ Return the color of the button radio """
         if i_element < 0 or i_element >= len(self.a_pallet_button_lst):
-            # print( "mwp_get_pallet_btn() i_element out of range: ", str( i_element))
+            # self.c_the_log.add_string_to_log( "mwp_get_pallet_btn() i_element out of range: ", str( i_element))
             return None
         return self.a_pallet_button_lst[i_element]
 
@@ -999,7 +1000,7 @@ class MyMainWindowPallet:
     def mwp_get_pallet_horizontal_lbl( self, i_element) -> Label:
         """ Return the label for horizontal list of number of column """
         if i_element < 0 or i_element >= len(self.a_pallet_horizontal_number_lst):
-            # print( "mwp_get_pallet_horizontal_lbl() i_element out of range: ", str( i_element))
+            # self.c_the_log.add_string_to_log( "mwp_get_pallet_horizontal_lbl() i_element out of range: ", str( i_element))
             return None
         return self.a_pallet_horizontal_number_lst[i_element]
 

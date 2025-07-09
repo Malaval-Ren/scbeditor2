@@ -285,10 +285,8 @@ then
 	echo -e "| "$pyInstall_Name" |" "$tempver"" |" >> "$pylint_log"
 	echo -e "" >> "$pylint_log"
 	echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
-	echo
-else
-	echo
 fi
+echo
 
 # zone for test
 

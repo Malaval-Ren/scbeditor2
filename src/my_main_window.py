@@ -37,7 +37,7 @@ from datetime import datetime
 from functools import partial
 
 import src.my_constants as constant
-# from .my_log_an_usage import MyLogAnUsage
+from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_main_window_icons_bar import MyMainWindowIconsBar
 from .my_main_window_image import MyMainWindowImage
@@ -67,7 +67,8 @@ class MyMainWindow:
             w_root_windows : the windows created by tk
             a_list_application_info : les inforamtions de l'application
         """
-        print()
+        self.c_the_log = MyLogAnUsage( None)
+        self.c_the_log.add_string_to_log( '\n')
         self.w_tk_root = w_root_windows        # root window the first window created
         self.a_list_application_info = list_application_info
         # Position of the main windows
@@ -161,7 +162,7 @@ class MyMainWindow:
         if a_original_img:
             i_around_cursor = self.c_main_pallet.mwp_get_around_cursor()
             i_offset = a_original_img.getpixel( ( i_true_x, i_true_y))
-            print( "offset to change = " + str( i_offset) + " by = " + str( i_around_cursor))
+            self.c_the_log.add_string_to_log( "offset to change = " + str( i_offset) + " by = " + str( i_around_cursor))
 
             i_run_offset = i_offset
             i_up = i_true_y
@@ -247,7 +248,7 @@ class MyMainWindow:
         self.c_main_image.mwi_set_pallet( self.c_main_pallet)
 
         self.w_tk_root.update()
-        # print( "Calcul height       : " + str( self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height())))
+        # self.c_the_log.add_string_to_log( "Calcul height       : " + str( self.i_main_window_height - ( a_top_bar_frame.winfo_height() + a_pic_frame.winfo_height())))
 
         self.w_tk_root.bind( '<Button>', self.__mw_change_focus)
         # Manage arrow keys pressed like click on arrow button
@@ -267,7 +268,7 @@ class MyMainWindow:
         """ Update the color button in the pallet """
         a_color_btn_rad = self.c_main_pallet.mwp_get_pallet_btn( i_element)
         if a_color_btn_rad:
-            # print( "mw_update_main_window() i_index = ", str( i_index))
+            # self.c_the_log.add_string_to_log( "mw_update_main_window() i_index = ", str( i_index))
             config_pallet_bottom_with_arg = partial( self.c_main_pallet.mwp_color_btn_rad, int( i_index / 3))
             a_color_btn_rad.configure( command=config_pallet_bottom_with_arg)
             a_color_btn_rad.configure( background="#" + s_red_green_blue)
@@ -330,10 +331,10 @@ class MyMainWindow:
         else:
             a_pallet_frame.place( x=2, y=98+constant.PICTURE_HEIGHT+20+4, width=self.i_main_window_width-4, height=self.i_main_window_height - ( constant.PICTURE_HEIGHT+20+8), anchor="nw" )
         self.w_tk_root.update()
-        print( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= ", str( self.w_tk_root.winfo_height()))
-        print( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= ", str( a_top_bar_frame.winfo_height()))
-        print( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= ", str( a_pic_frame.winfo_height()))
-        print( "a_pallet_frame      : width= " + str( a_pallet_frame.winfo_width()) + " height= ", str( a_pallet_frame.winfo_height()))
+        self.c_the_log.add_string_to_log( "w_tk_root           : width= " + str( self.w_tk_root.winfo_width()) + " height= " + str( self.w_tk_root.winfo_height()))
+        self.c_the_log.add_string_to_log( "a_top_bar_frame     : width= " + str( a_top_bar_frame.winfo_width()) + " height= " + str( a_top_bar_frame.winfo_height()))
+        self.c_the_log.add_string_to_log( "a_pic_frame         : width= " + str( a_pic_frame.winfo_width()) + " height= " + str( a_pic_frame.winfo_height()))
+        self.c_the_log.add_string_to_log( "a_pallet_frame      : width= " + str( a_pallet_frame.winfo_width()) + " height= " + str( a_pallet_frame.winfo_height()))
 
         self.__mw_create_windows_part( a_top_bar_frame, a_pic_frame, a_pallet_frame, b_vertical)
 
@@ -450,23 +451,23 @@ class MyMainWindow:
                 os.rename( s_new_file_name, old_file)
 
             a_original_img = self.c_main_image.mwi_get_original_image()
-            print( '\nSaving : ' + s_new_file_name)
+            self.c_the_log.add_string_to_log( '\nSaving : ' + s_new_file_name)
             try:
                 a_original_img.save( s_new_file_name, 'BMP')
                 # Save succeeded, remove .old
                 if os.path.exists( old_file):
                     os.remove( old_file)
-                print( "File saved successfully.")
+                self.c_the_log.add_string_to_log( "File saved successfully.")
             # pylint: disable=broad-exception-caught
             except Exception as error:
                 # pylint: enable=broad-exception-caught
-                print( f"Error saving file: {error}")
+                self.c_the_log.add_string_to_log( f"Error saving file: {error}")
                 # Restore original file on any error during save
                 if os.path.exists( old_file):
                     if os.path.exists( s_new_file_name):
                         os.remove( s_new_file_name)
                     os.rename( old_file, s_new_file_name)
-                print( "Original file restored.")
+                self.c_the_log.add_string_to_log( "Original file restored.")
 
     # ####################### mw_print_widget_under_mouse ########################
     def mw_print_widget_under_mouse( self, event):

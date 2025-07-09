@@ -149,7 +149,7 @@ class MyImportPalletWindow:
     def __ipw_count_number_of_scb( self, i_color_offset) -> int:
         """ Draw the bar with rectangles to display all the SCB usage """
         i_pallet_number = int( i_color_offset / 16) * 16
-        # print( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
+        # self.c_the_log.add_string_to_log( "mwi_count_number_of_scb() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         i_counter = 0
         i_rect_begin = -1
         for i_loop in range( 0, 200, 2):
@@ -167,7 +167,7 @@ class MyImportPalletWindow:
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
             i_counter += 1
-        # print( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
+        # self.c_the_log.add_string_to_log( "mwi_count_number_of_scb() Number of scb found = " + str( i_counter))
         return i_counter
 
     # ####################### __ipw_update_color_number_vertical_used ########################
@@ -182,7 +182,7 @@ class MyImportPalletWindow:
                 a_label.configure( foreground='black')
 
         self.w_import_window.update()
-        # print()
+        # self.c_the_log.add_string_to_log( '\n')
 
     # ####################### __ipw_import_block_top ########################
     def __ipw_import_block_top( self, a_image, top_frame):
@@ -321,7 +321,7 @@ class MyImportPalletWindow:
         self.w_import_window.resizable( False, False)
         self.w_import_window.iconphoto( True, self.c_the_icons.get_app_photo())
 
-        print( '\nipw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
+        self.c_the_log.add_string_to_log( '\nipw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/

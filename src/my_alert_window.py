@@ -324,7 +324,7 @@ class MyAlertWindow:
         button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
         button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
-        print( f"Alert type: {i_type}, message: {s_message}")
+        self.c_the_log.add_string_to_log( f"Alert type: {i_type}, message: {s_message}")
 
         if i_type == 1:
             self.__aw_error_block( s_message, top_frame, button_frame)

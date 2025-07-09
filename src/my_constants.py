@@ -36,8 +36,6 @@
 
 # #######========================= constant =========================
 
-MY_APPLICATION_NAME = 'SCB Editor II'
-
 # size of a button is number of charracters here 15 charracters => 115 pixels
 # size of a button is number of charracters here 3 charracters => 21 pixels
 # size of a button is number of charracters here 5 charracters => 35 pixels

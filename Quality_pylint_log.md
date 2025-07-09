@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  mar. 8 juil. 2025 23:39:34
+date :  mer. 9 juil. 2025 17:46:17
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -20,7 +20,8 @@ date :  mar. 8 juil. 2025 23:39:34
 
 ## *./scbeditor2.py*
 
-> pylint: disable=line-too-long
+> pylint: disable=line-too-long  
+> pylint: disable=protected-access  
   
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
@@ -134,7 +135,7 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window_pallet  
 
-src\my_main_window_pallet.py:1:0: C0302: Too many lines in module (1014/1000) (too-many-lines)
+src\my_main_window_pallet.py:1:0: C0302: Too many lines in module (1015/1000) (too-many-lines)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.98/10 (previous run: 9.98/10, +0.00)

@@ -122,16 +122,16 @@ class MyScbPalletWindow:
     def __scbw_scb_ok_button( self):
         """ Button ok of the scb window """
         b_result = False
-        # print( f'scbw_scb_ok_button() i_selected_pallet_line= {self.i_selected_pallet_line}')
+        # self.c_the_log.add_string_to_log( f'scbw_scb_ok_button() i_selected_pallet_line= {self.i_selected_pallet_line}')
         a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
         _, f_y0, _, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
         f_y0 = (f_y0 + 0.5) / 2
         f_y1 = (f_y1 + 0.5) / 2
-        # print( f'scbw_scb_ok_button() from line: {f_y0:0.0f} to {f_y1:0.0f}'.format(f_y0, f_y1))
+        # self.c_the_log.add_string_to_log( f'scbw_scb_ok_button() from line: {f_y0:0.0f} to {f_y1:0.0f}'.format(f_y0, f_y1))
         if self.var_rdx_btn.get() == 1:
             i_top_selected_pallet_line = int( self.a_pallet_to_begin_combo.get())
             i_bottom_selected_pallet_line = int( self.a_pallet_to_end_combo.get())
-            # print( f'scbw_scb_ok_button() combo up= {i_top_selected_pallet_line} down= {i_bottom_selected_pallet_line}')
+            # self.c_the_log.add_string_to_log( f'scbw_scb_ok_button() combo up= {i_top_selected_pallet_line} down= {i_bottom_selected_pallet_line}')
             if self.i_selected_pallet_line != i_top_selected_pallet_line:
                 # Change the pallet on top part of the image band
                 self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y0) + int(self.a_frontier_scale.get())+1)
@@ -146,7 +146,7 @@ class MyScbPalletWindow:
                 b_result = True
         else:
             i_top_selected_pallet_line = int( self.a_pallet_to_all_combo.get())
-            # print( f'scbw_scb_ok_button() combo = {i_top_selected_pallet_line}')
+            # self.c_the_log.add_string_to_log( f'scbw_scb_ok_button() combo = {i_top_selected_pallet_line}')
             if self.i_selected_pallet_line != i_top_selected_pallet_line:
                 self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y1)+1)
                 self.__scbw_do_leave_scb_dialog()
@@ -343,7 +343,7 @@ class MyScbPalletWindow:
     # ####################### __scbw_set_window_size ########################
     def __scbw_set_window_size( self):
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
-        # print( "computer height =" + str( 30 + self.i_height + (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT))
+        # self.c_the_log.add_string_to_log( "computer height =" + str( 30 + self.i_height + (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT))
         # i_height of the picture part + 30 windows title + 3 frames for action widgets + 1 frame for cancel and ok button
         # self.i_height += 30 +  (self.MIDDLE_FRAME_HEIGHT * 3) + self.BOTTOM_FRAME_HEIGHT
         self.i_height += 30 + self.MIDDLE_FRAME_HEIGHT + self.UP_MIDDLE_FRAME_HEIGHT + self.DOWN_MIDDLE_FRAME_HEIGHT
@@ -372,7 +372,7 @@ class MyScbPalletWindow:
         self.w_scb_window.resizable( False, False)
         self.w_scb_window.iconphoto( True, self.c_the_icons.get_app_photo())
 
-        print( '\nscbw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
+        self.c_the_log.add_string_to_log( '\nscbw_set_window_size() : geometry  ' + s_windows_size_and_position + '\n')
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -409,9 +409,9 @@ class MyScbPalletWindow:
             # Prepare the picture band
             a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
             f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-            print( f'scbw_scb_block() rect       size is: {f_x0:0.0f} {f_y0:0.0f} {f_x1:0.0f} {f_y1:0.0f}'.format(f_x0, f_y0, f_x1, f_y1))
+            self.c_the_log.add_string_to_log( f'scbw_scb_block() rect       size is: {f_x0:0.0f} {f_y0:0.0f} {f_x1:0.0f} {f_y1:0.0f}'.format(f_x0, f_y0, f_x1, f_y1))
             width, height = a_original_image.size
-            print( f'scbw_scb_block() org  image size is: {width:d} {height:d}'.format(width, height))
+            self.c_the_log.add_string_to_log( f'scbw_scb_block() org  image size is: {width:d} {height:d}'.format(width, height))
 
             f_y0 = (f_y0 + 0.5) / 2
             f_y1 = (f_y1 + 0.5) / 2
@@ -421,7 +421,7 @@ class MyScbPalletWindow:
             i_box_top = (0, int(f_y0), 320, int(f_y1))
             a_part_image = a_original_image.crop( i_box_top)
             width, height = a_part_image.size
-            print( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
+            self.c_the_log.add_string_to_log( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
             self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
             self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
             self.i_width = width * 3

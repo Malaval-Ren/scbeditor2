@@ -81,6 +81,7 @@ a.datas += [('Arrow_Right_T_16x16.png','images\\Arrow_Right_T_16x16.png', "DATA"
 a.datas += [('Arrow_Left_T_16x16.png','images\\Arrow_Left_T_16x16.png', "DATA")]
 a.datas += [('Arrow_Up_T_16x16.png','images\\Arrow_Up_T_16x16.png', "DATA")]
 a.datas += [('Arrow_Down_T_16x16.png','images\\Arrow_Down_T_16x16.png', "DATA")]
+a.datas += [('scbeditor2_version.txt','scbeditor2_version.txt', "DATA")]
 
 exe = EXE(
     pyz,

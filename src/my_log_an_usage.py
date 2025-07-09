@@ -45,39 +45,45 @@ from .my_log_txt import MyLogText
 class MyLogAnUsage:
     """
     Classe to create a log usage during life of the application.
-    2 capabilities mail or text file, (think if its could be beter in .rtf or .md format)
+    3 capabilities console, mail or text file, (think if its could be beter in .rtf or .md format)
+    console:
+        Just do a print in console
     mail:
         Content is created during usage of the application. and send on application exist
     file:
         File is created with mame of the month user name and application name (without space)
         Content is created during usage of the application. and write on application exist
     windows :
-        mail or file
+        console, mail or file
     linux :
-        file
+        console, file
     Mac OS :
-        file
+        console, file
     """
 
     _instance = None
+    _b_sealed = False
 
     # ####################### __new__ ########################
-    def __new__( cls, list_application_info=None, s_storage=None) -> 'MyLogAnUsage':
+    def __new__( cls, list_application_info=None, s_storage='') -> 'MyLogAnUsage':
         """ Instantiate a singleton class """
         if MyLogAnUsage._instance is None:
             MyLogAnUsage._instance = object.__new__( cls)
             MyLogAnUsage._a_list_application_info = list_application_info
-            MyLogAnUsage._s_storage = s_storage
+            if s_storage in ( 'console', 'file', 'mail'):
+                MyLogAnUsage._s_storage = s_storage
+            else:
+                MyLogAnUsage._s_storage = ''
             MyLogAnUsage.__b_log_is_enabled = False
-            MyLogAnUsage.s_log_text = ""
-            MyLogAnUsage.s_log_latest_text = ""
+            MyLogAnUsage.s_log_text = ''
+            MyLogAnUsage.s_log_latest_text = ''
             MyLogAnUsage._instance._b_sealed = False
             MyLogAnUsage.c_the_log = None
 
         return MyLogAnUsage._instance
 
     # ####################### __init__ ########################
-    def __init__( self, list_application_info=None, s_storage=None):
+    def __init__( self, list_application_info=None, s_storage=''):
         """ Find and configure process available to send a log mail """
         if not self._instance._b_sealed:
             self.s_log_text = ""
@@ -90,8 +96,11 @@ class MyLogAnUsage:
     # ####################### __add_log ########################
     def __add_log( self, s_text):
         """ Add log private text string to __s_log_text """
-        if s_text != "":
-            self.s_log_text = self.s_log_text + s_text + '\n'
+        if s_text:
+            if self._s_storage == 'console':
+                print( s_text)
+            else:
+                self.s_log_text = self.s_log_text + s_text + '\n'
 
     # ####################### set_log_mode ########################
     def get_last_log( self) -> str:
@@ -101,14 +110,11 @@ class MyLogAnUsage:
     # ####################### set_log_mode ########################
     def set_log_mode( self, s_storage):
         """ Changing mode of log ie before and after configuration load """
-        if s_storage is None :
-            self._s_storage = 'private'
+        if s_storage == '' :
+            self._s_storage = ''
             self.__b_log_is_enabled = False
         else:
-            if s_storage is None:
-                self._s_storage = 'private'
-                self.__b_log_is_enabled = False
-            elif self._s_storage != s_storage:
+            if self._s_storage != s_storage:
                 if s_storage == 'mail':
                     # feature removed
                     self.__b_log_is_enabled = False
@@ -116,7 +122,11 @@ class MyLogAnUsage:
                     self.c_the_log = MyLogText( self._a_list_application_info)
                     self.s_log_text = self.s_log_text[:-1]  # remove the last char : '\n'
                     self.c_the_log.add_log( self.s_log_text)
-                    self.s_log_text = ""
+                    self.s_log_text = ''
+                    self.__b_log_is_enabled = True
+                elif s_storage == 'console':
+                    self.__add_log( self.s_log_text)
+                    self.s_log_text = ''
                     self.__b_log_is_enabled = True
 
     # ####################### send_log_enabled ########################
@@ -132,22 +142,28 @@ class MyLogAnUsage:
     # ####################### add_string_to_log ########################
     def add_string_to_log( self, s_body_line):
         """ Concat an action done in application. This is the log string """
-        self.s_log_latest_text = s_body_line
-        if self.__b_log_is_enabled is True:
-            self.c_the_log.add_log( s_body_line)
-        else:
-            self.__add_log( s_body_line)
+        if s_body_line:
+            self.s_log_latest_text = s_body_line
+            if self.__b_log_is_enabled is True:
+                if self.c_the_log:
+                    self.c_the_log.add_log( s_body_line)
+                else:
+                    self.__add_log( s_body_line)
+            else:
+                self.__add_log( s_body_line)
 
     # ####################### add_date_to_log ########################
-    def add_date_to_log( self):
+    def add_date_to_log( self, s_prefix=''):
         """ Concat date string. This is first and last string line of the log string """
         # datetime object containing current date and time
         __now = datetime.now()
         # dd/mm/YY H:M:S
-        __s_dt_string = __now.strftime( "%d/%m/%Y %H:%M:%S")
-        # print("date and time =", dt_string)
+        __s_dt_string = s_prefix + __now.strftime( "%d/%m/%Y %H:%M:%S")
         if self.__b_log_is_enabled is True:
-            self.c_the_log.add_log( __s_dt_string)
+            if self.c_the_log:
+                self.c_the_log.add_log( __s_dt_string)
+            else:
+                self.__add_log( __s_dt_string)
         else:
             self.__add_log( __s_dt_string)
 
@@ -155,6 +171,7 @@ class MyLogAnUsage:
     def write_log( self):
         """ Select and use the available method to write log """
         if self.__b_log_is_enabled is True:
-            self.c_the_log.write_log()
+            if self.c_the_log:
+                self.c_the_log.write_log()
         else:
-            self.s_log_text = ""
+            self.s_log_text = ''
