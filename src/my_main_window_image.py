@@ -413,9 +413,9 @@ class MyMainWindowImage:
         a_picture_frame = Frame( a_pic_frame, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
         a_picture_frame.place( x=0, y=24, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT)
         if self.s_platform == "Linux":
-            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="target", borderwidth=0, compound="center", highlightthickness=0)
+            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image='', width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="target", borderwidth=0, compound="center", highlightthickness=0)
         else:
-            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image=None, width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="target", borderwidth=0, compound="center", highlightthickness=0)
+            self.a_picture_lbl = Label( a_picture_frame, padx=0, pady=0, image='', width=constant.PICTURE_WIDTH, height=constant.PICTURE_HEIGHT, background=constant.BACKGROUD_COLOR_UI, cursor="circle", borderwidth=0, compound="center", highlightthickness=0)
         self.a_picture_lbl.grid( row=i_index_base_block, column=0)
         self.a_picture_lbl.bind( '<Button>', self.__mwi_click_on_picture)
         self.a_picture_lbl.bind( '<Motion>', self.c_main_windows.mw_print_widget_under_mouse)

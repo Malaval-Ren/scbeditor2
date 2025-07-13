@@ -34,6 +34,7 @@
 import os
 import sys
 from tkinter import PhotoImage
+from PIL import Image
 
 # __name__ = "MyIconPictures"
 
@@ -86,6 +87,25 @@ class MyIconPictures:
 
         return s_pictures_folder
 
+
+    # ####################### _test_format_image ########################
+    def _test_format_image( self, s_relative_path):
+        
+        print( f"test image {s_relative_path}")
+        img = Image.open( s_relative_path)
+        if img.mode in ("RGBA", "LA"):
+            alpha = img.getchannel("A")
+            i_min, i_max = alpha.getextrema()
+            print( f"i_min = {i_min}")
+            print( f"i_max = {i_max}")
+            print( f"a var = {alpha.getextrema()[0]}")
+            if alpha.getextrema()[0] < 255:
+                print( "\t✅ L’image a une transparence.")
+            else:
+                print( "\t🟠 L’image est en mode RGBA, mais complètement opaque.")
+        else:
+            print( "\t❌ L’image n’a pas de canal alpha (pas de transparence).")
+
     # ####################### __init ########################
     def __init( self):
         """
@@ -96,28 +116,35 @@ class MyIconPictures:
         s_pictures_folder = "images"
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "ScbEditorII_T_16x16.png"))
-        self.app_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self.app_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)  
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "ScbEditorII_b_T_81x81.png"))
         self.about_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "openfile_b_T_81x81.png"))
         self.open_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "savefile_b_T_81x81.png"))
         self.save_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "color-pallet_b_T_81x81.png"))
         self.color_palett_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "curseur_b_T_81x81.png"))
         self.cursor_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "preferences_b_T_81x81.png"))
         self.preferences_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "fr_France_T_81x81.png"))
         self.french_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)
+        self._test_format_image( icon_path)
 
         icon_path = self._resource_path( os.path.join( s_pictures_folder, "error_T_81x81.png"))
         MyIconPictures.error_photo = PhotoImage( master=self.w_windows_parent, file=icon_path)

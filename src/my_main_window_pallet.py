@@ -331,7 +331,7 @@ class MyMainWindowPallet:
             # create list of line of radio button and add it in a list to be accessible
             for _ in range( i_from, i_to, 3):
                 if self.s_platform == "Darwin":        # highlightbackground option, and its focused color with highlightcolor
-                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=14, height=4, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
+                    a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=9, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
                     a_button_color.grid( row=i_index_base_block, column=i_index_base_column, padx=2, pady=2)
                 elif self.s_platform == "Linux":
                     a_button_color = Radiobutton( a_pallet_bottom_frame, text='', indicatoron = False, width=13, height=2, variable=self.color_radio_button, value=i_index, background=constant.LIGHT_COLOR_UI, font=a_font_button, borderwidth=1, highlightthickness=0)
@@ -373,14 +373,19 @@ class MyMainWindowPallet:
         """ Frame with the pallet colors label left, and color display to right """
         if self.s_platform == 'Linux':
             i_pad_y=0
+            a_cursor='target'
+        elif self.s_platform == 'Darwin':
+            i_pad_y=1
+            a_cursor='circle'
         else:
             i_pad_y=1
+            a_cursor='circle'
         a_color_name_lbl = Label( a_color_bottom_frame, text="Red", background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y)
         a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=i_pad_y)
         # the text is the cursor style on the middle of the label
-        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor='target', borderwidth=2, compound="center", highlightthickness=2)
+        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor=a_cursor, borderwidth=2, compound="center", highlightthickness=2)
         if self.s_platform in [ "Darwin", "Linux" ]:
             self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=i_pad_y+8, sticky='ewn')
         else:

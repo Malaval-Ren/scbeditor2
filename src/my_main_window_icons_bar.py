@@ -33,7 +33,7 @@
 import os
 import platform
 
-from tkinter import Button
+from tkinter import Button, Menu
 from PIL import Image
 
 import src.my_constants as constant
@@ -344,6 +344,15 @@ class MyMainWindowIconsBar:
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            # Create a custom menu bar
+            menu_bar = Menu( self.w_main_windows)
+            # Add a custom "File" menu (or other menus you want)
+            file_menu = Menu( menu_bar, tearoff=0)
+            file_menu.add_command( label="Open", command=self.mwib_open_box)
+            file_menu.add_command( label="Exit", command=self.w_main_windows.quit)
+            menu_bar.add_cascade( label="File", menu=file_menu)
+            # Set the custom menu bar
+            self.w_main_windows.config( menu=menu_bar)     
         elif self.s_platform == "Linux":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
@@ -379,11 +388,20 @@ class MyMainWindowIconsBar:
         i_column = 0
         i_row_line = 0
         if self.s_platform == "Darwin":
-            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, bg=constant.BACKGROUD_COLOR_UI_MAC, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
+            a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, bg=constant.BACKGROUD_COLOR_UI_MAC, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            # Create a custom menu bar
+            menu_bar = Menu( self.w_main_windows)
+            # Add a custom "File" menu (or other menus you want)
+            file_menu = Menu( menu_bar, tearoff=0)
+            file_menu.add_command( label="Open", command=self.mwib_open_box)
+            file_menu.add_command( label="Exit", command=self.w_main_windows.quit)
+            menu_bar.add_cascade( label="File", menu=file_menu)
+            # Set the custom menu bar
+            self.w_main_windows.config( menu=menu_bar)
         elif self.s_platform == "Linux":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)

@@ -67,7 +67,7 @@ class MyMainWindow:
             w_root_windows : the windows created by tk
             a_list_application_info : les inforamtions de l'application
         """
-        self.c_the_log = MyLogAnUsage( None)
+        self.c_the_log = MyLogAnUsage( list_application_info, 'console')
         self.c_the_log.add_string_to_log( '\n')
         self.w_tk_root = w_root_windows        # root window the first window created
         self.a_list_application_info = list_application_info
@@ -83,7 +83,7 @@ class MyMainWindow:
             self.i_main_window_height = 838
         elif self.s_platform == "Darwin":
             self.i_main_window_width = 1150
-            self.i_main_window_height = 834
+            self.i_main_window_height = 838
         elif self.s_platform == "Windows":
             self.i_main_window_width = 1070
             self.i_main_window_height = 824
@@ -299,10 +299,13 @@ class MyMainWindow:
             self.i_main_window_width += 100
             if self.s_platform == "Linux":
                 self.i_main_window_height -= 100
+                a_bg_color=constant.BACKGROUD_COLOR_UI
             elif self.s_platform == "Darwin":
                 self.i_main_window_height -= 100
+                a_bg_color=constant.BACKGROUD_COLOR_UI_MAC
             elif self.s_platform == "Windows":
                 self.i_main_window_height -= 98
+                a_bg_color=constant.BACKGROUD_COLOR_UI
             i_rect_x = 2
             i_rect_y = 0
             i_rect_width = 98
@@ -316,10 +319,10 @@ class MyMainWindow:
         self.__mw_set_windows_attribute()  # Set windows attribute
 
         # Create icons frame
-        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)    # background='darkgray'
+        a_top_bar_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=2, background=a_bg_color)    # background='darkgray'
         a_top_bar_frame.place( x=i_rect_x, y=i_rect_y, width=i_rect_width, height=i_rect_height )   # fill :  must be 'none', 'x', 'y', or 'both'
         # Create picture frame
-        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
+        a_pic_frame = tk_gui.Frame( self.w_tk_root, padx=0, pady=0, background=a_bg_color)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
         if b_vertical is True:
             a_pic_frame.place( x=100, y=2, width=self.i_main_window_width-104, height=constant.PICTURE_HEIGHT+20+4)  # fill :  must be 'none', 'x', 'y', or 'both'
         else:
