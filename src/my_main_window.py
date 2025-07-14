@@ -303,7 +303,7 @@ class MyMainWindow:
             elif self.s_platform == "Darwin":
                 self.i_main_window_height -= 100
                 a_bg_color=constant.BACKGROUD_COLOR_UI_MAC
-            elif self.s_platform == "Windows":
+            else:     # self.s_platform == "Windows":
                 self.i_main_window_height -= 98
                 a_bg_color=constant.BACKGROUD_COLOR_UI
             i_rect_x = 2
@@ -315,6 +315,7 @@ class MyMainWindow:
             i_rect_y = 0
             i_rect_width = self.i_main_window_width-4
             i_rect_height = 98
+            a_bg_color=constant.BACKGROUD_COLOR_UI
 
         self.__mw_set_windows_attribute()  # Set windows attribute
 

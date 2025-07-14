@@ -276,7 +276,7 @@ def main( a_list_argv):
     __print_application_info( c_the_log, LIST_APPLICATION_INFO)
 
     a_root_windows = tk_gui.Tk()
-    
+
     a_root_windows.configure( bg=constant.BACKGROUD_COLOR_UI) # 'blue'
     # a_root_windows.withdraw()
 

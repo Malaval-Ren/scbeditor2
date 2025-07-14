@@ -273,18 +273,28 @@ class MyMainWindowPallet:
         a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=24)
         a_pallet_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
         a_pallet_sep_h0.place( x=0, y=10, relwidth=1.0)
-        a_pallet_sep_lbl_h0 = Label( a_top_separator_frame, text="Pallet", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+
+        if self.s_platform == 'Darwin':
+            font_style = ("TkDefaultFont", 12, "bold")
+        else:
+            font_style = '-weight bold'
+
+        a_pallet_sep_lbl_h0 = Label( a_top_separator_frame, text="Pallets", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
         a_pallet_sep_lbl_h0.place( x=280, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h0, text="Click to select a color in a pallet")
-        a_pallet_sep_lbl_h1 = Label( a_top_separator_frame, text="Color", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        if self.s_platform == 'Linux':
+        a_pallet_sep_lbl_h1 = Label( a_top_separator_frame, text="Colors", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
+        if self.s_platform == "Linux":
             a_pallet_sep_lbl_h1.place( x=680, y=0)
+        elif self.s_platform == "Darwin":
+            a_pallet_sep_lbl_h1.place( x=714, y=0)
         else:
             a_pallet_sep_lbl_h1.place( x=660, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h1, text="Edit a color to modify it")
-        a_pallet_sep_lbl_h2 = Label( a_top_separator_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        if self.s_platform == 'Linux':
+        a_pallet_sep_lbl_h2 = Label( a_top_separator_frame, text="Zoom", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
+        if self.s_platform == "Linux":
             a_pallet_sep_lbl_h2.place( x=640+320, y=0)
+        elif self.s_platform == "Darwin":
+            a_pallet_sep_lbl_h2.place( x=640+360, y=0)
         else:
             a_pallet_sep_lbl_h2.place( x=640+270, y=0)
         MyToolTip( widget=a_pallet_sep_lbl_h2, text="Show zoom around the last click on the picture")
@@ -368,8 +378,17 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         return i_index_base_block
 
+    # ####################### __mpw_entry_label ########################
+    def __mpw_entry_label( self, a_color_bottom_frame, a_string_var, a_color_okay_command, i_index_base_block) -> tuple:
+        """ create an entry and a label for the color edition hexadecimal and decimal """
+        an_entry = Entry( a_color_bottom_frame, textvariable=a_string_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( a_color_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
+        an_entry.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
+        an_label = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
+        an_label.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        return an_entry, an_label
+
     # ####################### __mwp_pallet_zone_center_up ########################
-    def __mwp_pallet_zone_center_up( self, a_color_bottom_frame, i_index_base_block) -> int:
+    def __mwp_pallet_zone_center_up( self, a_color_bottom_frame, i_index_base_block : int) -> int:
         """ Frame with the pallet colors label left, and color display to right """
         if self.s_platform == 'Linux':
             i_pad_y=0
@@ -395,10 +414,12 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         red_okay_command = self.w_tk_root.register( self.mwp_red_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_red_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate='all', validatecommand=( red_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='red')
-        self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
-        self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
-        self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        self.a_red_ntr, self.a_red_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_red_input_var, red_okay_command, i_index_base_block)
+        # self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate='all', validatecommand=( red_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='red')
+        # self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
+        # self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
+        # self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+
         a_offset_lbl = Label( a_color_bottom_frame, text="New", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
         a_offset_lbl = Label( a_color_bottom_frame, text="Old", background=constant.BACKGROUD_COLOR_UI)
@@ -414,10 +435,11 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         green_okay_command = self.w_tk_root.register( self.mwp_green_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_green_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( green_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
-        self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
-        self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
-        self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        self.a_green_ntr, self.a_green_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_green_input_var, green_okay_command, i_index_base_block)
+        # self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( green_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
+        # self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
+        # self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
+        # self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
         i_index_base_block += 1
         a_color_name_lbl = Label( a_color_bottom_frame, text="Blue", background=constant.BACKGROUD_COLOR_UI, foreground='black')
@@ -426,10 +448,11 @@ class MyMainWindowPallet:
         i_index_base_block += 1
         blue_okay_command = self.w_tk_root.register( self.mwp_blue_max_of_two_chars_and_filter)
         # all parameter available for self.mwp_blue_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( blue_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='blue')
-        self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
-        self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
-        self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        self.a_blue_ntr, self.a_blue_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_blue_input_var, blue_okay_command, i_index_base_block)
+        # self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( blue_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='blue')
+        # self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
+        # self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
+        # self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
 
         i_index_base_block = self.__mwp_pallet_zone_center_up_button( a_color_bottom_frame, i_index_base_block, i_index_base_block_for_old_button)
 

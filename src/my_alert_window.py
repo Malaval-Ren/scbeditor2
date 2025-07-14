@@ -102,7 +102,11 @@ class MyAlertWindow:
     # ####################### __aw_alert_frame ########################
     def __aw_alert_frame( self, top_frame) -> tk_gui.Frame:
         """ Create the same frame for all dialog """
-        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=self.alert_background)   # darkgray or light grey or self.alert_background
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+        top_left_frame = tk_gui.Frame( top_frame, relief='flat', background=background_color)   # darkgray or light grey or self.alert_background
         top_left_frame.pack( side='left', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
         top_left_frame.grid_rowconfigure( 1, weight=1)
         top_left_frame.grid_columnconfigure( 1, weight=1)
@@ -115,16 +119,21 @@ class MyAlertWindow:
     def __aw_error_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
 
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_error_photo()
         top_left_frame = self.__aw_alert_frame( top_frame)
 
-        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=background_color, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=background_color, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
         a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
@@ -138,16 +147,21 @@ class MyAlertWindow:
     def __aw_question_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
 
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
         top_left_frame = self.__aw_alert_frame( top_frame)
 
-        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=background_color, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=background_color, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
         a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
@@ -171,18 +185,23 @@ class MyAlertWindow:
     def __aw_choice_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
 
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_question_photo()
         top_left_frame = self.__aw_alert_frame( top_frame)
 
-        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=background_color, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
         # Configure column 2 to expand
         top_left_frame.grid_columnconfigure(2, weight=1)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=background_color, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
         a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
@@ -209,16 +228,21 @@ class MyAlertWindow:
     def __aw_warning_block( self, s_message, top_frame, button_frame):
         """ Create a error dialog """
 
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
         # #### TOP LEFT #####
         _a_error_photo = self.c_the_icons.get_warning_photo()
         top_left_frame = self.__aw_alert_frame( top_frame)
 
-        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label = Label( top_left_frame, image=_a_error_photo, background=background_color, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
         a_font_label = font.Font( size=18)
-        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=self.alert_background, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label = Label( top_left_frame, text=s_message, wraplength=400, justify='left', background=background_color, foreground='white', anchor='w', font=a_font_label)  # background='darkgray' or 'light grey' == self.about_background
         a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
@@ -237,15 +261,20 @@ class MyAlertWindow:
     def __aw_alert_block( self, s_message, top_frame, button_frame):
         """ Create a alert dialog """
 
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
         # #### TOP LEFT #####
         _a_about_photo = self.c_the_icons.get_about_photo()
         top_left_frame = self.__aw_alert_frame( top_frame)
 
-        a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=self.alert_background, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_name_photo_label = Label( top_left_frame, image=_a_about_photo, background=background_color, anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_name_photo_label.grid( row=1, column=1, padx=4, pady=4, sticky='ns')
 
         # #### TOP RIGHT #####
-        a_alert_text_label = Label( top_left_frame, text=s_message, background='light grey', foreground='black', anchor='center')  # background='darkgray' or 'light grey' == self.about_background
+        a_alert_text_label = Label( top_left_frame, text=s_message, background=background_color, foreground='black', anchor='center')  # background='darkgray' or 'light grey' == self.about_background
         a_alert_text_label.grid( row=1, column=2, padx=4, pady=4, sticky='ew')
 
         # #### BOTTOM #####
@@ -268,6 +297,8 @@ class MyAlertWindow:
             self.i_height += 10
             if self.s_platform == "Linux":
                 self.i_height += 38
+            elif self.s_platform == "Darwin":
+                self.i_height += 10
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
@@ -304,7 +335,13 @@ class MyAlertWindow:
         # window dialog is on top of w_parent_window
         self.w_alert_window.grab_set()
         self.w_alert_window.focus_set()
-        self.w_alert_window.configure( background=self.alert_background)
+
+        if self.s_platform == "Darwin":
+            background_color = constant.BACKGROUD_COLOR_UI_MAC
+        else:
+            background_color = self.alert_background
+
+        self.w_alert_window.configure( background=background_color)
 
         # ####################### disable_event ########################
         # disable click on the X on top right of the window
@@ -319,7 +356,7 @@ class MyAlertWindow:
             self.w_alert_window.title( ' Alert ')
 
         # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=self.alert_background)   # darkgray or light grey
+        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=background_color)   # darkgray or light grey
         top_frame.pack( side='top', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
         button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
         button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
@@ -349,3 +386,20 @@ class MyAlertWindow:
         """ Close the preference window """
         self.__aw_alert_cancel_button()
         self.w_alert_window.quit()
+
+    # ####################### aw_test_all_alert ########################
+    def aw_test_all_alert( self):
+        """ Show all the alert in code to see look and fiel """
+        # self.aw_create_alert_window( 1, "BMP file not compatible", "This bmp file don't have 256 colors (1 or 2 bpp).")
+        self.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
+        # self.aw_create_alert_window( 1, "Swap two colors in a pallet line", "The selected colors must be in the same line.")
+
+        _ = self.aw_create_alert_window( 2, "Question", "Confirm copy of the color at index " + str( 3) + " to the index " + str( 11) + " ?")
+        # _ = self.aw_create_alert_window( 2, "Question", "Confirm copy of the line " + str( 3) + " to the line " + str( 13) + " ?")
+
+        y = 15
+        color_set = 59
+        self.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors {color_set} colors).")
+        # self.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
+
+        _ = self.aw_create_alert_window( 4, "Question", "This bmp file don't have 256 colors (4 bpp is 16 colors).\nDo you agree improvement it?\n- just 8 bpp (16 / 256 colors)\n- 8 bpp and copy pallet (256 colors)\nThis write it to update it.")

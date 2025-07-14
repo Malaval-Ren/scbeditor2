@@ -170,53 +170,61 @@ class MyMainWindowIconsBar:
         """ Select the bmp file to use """
         return mt_open_file( self.w_main_windows, self.c_main_class)
 
+    # ####################### __mwib_select_load_bmp ########################
+    def __mwib_nbr_color_per_lines( self, a_image, s_filename : str, i_width : int, i_height : int) -> tuple:
+        """ Check if the image have a maximum of 16 colors per line """
+        if a_image and s_filename:
+            # Check if the image have a maximum of 16 colors per line
+            for y in range( i_height):
+                color_set = set()
+                for x in range( i_width):
+                    color_index = a_image.getpixel( (x, y))
+                    color_set.add(color_index)
+                if len(color_set) > 16:
+                    self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors).")
+                    a_image = None
+                    s_filename = ''
+                    break
+
+        return a_image, s_filename
+
     # ####################### __mwib_load_check_bmp ########################
     def __mwib_load_check_bmp( self, s_filename) -> tuple:
         """ Check size and number of color in bmp """
         a_image = None
         self.c_the_log.add_string_to_log( 'mwib_load_check_bmp() : Loading : ' + s_filename)
-        # Open the image file
-        with Image.open( s_filename) as a_img:
-            a_image = self.__mwib_get_copy_of_image( s_filename, a_img)
+        if s_filename:
+            # Open the image file
+            with Image.open( s_filename) as a_img:
+                a_image = self.__mwib_get_copy_of_image( s_filename, a_img)
 
-        a_img = None  # Free the memory of the original image
-        # Now the file is closed, but a_image is a full in-memory image
-        if a_image and s_filename:
-            i_width, i_height = a_image.size
-            # resize the original bmp from 320x200 to 640x400
-            if i_width != 320 or i_height != 200:
-                # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
-                self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
-                a_image = None
-                s_filename = ''
-            else:
-                a_pallet_list = a_image.getpalette()
-                if len( a_pallet_list) < 768:      # Less than 256 colors 2, 4 bpp
-                    i_result = self.c_alert_windows.aw_create_alert_window( 4, "Question", "This bmp file don't have 256 colors (4 bpp is 16 colors).\nDo you agree improvement it?\n- just 8 bpp (16 / 256 colors)\n- 8 bpp and copy pallet (256 colors)\nThis write it to update it.")
-                    if i_result == 1:
-                        a_image = self.__mwib_convert_bmp( s_filename, a_image, True)
-                    elif i_result == 3:
-                        a_image = self.__mwib_convert_bmp( s_filename, a_image, False)
-                    else:
-                        a_image = None
-                        s_filename = ''
-                elif len( a_pallet_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
-                    self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
+            a_img = None  # Free the memory of the original image
+            # Now the file is closed, but a_image is a full in-memory image
+            if a_image:
+                i_width, i_height = a_image.size
+                # resize the original bmp from 320x200 to 640x400
+                if i_width != 320 or i_height != 200:
+                    # messagebox.showerror( "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.", parent=self.w_main_windows )
+                    self.c_alert_windows.aw_create_alert_window( 1, "BMP file not compatible", "The size of bmp file must be 320 x 200, for Apple II GS.")
                     a_image = None
                     s_filename = ''
-
-                if a_image and s_filename:
-                    # Check if the image have a maximum of 16 colors per line
-                    for y in range(i_height):
-                        color_set = set()
-                        for x in range(i_width):
-                            color_index = a_image.getpixel((x, y))
-                            color_set.add(color_index)
-                        if len(color_set) > 16:
-                            self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors).")
+                else:
+                    a_pallet_list = a_image.getpalette()
+                    if len( a_pallet_list) < 768:      # Less than 256 colors 2, 4 bpp
+                        i_result = self.c_alert_windows.aw_create_alert_window( 4, "Question", "This bmp file don't have 256 colors (4 bpp is 16 colors).\nDo you agree improvement it?\n- just 8 bpp (16 / 256 colors)\n- 8 bpp and copy pallet (256 colors)\nThis write it to update it.")
+                        if i_result == 1:
+                            a_image = self.__mwib_convert_bmp( s_filename, a_image, True)
+                        elif i_result == 3:
+                            a_image = self.__mwib_convert_bmp( s_filename, a_image, False)
+                        else:
                             a_image = None
                             s_filename = ''
-                            break
+                    elif len( a_pallet_list) > 768:      # More than 256 colors 16, 24 or 32 bpp
+                        self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", "The bmp file have to much colors.\nConvert it, please.")
+                        a_image = None
+                        s_filename = ''
+
+                    a_image, s_filename = self.__mwib_nbr_color_per_lines( a_image, s_filename, i_width, i_height)
 
         return s_filename, a_image
 
@@ -289,10 +297,10 @@ class MyMainWindowIconsBar:
         self.w_front_window.pbw_progress_bar_stop()
         self.w_front_window = None
 
-    # ####################### __about_dialog_box ########################
+    # ####################### __mwib_about_dialog_box ########################
     def __mwib_about_dialog_box( self):
         """ Button about of the main window """
-        self.c_the_log.add_string_to_log( 'Do about')
+        self.c_the_log.add_string_to_log( 'mwib_about_dialog_box')
         self.w_front_window = MyAboutWindow( self.c_main_class, self.a_list_application_info)
         self.w_front_window.aw_create_about_window()
         self.w_front_window = None
@@ -300,6 +308,7 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_save_box ########################
     def __mwib_save_box( self):
         """ Button save the picture modified """
+        self.c_the_log.add_string_to_log( 'mwib_save_box()')
         a_main_picture = self.c_mains_image.mwi_get_original_image()
         if a_main_picture:
             self.c_the_log.add_string_to_log( 'Do save picture')
@@ -308,6 +317,7 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_import_pallet_box ########################
     def __mwib_import_pallet_box( self):
         """ Button import pallet from an another picture """
+        self.c_the_log.add_string_to_log( 'mwib_import_pallet_box()')
         if self.s_filename and self.a_original_image:
             self.c_the_log.add_string_to_log( 'Do import pallet of picture')
             s_filename = self.__mwib_select_load_bmp()
@@ -317,6 +327,12 @@ class MyMainWindowIconsBar:
                     self.w_front_window = MyImportPalletWindow( self.c_main_class, self.c_mains_image, self.mwib_get_get_path_filename())
                     self.w_front_window.ipw_create_import_window( a_image, self.a_original_image, self.i_selected_pallet_in_main_windows)
                     self.w_front_window = None
+
+    # ####################### __mwib_cursor_box ########################
+    def __mwib_cursor_box( self):
+        """ Button cursor to do something """
+        self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
+        self.c_alert_windows.aw_test_all_alert()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -335,6 +351,7 @@ class MyMainWindowIconsBar:
     def mwib_create_top_bar_icons( self, i_row_line) -> int:
         """ Design the top row for the main windows """
         # self.c_the_log.add_string_to_log( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
+        self.c_the_log.add_string_to_log( 'mwib_create_top_bar_icons()')
 
         s_button_style = 'flat'
         i_column = 0
@@ -352,7 +369,7 @@ class MyMainWindowIconsBar:
             file_menu.add_command( label="Exit", command=self.w_main_windows.quit)
             menu_bar.add_cascade( label="File", menu=file_menu)
             # Set the custom menu bar
-            self.w_main_windows.config( menu=menu_bar)     
+            self.w_main_windows.config( menu=menu_bar)
         elif self.s_platform == "Linux":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
@@ -383,6 +400,7 @@ class MyMainWindowIconsBar:
     def mwib_create_left_bar_icons( self, i_row_line) -> int:
         """ Design the left row for the main windows """
         # self.c_the_log.add_string_to_log( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
+        self.c_the_log.add_string_to_log( 'mwib_create_left_bar_icons()')
 
         s_button_style = 'flat'
         i_column = 0
@@ -392,7 +410,7 @@ class MyMainWindowIconsBar:
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, bg=constant.BACKGROUD_COLOR_UI_MAC, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             # Create a custom menu bar
             menu_bar = Menu( self.w_main_windows)
             # Add a custom "File" menu (or other menus you want)

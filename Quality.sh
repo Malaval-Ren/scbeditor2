@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.31'
+version='1.33'
 
 # definition all colors and styles to use with an echo
 
@@ -161,7 +161,7 @@ then
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     python_version=$(python3 --version)
-	tcl_tk_version=$(python -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
+	tcl_tk_version=$(python3 -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
     pyinstaller_version=$(pyinstaller -v)
 	temp=$(pylint --version)
 	# Get from string the version
@@ -211,7 +211,7 @@ echo -e "" >> "$pylint_log"
 echo -e "| *Tools* | *version* |" >> "$pylint_log"
 echo -e "| -------------- | -------------------------------- |" >> "$pylint_log"
 echo -e "| Python |" "$python_version"" |" >> "$pylint_log"
-echo -e "| Tcl/Tk |" "$tcl_tk_version"" |" >> "$pylint_log"
+echo -e "| Tkinter |" "$tcl_tk_version"" |" >> "$pylint_log"
 echo -e "| PyInstaller |" "$pyinstaller_version"" |" >> "$pylint_log"
 echo -e "| Pylint |" "$pylint_version"" |" >> "$pylint_log"
 echo -e "| Perl |" "$perl_version"" |" >> "$pylint_log"
@@ -221,7 +221,7 @@ echo -e "| System |" "$os_version"" |" >> "$pylint_log"
 echo -e $BGreen $pyInstall_Name $Color_Off
 echo -e $Green "Date                :" $(date) $Color_Off
 echo -e $Green "Python version      :" "$python_version" $Color_Off
-echo -e $Green "Tcl/Tk version      :" "$tcl_tk_version" $Color_Off
+echo -e $Green "Tkinter version     :" "$tcl_tk_version" $Color_Off
 echo -e $Green "PyInstaller version :" "$pyinstaller_version" $Color_Off
 echo -e $Green "Pylint version      :" "$pylint_version" $Color_Off
 echo -e $Green "perl version        :" "$perl_version" $Color_Off

@@ -390,18 +390,28 @@ class MyMainWindowImage:
         a_top_separator_frame.place( x=0, y=0, width=i_pic_frame_width+24+380, height=24)
         a_pic_sep_h0 = Separator( a_top_separator_frame, orient='horizontal')
         a_pic_sep_h0.place( x=0, y=10, relwidth=1.0)
-        a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
+
+        if self.s_platform == 'Darwin':
+            font_style = ("TkDefaultFont", 12, "bold")
+        else:
+            font_style = '-weight bold'
+
+        a_pic_sep_lbl_h0 = Label( a_top_separator_frame, text="Picture", anchor="center", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
         a_pic_sep_lbl_h0.place( x=300, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h0, text="Click on Picture to sea zoomed part")
-        a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        if self.s_platform == 'Linux':
+        a_pic_sep_lbl_h1 = Label( a_top_separator_frame, text="SCB", anchor="center", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
+        if self.s_platform == "Linux":
+            a_pic_sep_lbl_h1.place( x=637, y=0)
+        elif self.s_platform == "Darwin":
             a_pic_sep_lbl_h1.place( x=637, y=0)
         else:
             a_pic_sep_lbl_h1.place( x=632, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h1, text="Click on blue rectangle to manage SCB")
-        a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font='-weight bold')
-        if self.s_platform == 'Linux':
+        a_pic_sep_lbl_h2 = Label( a_top_separator_frame, text="Details", anchor="center", background=constant.BACKGROUD_COLOR_UI, font=font_style, fg='black')
+        if self.s_platform == "Linux":
             a_pic_sep_lbl_h2.place( x=640+224, y=0)
+        elif self.s_platform == "Darwin":
+            a_pic_sep_lbl_h2.place( x=640+240, y=0)
         else:
             a_pic_sep_lbl_h2.place( x=640+200, y=0)
         MyToolTip( widget=a_pic_sep_lbl_h2, text="- Show filename\n- Arrows to roll picture pixels\n- Arrows to move cursor in picture\n- Set a pallet to a line\n- Show color used")

@@ -4,7 +4,7 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
 _Creation: December 31th, 2023..2025, by Renaud Malaval_  
-_Last review: July 8th, 2025, by Renaud Malaval_
+_Last review: July 14th, 2025, by Renaud Malaval_
 
 ## Features
 
@@ -34,13 +34,13 @@ _Last review: July 8th, 2025, by Renaud Malaval_
 ## **Notes**
 
 - Windows 11 :
-Please, check it before install it, please  
+Check it before install it, please  
 If your antivirus find some think, send me a mail, please  
 
 - Windows 10 :
 :warning: Microsoft Defender found **PUA:Win32/Packunwan** but I think that is an error  
 Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and on my hard drive  
-Please, check it before install it, please  
+Check it before install it, please  
 If your antivirus find some think, send me a mail, please  
 
 - Linux Mint :
@@ -57,15 +57,17 @@ I have to create an ".venv" environment to simplify it
 
 ## **Tools**
 
-- [Python](https://www.python.org/) with Tcl/Tk : 8.6.15
-  - Windows 11 : 3.12.10
-  - [Linux Mint v22.1](https://linuxmint.com/) : default release installed with this distribution : 3.12.3  
-  - [Mac OSx86 10.15.7](https://apps.apple.com/fr/app/macos-catalina/id1466841314?mt=12) : 3.12.2
+- [Python](https://www.python.org/)
+  - [Windows 11](https://www.microsoft.com/en-us/software-download/windows11) : 3.12.10 with Tkinter : 8.6.15
+  - [Linux Mint v22.1](https://linuxmint.com/) : 3.12.3  with Tkinter : 8.6.15
+  - [Mac OSx86 v12.7.6](https://apps.apple.com/fr/app/macos-monterey/id1576738294?mt=12) : 3.13.3 with Tkinter : 9.0.2
 - [Python modules](https://pypi.org/)
   - [pip](https://pypi.org/project/pip/)
   - [pylint](https://pypi.org/project/pylint/)
   - [pyinstaller](https://pyinstaller.org/en/stable/)
   - [pillow](https://pypi.org/project/pillow/)
+- [Oracle VirtualBox](https://www.virtualbox.org/) : A full virtualization software for x86_64 hardware
+- [Homerew](https://brew.sh/) : A Package Manager for macOS
 - [Visual Studio Code](https://code.visualstudio.com/) : IDE (with somes extensions)
 - [Mark Text](https://www.marktext.cc/) : A viewer for markdown file (.md)
 - [GIT](https://git-scm.com/) : Distributed version control system
@@ -74,7 +76,7 @@ I have to create an ".venv" environment to simplify it
 - [7-Zip](https://www.7-zip.org/) : A file archiver
 - [GIMP](https://www.gimp.org/) : A picture editor
 - [Image Magick Display](https://imagemagick.org/) : To convert .png to .icns
-- [XnView](https://www.xnview.com/) : To view .icns Mac Os icon file on Windows 10
+- [XnView](https://www.xnview.com/) : To view .icns Mac Os icon file on Windows
 - [FlatIcon](https://www.flaticon.com) : Source of wonderful free pictures
 
 ## **Development**
@@ -84,8 +86,6 @@ $ git clone https://github.com/Malaval-Ren/scbeditor2.git
 pip install -r requirements.txt
 
 >note : https://code.visualstudio.com/docs/python/environments
-        Linux    : python3 -m pip install --upgrade pip
-        Catalina :
-        windows  : py -m pip install pillow
-
-pip install -r requirements.txt
+      : **macOS** install Python with homebrew
+      : **Linux** Python is already present
+      : **Windows** install Python
