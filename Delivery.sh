@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.95'
+version='1.96'
 
 # definition all colors and styles to use with an echo
 
@@ -147,6 +147,8 @@ pyInstallSpec_MacOS="./"$pyInstall_Name"_osx.spec"
 pyInstallSpec_Src=""
 
 pyInstallSpec="./"$pyInstall_Name".spec"
+pyInstall_fileVersion_lnx="./"$pyInstall_Name".desktop"
+pyInstall_fileVersion_osx="./"$pyInstall_Name"_osx.spec"
 pyInstall_fileVersion="./"$pyInstall_Name"_version.txt"
 pyInstall_pycache="__pycache__"
 pyInstall_pycache_sources="src/__pycache__"
@@ -198,12 +200,13 @@ fi
 
 echo -e $IGreen "OS type             :" "$OSTYPE" $Color_Off
 echo -e $IGreen "Current folder      :" "$currentFolder" $Color_Off
-# Date of the day at format YYYY-MM-DD
+
+# Date of the day at format YYYY-MM-DD  WINDOWS
 nouvelle_date=$(date +%F)
 # Remplace value in file
 sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
 echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
-# Utilise sed pour capturer les 4 numéros et increase last number by +1
+# Utilise sed pour capturer les 4 numéros et increase last number by +1  WINDOWS
 sed -E -i.bak -e '
 /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
     s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
@@ -212,9 +215,26 @@ sed -E -i.bak -e '
 # Get new version to display it
 nouvelle_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
 echo -e $IGreen "Version             :" "$nouvelle_version" $Color_Off
+
+# Utilise sed pour capturer les 4 numéros et increase last number by +1  MAC OS X
+sed -E -i.bak '
+/^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
+  s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
+}
+' "$pyInstall_fileVersion_osx"
+
+# Utilise sed pour incrémenter la dernière partie (après le tiret)  Linux
+sed -E -i.bak '
+/^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
+  s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
+}
+' "$pyInstall_fileVersion_lnx"
+
 # git update file in local
-git add ./scbeditor2_version.txt
-git commit -m "update BuildDate and ProductVersion field"
+# git add $pyInstall_fileVersion_lnx
+# git add $pyInstall_fileVersion_osx
+# git add $pyInstall_fileVersion
+# git commit -m "update BuildDate and ProductVersion field"
 echo
 
 # store arguments in a special array 
