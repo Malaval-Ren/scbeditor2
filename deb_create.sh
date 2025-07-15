@@ -33,7 +33,7 @@
 #		Problem not solved to convert script 'preinst'
 #		https://stackoverflow.com/questions/54480244/how-to-easily-convert-debian-script-to-rpm-script
 
-version='1.47'
+version='1.48'
 
 # definition all colors and styles to use with an echo
 
@@ -180,47 +180,9 @@ echo -e $Green "Architecture        :" "$arch" $Color_Off
 pyInstall_fileVersion="./""$pyInstall_Name""_version.txt"
 if [ -f "$pyInstall_fileVersion" ]
 then
-	# echo
-    # echo -e $Green "getVersion          :" "$pyInstall_getVersion" $Color_Off
-    # echo -e $Green "fileVersion         :" "$pyInstall_fileVersion" $Color_Off
-	# echo
-    temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
-    # echo -e $Green "grep result         :" "$temp" $Color_Off
-    tempNoSpace=$(echo $temp | tr -d ' ')
-
-    temp=${tempNoSpace: -1}
-    hex="$(printf '%s' "$temp" | xxd -pu)"
-    if [[ "$hex" == "0d" ]]
-    then
-        # remove this char '\r' at end of string
-        refLineLen=${#tempNoSpace}
-        refLineLen=$(($refLineLen - 1))
-        tempNoSpace=${tempNoSpace:0:refLineLen}
-    fi
-
-    # echo -e $Green "result no space     :" "$tempNoSpace" $Color_Off
-    refLineLen=${#pyInstall_getVersion}
-    # echo -e $Green "getVersion len      :" "$refLineLen" $Color_Off
-    refLineLen=$(($refLineLen - 1))
-	tempNoSpaceLen=${#tempNoSpace}
-    # echo -e $Green "tempNoSpaceLen len  :" "$tempNoSpaceLen" $Color_Off
-	calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
-	calcVersionLen=$(($calcVersionLen - 4))
-    # echo -e $Green "calcVersionLen len  :" "$calcVersionLen" $Color_Off
-	# echo -e $Green  "tempNoSpace         :" "$tempNoSpace"":""$refLineLen"":""$calcVersionLen" $Color_Off
-    versionTemp=${tempNoSpace:refLineLen:calcVersionLen}
-    # echo -e $Green "result filter       :" "$tversionTemp" $Color_Off
-
-    versionLen=${#versionTemp}
-    # echo -e $Green "len result filter   :" "$versionLen" $Color_Off
-    if [ $versionLen -eq $calcVersionLen ]
-    then
-        pyInstall_version="_v""$versionTemp"
-        echo -e $Green "Version found is    :" "$pyInstall_version" $Color_Off
-    else
-        pyInstall_version=""
-        echo -e $BYellow "Version is no available" $Color_Off 
-    fi
+    the_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+    pyInstall_version="_v""$the_version"
+    echo -e $Green "Version found is    :" "$pyInstall_version" $Color_Off
     echo
 else
 	echo

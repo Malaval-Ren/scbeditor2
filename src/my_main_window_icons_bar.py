@@ -30,8 +30,9 @@
 # pylint: disable=too-many-instance-attributes
 # ###############################################################################################
 
-import os
 import platform
+import os
+import sys
 
 from tkinter import Button, Menu
 from PIL import Image
@@ -331,8 +332,12 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_cursor_box ########################
     def __mwib_cursor_box( self):
         """ Button cursor to do something """
-        self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
-        self.c_alert_windows.aw_test_all_alert()
+        if getattr( sys, 'frozen', False) and hasattr( sys, '_MEIPASS'):
+            # here we are in PyInstaller application
+            self.c_the_log.add_string_to_log( '__mwib_cursor_box(): does nothing')
+        else:
+            self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
+            self.c_alert_windows.aw_test_all_alert()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/

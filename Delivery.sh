@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.97'
+version='1.98'
 
 # definition all colors and styles to use with an echo
 
@@ -224,7 +224,7 @@ then
     sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
 elif [[ "$OSTYPE" == "linux-gnu"* ]]
 then
-    sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+    sed -i "s/\(StringStruct(u'BuildDate', u'\)[0-9-]*\('\)/\1$nouvelle_date\2/" "$pyInstall_fileVersion"
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     gsed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
@@ -560,7 +560,7 @@ then
                 exit $ERROR_SH_FAILED
             fi
             i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
-            if [ $i_number_of_picture -ne 15 ]
+            if [ $i_number_of_picture -ne 16 ]
             then
                 echo
                 echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
@@ -581,8 +581,8 @@ then
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
-            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
-            if [ $i_number_of_picture -ne 15 ]
+            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name" | grep png | grep -c "^")
+            if [ $i_number_of_picture -ne 16 ]
             then
                 echo
                 echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
