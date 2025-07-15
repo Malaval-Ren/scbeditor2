@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.30'
+version='1.31'
 
 # definition all colors and styles to use with an echo
 
@@ -167,7 +167,7 @@ fi
 test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_version".dmg"
 create-dmg \
     --volname "${pyInstall_Name}${pyInstall_version}" \
-    --volicon "./dmg_icon_T_512x512.icns" \
+    --volicon "./.VolumeIcon.icns" \
     --window-pos 200 120 \
     --window-size 800 400 \
     --icon-size 128 \
