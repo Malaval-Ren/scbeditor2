@@ -30,7 +30,7 @@
 | ![Alt text](./logo_Windows_T_64x64.png) ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | **Delivery.sh** | - Script bash pour builder l’application avec [PyInstaller](https://www.pyinstaller.org/) dans le dossier «\dist», dans chaque platforme supporter :<br>&ensp;- **Windows 11**<br>&ensp;- [**Linux Mint**](https://linuxmint.com/) (dos2unix ./Delivery.sh)<br>&ensp;- **MAC OS X** (dos2unix ./Delivery.sh)<br>- Il génère le dossier d'archive, contenant les fichiers du projet et les 3 applications, dans le dossier «..\Livraions\scbeditor2_v2.9.27.125» et le fichier «..\Livraions\scbeditor2_v2.9.27.125.7z».<br>Les 2 noms contiennent le numéro de version. |
 | ![Alt text](./logo_Windows_T_64x64.png) ![Alt text](./logo_Linux_T_64x64.png) ![Alt text](./logo_Apple-rainbow_T_64x64.png) | Display_Version.sh | Extract and show the version form the file «scbeditor2_version.txt» |
 | ![Alt text](./logo_Apple-rainbow_T_64x64.png) ![Alt text](./logo_Shell_Bash_GIT_T_64x64.png) | dmg_create.sh | Script bash pour générer le fichier de distribution «scbeditor2_v2.9.27.125.dmg» de l’application pour MAC OS X. le nom contient le numéro de version |
-| ![Alt text](./logo_Apple-rainbow_T_64x64.png) | dmg_icon_T_512x512.icns | Icone de l’application pour Mac OS X du fichier «.dmg» |
+| ![Alt text](./logo_Apple-rainbow_T_64x64.png) | .VolumeIcon.icns | Icon for Mac OS X when «.dmg» is mounted on the desktop |
 |   | GNU_GPLv3.txt | The licence for all this project |
 | ![Alt text](./logo_Windows_T_64x64.png) | Innosetup_begin.txt | File for InnoSetup, on go in... |
 | ![Alt text](./logo_Windows_T_64x64.png) | Innosetup_create_install.iss | File for InnoSetup, on go in... |
