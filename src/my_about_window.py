@@ -123,6 +123,8 @@ class MyAboutWindow:
 
         if self.s_platform == "Darwin":
             a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=67, height=19)  # , exportselection=0, takefocus=0
+        elif self.s_platform == "Linux":
+            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
         else:
             a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=63, height=19)  # , exportselection=0, takefocus=0
 

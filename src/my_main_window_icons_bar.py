@@ -30,8 +30,9 @@
 # pylint: disable=too-many-instance-attributes
 # ###############################################################################################
 
-import os
 import platform
+import os
+import sys
 
 from tkinter import Button, Menu
 from PIL import Image
@@ -331,8 +332,12 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_cursor_box ########################
     def __mwib_cursor_box( self):
         """ Button cursor to do something """
-        self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
-        self.c_alert_windows.aw_test_all_alert()
+        if getattr( sys, 'frozen', False) and hasattr( sys, '_MEIPASS'):
+            # here we are in PyInstaller application
+            self.c_the_log.add_string_to_log( '__mwib_cursor_box(): does nothing')
+        else:
+            self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
+            self.c_alert_windows.aw_test_all_alert()
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
@@ -425,13 +430,13 @@ class MyMainWindowIconsBar:
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
 
         a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
         i_row_line += 1
