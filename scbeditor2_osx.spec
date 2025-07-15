@@ -1,10 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+
+project_root = os.getcwd()
+
 block_cipher = None
 
 a = Analysis(
     ['scbeditor2.py'],
-    pathex=['/Users/renaud/Documents/Python/scbeditor2/scbeditor2/','/Users/renaud/Documents/Python/scbeditor2/scbeditor2/src/'],
+    pathex=[
+        project_root,
+        os.path.join(project_root, "src")
+    ],
     binaries=[],
     datas=[],
     hiddenimports=[],
@@ -85,26 +92,19 @@ exe = EXE(
     argv_emulation=False,
     target_arch=None,
     codesign_identity=None,
-    entitlements_file=None
+    entitlements_file=None,
     icon='appIcon_T_1024x1024.icns'
 )
 app = BUNDLE(
     exe,
     name='scbeditor2.app',
     icon='appIcon_T_1024x1024.icns',
-    bundle_identifier=None,
+    bundle_identifier='com.malaval.scbeditor2',
     version='2.9.27.125',
     info_plist={
-        'NSPrincipalClass': 'NSApplication',
-        'NSAppleScriptEnabled': False,
-        'CFBundleDocumentTypes':
-        [
-            {
-            'CFBundleTypeName': 'My File Format',
-            'CFBundleTypeIconFile': 'appIcon_T_1024x1024.icns',
-            'LSItemContentTypes': ['com.example.myformat'],
-            'LSHandlerRank': 'Owner'
-            }
-        ]
+        'CFBundleName': 'SCB Editor II',
+        'CFBundleDisplayName': 'SCB Editor II',
+        'CFBundleExecutable': 'scbeditor2',        
+        'NSPrincipalClass': 'NSApplication'
     }
 )

@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.96'
+version='1.97'
 
 # definition all colors and styles to use with an echo
 
@@ -161,6 +161,9 @@ pyInstall_Parameter=""
 
 livraisons_folder="../Livraisons/"
 
+
+# brew install gnu-sed gawk coreutils findutils
+
 if [[ "$OSTYPE" == "msys" ]]
 then
     python_version=$(python --version)
@@ -201,34 +204,119 @@ fi
 echo -e $IGreen "OS type             :" "$OSTYPE" $Color_Off
 echo -e $IGreen "Current folder      :" "$currentFolder" $Color_Off
 
+# ##########################################################################################
+# https://manytools.org/hacker-tools/ascii-banner/
+#
+#  ######                                                          
+#  #     # #    # # #      #####        #####    ##   ##### ###### 
+#  #     # #    # # #      #    #       #    #  #  #    #   #      
+#  ######  #    # # #      #    #       #    # #    #   #   #####  
+#  #     # #    # # #      #    #       #    # ######   #   #      
+#  #     # #    # # #      #    #       #    # #    #   #   #      
+#  ######   ####  # ###### #####        #####  #    #   #   ###### 
+#
+# ##########################################################################################
 # Date of the day at format YYYY-MM-DD  WINDOWS
 nouvelle_date=$(date +%F)
 # Remplace value in file
-sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+if [[ "$OSTYPE" == "msys" ]]
+then
+    sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    gsed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+fi
 echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
+
+# ##########################################################################################
+# https://manytools.org/hacker-tools/ascii-banner/
+#
+#  ###                                                              
+#   #  #    #  ####     #    # ###### #####   ####  #  ####  #    # 
+#   #  ##   # #    #    #    # #      #    # #      # #    # ##   # 
+#   #  # #  # #         #    # #####  #    #  ####  # #    # # #  # 
+#   #  #  # # #         #    # #      #####       # # #    # #  # # 
+#   #  #   ## #    #     #  #  #      #   #  #    # # #    # #   ## 
+#  ### #    #  ####       ##   ###### #    #  ####  #  ####  #    # 
+#
+# ##########################################################################################
 # Utilise sed pour capturer les 4 numéros et increase last number by +1  WINDOWS
-sed -E -i.bak -e '
-/^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
-    s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
-}
-' "$pyInstall_fileVersion"
+if [[ "$OSTYPE" == "msys" ]]
+then
+    sed -E -i'' -e '
+    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
+        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    sed -E -i'' -e '
+    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
+        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion"
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    gsed -E -i'' -e '
+    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
+        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion"
+fi
 # Get new version to display it
 nouvelle_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
 echo -e $IGreen "Version             :" "$nouvelle_version" $Color_Off
 
 # Utilise sed pour capturer les 4 numéros et increase last number by +1  MAC OS X
-sed -E -i.bak '
-/^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
-  s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
-}
-' "$pyInstall_fileVersion_osx"
+if [[ "$OSTYPE" == "msys" ]]
+then
+    sed -E -i'' '
+    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
+    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion_osx"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    sed -E -i'' '
+    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
+    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion_osx"
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    gsed -E -i'' '
+    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
+    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
+    }
+    ' "$pyInstall_fileVersion_osx"
+fi
 
 # Utilise sed pour incrémenter la dernière partie (après le tiret)  Linux
-sed -E -i.bak '
-/^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
-  s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
-}
-' "$pyInstall_fileVersion_lnx"
+if [[ "$OSTYPE" == "msys" ]]
+then
+    sed -E -i'' '
+    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
+    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
+    }
+    ' "$pyInstall_fileVersion_lnx"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    sed -E -i'' '
+    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
+    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
+    }
+    ' "$pyInstall_fileVersion_lnx"
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    gsed -E -i'' '
+    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
+    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
+    }
+    ' "$pyInstall_fileVersion_lnx"
+fi
 
 # git update file in local
 # git add $pyInstall_fileVersion_lnx
@@ -236,6 +324,7 @@ sed -E -i.bak '
 # git add $pyInstall_fileVersion
 # git commit -m "update BuildDate and ProductVersion field"
 echo
+
 
 # store arguments in a special array 
 args=("$@") 
@@ -320,47 +409,8 @@ echo
 
 if [[ -f "${pyInstall_fileVersion}" ]]
 then
-    # echo
-    # echo -e $IGreen "getVersion          :" "$pyInstall_getVersion" $Color_Off
-    # echo -e $IGreen "fileVersion         :" "$pyInstall_fileVersion" $Color_Off
-    # echo
-    temp=$(grep -F "$pyInstall_getVersion" "${pyInstall_fileVersion}")
-    # echo -e $IGreen "grep result         :" "$temp" $Color_Off
-    tempNoSpace=$(echo $temp | tr -d ' ')
-
-    if [[ "$OSTYPE" == "darwin"* || "$OSTYPE" == "linux-gnu"* ]]
-    then
-        temp=${tempNoSpace: -1}
-        hex="$(printf '%s' "$temp" | xxd -pu)"
-        if [[ "$hex" == "0d" ]]
-        then
-            # remove this char '\r' at end of string
-            refLineLen=${#tempNoSpace}
-            refLineLen=$(($refLineLen - 1))
-            tempNoSpace=${tempNoSpace:0:refLineLen}
-        fi
-    fi
-
-    # echo -e $IGreen "result no space     :" $IYellow"->"$IGreen"$tempNoSpace"$IYellow"<-" $Color_Off
-    refLineLen=${#pyInstall_getVersion}
-    # echo -e $IGreen "getVersion len      :" "$refLineLen" $Color_Off
-    refLineLen=$(($refLineLen - 1))
-    tempNoSpaceLen=${#tempNoSpace}
-    # echo -e $IGreen "tempNoSpaceLen len  :" "$tempNoSpaceLen" $Color_Off
-    calcVersionLen=$(($tempNoSpaceLen - $refLineLen))
-    calcVersionLen=$(($calcVersionLen - 4))
-    # echo -e $IGreen "calcVersionLen len  :" "$calcVersionLen" $Color_Off
-    temp=${tempNoSpace:refLineLen:calcVersionLen}
-    # echo -e $IGreen "result filter       :" "$temp" $Color_Off
-    versionLen=${#temp}
-    # echo -e $IGreen "len result filter   :" "$versionLen" $Color_Off
-    if [ $versionLen -eq $calcVersionLen ]
-    then
-        pyInstall_version="_v""$temp"
-        echo -e $IGreen "Version             :" "$pyInstall_version" $Color_Off
-    else
-        echo -e $IYellow "Version is no available" $Color_Off 
-    fi
+    pyInstall_version="_v""$nouvelle_version"
+    echo -e $IGreen "Version             :" "$pyInstall_version" $Color_Off
 fi
 
 echo
@@ -371,6 +421,18 @@ then
     echo
 fi
 
+# ##########################################################################################
+# https://manytools.org/hacker-tools/ascii-banner/
+#
+#   ######        ###                                                                                                                            
+#   #     # #   #  #  #    #  ####  #####   ##   #      #      ###### #####        #####    ##   #####    ##   #    # ###### ##### ###### #####  
+#   #     #  # #   #  ##   # #        #    #  #  #      #      #      #    #       #    #  #  #  #    #  #  #  ##  ## #        #   #      #    # 
+#   ######    #    #  # #  #  ####    #   #    # #      #      #####  #    #       #    # #    # #    # #    # # ## # #####    #   #####  #    # 
+#   #         #    #  #  # #      #   #   ###### #      #      #      #####        #####  ###### #####  ###### #    # #        #   #      #####  
+#   #         #    #  #   ## #    #   #   #    # #      #      #      #   #        #      #    # #   #  #    # #    # #        #   #      #   #  
+#   #         #   ### #    #  ####    #   #    # ###### ###### ###### #    #       #      #    # #    # #    # #    # ######   #   ###### #    # 
+#
+# ##########################################################################################
 if [[ "$OSTYPE" == "msys" ]]
 then
     # Lightweight shell and GNU utilities compiled for Windows (part of MinGW)
@@ -464,7 +526,18 @@ else
     mkdir -p ${pyInstall_build}
 fi
 
-# Launch pyinstaller
+# ##########################################################################################
+# https://manytools.org/hacker-tools/ascii-banner/
+#
+#  #                                                             ######        ###                                                        
+#  #         ##   #    # #    #  ####  #    # # #    #  ####     #     # #   #  #  #    #  ####  #####   ##   #      #      ###### #####  
+#  #        #  #  #    # ##   # #    # #    # # ##   # #    #    #     #  # #   #  ##   # #        #    #  #  #      #      #      #    # 
+#  #       #    # #    # # #  # #      ###### # # #  # #         ######    #    #  # #  #  ####    #   #    # #      #      #####  #    # 
+#  #       ###### #    # #  # # #      #    # # #  # # #  ###    #         #    #  #  # #      #   #   ###### #      #      #      #####  
+#  #       #    # #    # #   ## #    # #    # # #   ## #    #    #         #    #  #   ## #    #   #   #    # #      #      #      #   #  
+#  ####### #    #  ####  #    #  ####  #    # # #    #  ####     #         #   ### #    #  ####    #   #    # ###### ###### ###### #    # 
+#
+# ##########################################################################################
 echo
 #echo -e $BCyan "Don't do the call to pyinstaller" $Color_Off 
 echo -e $IGreen "pyinstaller "$pyInstall_Parameter $Color_Off
@@ -566,6 +639,19 @@ then
     echo
     if [[ "$OSTYPE" == "msys" ]]
     then
+        # ##########################################################################################
+        # https://manytools.org/hacker-tools/ascii-banner/
+        #
+        #   #####                                       #     #                                                                                                  
+        #  #     # #####  ######   ##   ##### ######    #  #  # # #    # #####   ####  #    #  ####     # #    #  ####  #####   ##   #      #      ###### #####  
+        #  #       #    # #       #  #    #   #         #  #  # # ##   # #    # #    # #    # #         # ##   # #        #    #  #  #      #      #      #    # 
+        #  #       #    # #####  #    #   #   #####     #  #  # # # #  # #    # #    # #    #  ####     # # #  #  ####    #   #    # #      #      #####  #    # 
+        #  #       #####  #      ######   #   #         #  #  # # #  # # #    # #    # # ## #      #    # #  # #      #   #   ###### #      #      #      #####  
+        #  #     # #   #  #      #    #   #   #         #  #  # # #   ## #    # #    # ##  ## #    #    # #   ## #    #   #   #    # #      #      #      #   #  
+        #   #####  #    # ###### #    #   #   ######     ## ##  # #    # #####   ####  #    #  ####     # #    #  ####    #   #    # ###### ###### ###### #    #
+        #
+        # ##########################################################################################
+
         # Generate window install with Inno Setup
         if [[ -f "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ]]
         then
@@ -601,6 +687,18 @@ then
         fi
     fi
 
+    # ##########################################################################################
+    # https://manytools.org/hacker-tools/ascii-banner/
+    #
+    #   #####                                                                                    
+    #  #     # #####  ######   ##   ##### ######      ##   #####   ####  #    # # #    # ######  
+    #  #       #    # #       #  #    #   #          #  #  #    # #    # #    # # #    # #       
+    #  #       #    # #####  #    #   #   #####     #    # #    # #      ###### # #    # #####   
+    #  #       #####  #      ######   #   #         ###### #####  #      #    # # #    # #       
+    #  #     # #   #  #      #    #   #   #         #    # #   #  #    # #    # #  #  #  #       
+    #   #####  #    # ###### #    #   #   ######    #    # #    #  ####  #    # #   ##   ###### 
+    #
+    # ##########################################################################################
     # Create the backup folder of delivery 
     echo
     if [ ! -d $livraisons_folder ]

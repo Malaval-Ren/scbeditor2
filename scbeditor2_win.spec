@@ -1,10 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+ort os
+
+project_root = os.getcwd()
+
 block_cipher = None
 
 a = Analysis(
     ['scbeditor2.py'],
-    pathex=['G:\\DEV\\Python\\scbeditor2\\scbeditor2','G:\\DEV\\Python\\scbeditor2\\scbeditor2\\src'],
+    pathex=[
+        project_root,
+        os.path.join(project_root, "src")
+    ],
     binaries=[],
     datas=[],
     hiddenimports=[],

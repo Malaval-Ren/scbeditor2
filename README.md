@@ -66,8 +66,8 @@ I have to create an ".venv" environment to simplify it
   - [pylint](https://pypi.org/project/pylint/)
   - [pyinstaller](https://pyinstaller.org/en/stable/)
   - [pillow](https://pypi.org/project/pillow/)
-- [Oracle VirtualBox](https://www.virtualbox.org/) : A full virtualization software for x86_64 hardware
 - [Homerew](https://brew.sh/) : A Package Manager for macOS
+- [Oracle VirtualBox](https://www.virtualbox.org/) : A full virtualization software for x86_64 hardware
 - [Visual Studio Code](https://code.visualstudio.com/) : IDE (with somes extensions)
 - [Mark Text](https://www.marktext.cc/) : A viewer for markdown file (.md)
 - [GIT](https://git-scm.com/) : Distributed version control system
@@ -81,11 +81,29 @@ I have to create an ".venv" environment to simplify it
 
 ## **Development**
 
-$ git clone https://github.com/Malaval-Ren/scbeditor2.git
+### **Linux**
+
+pip3 install -r requirements.txt
+
+### **Windows**
 
 pip install -r requirements.txt
 
+### **macOS** install Python with homebrew
+
+brew install midnight-commander
+brew install pillow
+brew install pylint
+brew install pyinstaller
+brew install create-dmg
+brew install imagemagick
+brew install git
+brew install dos2unix
+brew install pillow
+brew install gnu-sed gawk coreutils findutils
+
+### Source code
+
+git clone https://github.com/Malaval-Ren/scbeditor2.git
+
 >note : https://code.visualstudio.com/docs/python/environments
-      : **macOS** install Python with homebrew
-      : **Linux** Python is already present
-      : **Windows** install Python

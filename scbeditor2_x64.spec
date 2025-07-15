@@ -1,10 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import os
+
+project_root = os.getcwd()
+
 block_cipher = None
 
 a = Analysis(
     ['scbeditor2.py'],
-    pathex=['/home/renaud/Documents/Python/scbeditor2/scbeditor2', '/home/renaud/Documents/Python/scbeditor2/scbeditor2/src'],
+    pathex=[
+        project_root,
+        os.path.join(project_root, "src")
+    ],
     binaries=[],
     datas=[],
     hiddenimports=['PIL._tkinter_finder'],
