@@ -180,8 +180,8 @@ echo -e $Green "Architecture        :" "$arch" $Color_Off
 pyInstall_fileVersion="./""$pyInstall_Name""_version.txt"
 if [ -f "$pyInstall_fileVersion" ]
 then
-    the_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
-    pyInstall_version="_v""$the_version"
+    versionTemp=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+    pyInstall_version="_v""$versionTemp"
     echo -e $Green "Version found is    :" "$pyInstall_version" $Color_Off
     echo
 else
