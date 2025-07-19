@@ -88,12 +88,15 @@ class MyIconPictures:
                 ("french_photo", "fr_France_T_81x81.png"),
                 ("error_photo", "error_T_81x81.png"),
                 ("question_photo", "question2_T_81x81.png"),
-                ("warning_photo", "Warning_T_81x81.png"),
+                ("warning_photo", "Warning_T_81x81.png")
+            ]
+            MyIconPictures.arrows = [
                 ("right_arrow_photo", "Arrow_Right_T_16x16.png"),
                 ("left_arrow_photo", "Arrow_Left_T_16x16.png"),
                 ("up_arrow_photo", "Arrow_Up_T_16x16.png"),
                 ("down_arrow_photo", "Arrow_Down_T_16x16.png")
             ]
+            
             MyIconPictures.__init( MyIconPictures._instance)
         return MyIconPictures._instance
 
@@ -156,6 +159,11 @@ class MyIconPictures:
                 photo = self.__get_flat_icon( s_icon_path)
             else:
                 photo = PhotoImage( master=self.w_windows_parent, file=s_icon_path)
+            setattr( self, var_name, photo)
+
+        for var_name, file_name in self.arrows:
+            s_icon_path = self.__resource_path( os.path.join( s_pictures_folder, file_name))
+            photo = PhotoImage( master=self.w_windows_parent, file=s_icon_path)
             setattr( self, var_name, photo)
 
     # ####################### get_app_photo ########################

@@ -370,8 +370,7 @@ class MyMainWindowIconsBar:
             menu_bar = Menu( self.w_main_windows)
             # Add a custom "File" menu (or other menus you want)
             file_menu = Menu( menu_bar, tearoff=0)
-            file_menu.add_command( label="Open", command=self.mwib_open_box)
-            file_menu.add_command( label="Exit", command=self.w_main_windows.quit)
+            file_menu.add_command( label="Open BMP image…", command=self.mwib_open_box)
             menu_bar.add_cascade( label="File", menu=file_menu)
             # Set the custom menu bar
             self.w_main_windows.config( menu=menu_bar)
@@ -420,8 +419,7 @@ class MyMainWindowIconsBar:
             menu_bar = Menu( self.w_main_windows)
             # Add a custom "File" menu (or other menus you want)
             file_menu = Menu( menu_bar, tearoff=0)
-            file_menu.add_command( label="Open", command=self.mwib_open_box)
-            file_menu.add_command( label="Exit", command=self.w_main_windows.quit)
+            file_menu.add_command( label="Open BMP image…", command=self.mwib_open_box)
             menu_bar.add_cascade( label="File", menu=file_menu)
             # Set the custom menu bar
             self.w_main_windows.config( menu=menu_bar)

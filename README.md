@@ -4,7 +4,7 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")
 
 _Creation: December 31th, 2023..2025, by Renaud Malaval_  
-_Last review: July 14th, 2025, by Renaud Malaval_
+_Last review: July 19th, 2025, by Renaud Malaval_
 
 ## Features
 
@@ -67,6 +67,12 @@ I have to create an ".venv" environment to simplify it
   - [pyinstaller](https://pyinstaller.org/en/stable/)
   - [pillow](https://pypi.org/project/pillow/)
 - [Homerew](https://brew.sh/) : A Package Manager for macOS
+  - Midnight commander : brew install midnight-commander
+  - nano : brew install nano
+  - dos2unix : brew install dos2unix
+  - create-dmg : brew install create-dmg
+  - gnu tools : brew install gnu-sed gawk coreutils findutils
+  - shell ask gpg code : brew install pinentry
 - [Oracle VirtualBox](https://www.virtualbox.org/) : A full virtualization software for x86_64 hardware
 - [Visual Studio Code](https://code.visualstudio.com/) : IDE (with somes extensions)
 - [Mark Text](https://www.marktext.cc/) : A viewer for markdown file (.md)
