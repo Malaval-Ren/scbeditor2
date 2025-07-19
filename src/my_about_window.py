@@ -126,7 +126,7 @@ class MyAboutWindow:
         elif self.s_platform == "Windows":
             a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
         else:
-            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=63, height=19)  # , exportselection=0, takefocus=0
+            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
 
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
