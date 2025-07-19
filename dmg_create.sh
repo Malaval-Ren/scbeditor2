@@ -21,7 +21,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.31'
+version='1.33'
 
 # definition all colors and styles to use with an echo
 
@@ -165,25 +165,28 @@ fi
 
 # --background "installer_background.png" \
 test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_version".dmg"
+
 create-dmg \
     --volname "${pyInstall_Name}${pyInstall_version}" \
-    --volicon "./.VolumeIcon.icns" \
+    --volicon "dmg_icon_T_512x512.icns" \
+    --background "LGM-612x408.png" \
     --window-pos 200 120 \
-    --window-size 800 400 \
+    --window-size 612 408 \
     --icon-size 128 \
     --eula "./GNU_GPLv3.txt" \
-    --icon "${pyInstall_Name}.app" 200 190 \
+    --icon "${pyInstall_Name}.app" 144 158 \
     --hide-extension "${pyInstall_Name}.app" \
-    --app-drop-link 600 185 \
+    --hdiutil-verbose \
+    --app-drop-link 459 158 \
     "./dist/${pyInstall_Name}${pyInstall_version}.dmg" \
     "./dist/dmgContent/"
 
 echo
 if [ $? -eq 0 ]
 then
-    echo -e $BGreen "create-dmg is done" $Color_Off
+    echo -e $BGreen "✅ create-dmg is done" $Color_Off
 else
-    echo -e $BRed "create-dmg failed ! error =" $?  $Color_Off
+    echo -e $BRed "❌ create-dmg failed ! error =" $?  $Color_Off
     error= $?
 fi
 

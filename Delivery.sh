@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.98'
+version='1.99'
 
 # definition all colors and styles to use with an echo
 
@@ -227,7 +227,8 @@ then
     sed -i "s/\(StringStruct(u'BuildDate', u'\)[0-9-]*\('\)/\1$nouvelle_date\2/" "$pyInstall_fileVersion"
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
-    gsed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+    # Update the build date in-place
+    gsed -i "s/\(StringStruct(u'BuildDate',[[:space:]]*u'\)[0-9\-]\+\('\)/\1$nouvelle_date\2/" "$pyInstall_fileVersion"
 fi
 echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
 
@@ -620,7 +621,6 @@ then
             then
                 exit $ERROR_SH_SUB_ERROR
             fi
-            # echo
             # echo -e $Green "Exit dmg_create.sh" $Color_Off
             cd ./dist
             rm -R ./dmgContent

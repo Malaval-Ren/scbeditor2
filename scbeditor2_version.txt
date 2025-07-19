@@ -40,7 +40,7 @@ VSVersionInfo(
           StringStruct(u'ProductName', u'SCB Editor II'),
           StringStruct(u'ProductVersion', u'2.9.27.125'),
           # Champs personnalisés
-          StringStruct(u'BuildDate', u'2025-07-16'),
+          StringStruct(u'BuildDate', u'2025-07-19'),
           StringStruct(u'Maintainer', u'renaud.malaval@free.fr')
         ])
       ]),
