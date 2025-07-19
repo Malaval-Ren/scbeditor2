@@ -1,6 +1,6 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-ort os
+import os
 
 project_root = os.getcwd()
 
