@@ -169,7 +169,7 @@ test -f $pyInstall_Name$pyInstall_version".dmg" && rm $pyInstall_Name$pyInstall_
 create-dmg \
     --volname "${pyInstall_Name}${pyInstall_version}" \
     --volicon "dmg_icon_T_512x512.icns" \
-    --background "LGM-612x408.png" \
+    --background "dmg_LGM-612x408.png" \
     --window-pos 200 120 \
     --window-size 612 408 \
     --icon-size 128 \
@@ -177,7 +177,7 @@ create-dmg \
     --icon "${pyInstall_Name}.app" 144 158 \
     --hide-extension "${pyInstall_Name}.app" \
     --hdiutil-verbose \
-    --app-drop-link 459 158 \
+    --app-drop-link 468 158 \
     "./dist/${pyInstall_Name}${pyInstall_version}.dmg" \
     "./dist/dmgContent/"
 
