@@ -7,11 +7,11 @@
 _Creation: December 31th, 2023..2025, by Renaud Malaval_  
 _Last review: July 19th, 2025, by Renaud Malaval_
 
-## Features
+## **Features**
 
   This is an application to do modification of bmp file to prepare convertion to Apple IIGS pic format file.
   The goal is to increase the number of color used in your pic files with usage of **SCB**.
-  This is an help for cross-dev on Linux (Debian and Red Hat package), MAC OS Catalina, Windows 10.
+  This is an help for cross-dev on Linux Mint (Debian and Red Hat package), Mac OS Monterey, Windows.
   BMP file supported are 4 (converted to 8) and 8 bits / per pixels.
   When your bmp files is ready you could convert it with [convm](https://github.com/Malaval-Ren/ConvM)
 
@@ -34,6 +34,13 @@ _Last review: July 19th, 2025, by Renaud Malaval_
 
 ## **Notes**
 
+- Linux Mint Xia:
+The **Debian** package .deb is created on Linux Mint Xia (v22.1)  
+:warning: Not tested. The **Red Hat** package .rpm is converted by [Alien](https://joeyh.name/code/alien/)  
+
+- Mac OSx86 Monterey :
+[Homebrew](https://brew.sh/)  
+
 - Windows 11 :
 Check it before install it, please  
 If your antivirus find some think, send me a mail, please  
@@ -43,13 +50,6 @@ If your antivirus find some think, send me a mail, please
 Clamav, Malwarebytes, RogueKiller and Trellix don't found it on the exe file and on my hard drive  
 Check it before install it, please  
 If your antivirus find some think, send me a mail, please  
-
-- Linux Mint :
-The **Debian** package .deb is created on Linux Mint Xia (v22.1)  
-:warning: Not tested. The **Red Hat** package .rpm is converted by [Alien](https://joeyh.name/code/alien/)  
-
-- Mac OSx86 :
-[Homebrew](https://brew.sh/)  
 
 - Create Release :
 A complete release could be created with "Delivery.sh"  
@@ -67,7 +67,7 @@ I have to create an ".venv" environment to simplify it
   - [pylint](https://pypi.org/project/pylint/)
   - [pyinstaller](https://pyinstaller.org/en/stable/)
   - [pillow](https://pypi.org/project/pillow/)
-- [Homerew](https://brew.sh/) : A Package Manager for macOS
+- [Homerew](https://brew.sh/) : A Package Manager for Mac OS
   - Midnight commander : brew install midnight-commander
   - nano : brew install nano
   - dos2unix : brew install dos2unix
@@ -88,15 +88,17 @@ I have to create an ".venv" environment to simplify it
 
 ## **Development**
 
-### **Linux**
+### Linux
 
 pip3 install -r requirements.txt
 
-### **Windows**
+### Windows
 
 pip install -r requirements.txt
 
-### **macOS** install Python with homebrew
+### Mac OS
+
+install Homebrew
 
 brew install git
 brew install midnight-commander
@@ -109,8 +111,50 @@ brew install imagemagick
 brew install dos2unix
 brew install gnu-sed gawk coreutils findutils
 
-### Source code
+### Source code GIT
 
 git clone https://github.com/Malaval-Ren/scbeditor2.git
 
 >note : https://code.visualstudio.com/docs/python/environments
+
+### Source code archive
+
+Decompress the archive file (.zip, .tar.gz)
+
+type command in a shell to start it :
+
+```
+python scbeditor2.py
+```
+or 
+```
+python3 scbeditor2.py
+```
+
+## **Build with Pyinstaller**
+
+### Linux
+
+On a Bash shell version 5.x
+
+type command :
+```bash
+./Delivery.sh
+```
+
+### Mac OS
+
+On a Bash shell version 5.x
+
+type :
+```bash
+./Delivery.sh
+```
+### Windows
+
+On a Bash shell version 5.x installed by GIT
+
+Type command :
+```bash
+./Delivery.sh
+```
