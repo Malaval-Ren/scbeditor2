@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.99'
+version='2.00'
 
 # definition all colors and styles to use with an echo
 
@@ -221,7 +221,7 @@ nouvelle_date=$(date +%F)
 # Remplace value in file
 if [[ "$OSTYPE" == "msys" ]]
 then
-    sed -i "s/\(VALUE \"BuildDate\",[[:space:]]*\"\)[0-9\-]*\"/\1$nouvelle_date\"/" "$pyInstall_fileVersion"
+    sed -i "s/\(StringStruct(u'BuildDate',[[:space:]]*u'\)[0-9\-]\+\('\)/\1$nouvelle_date\2/" "$pyInstall_fileVersion"
 elif [[ "$OSTYPE" == "linux-gnu"* ]]
 then
     sed -i "s/\(StringStruct(u'BuildDate', u'\)[0-9-]*\('\)/\1$nouvelle_date\2/" "$pyInstall_fileVersion"
@@ -540,14 +540,13 @@ fi
 #
 # ##########################################################################################
 echo
-#echo -e $BCyan "Don't do the call to pyinstaller" $Color_Off 
 echo -e $IGreen "pyinstaller "$pyInstall_Parameter $Color_Off
 echo
 PYTHONOPTIMIZE=1 pyinstaller ${pyInstall_Parameter}
 echo
 if [ $? -eq 0 ]
 then
-    echo -e $BGreen "pyinstaller is DONE" $Color_Off
+    echo -e $Green "PyInstaller build is done" $Color_Off
     echo
     if [[ "$OSTYPE" == "msys" ]]
     then
@@ -613,7 +612,7 @@ then
             echo
             cp -Rfp ./$pyInstall_Name.app ./dmgContent/
             cd ..
-            echo -e $BGreen "Generate .DMG file" $Color_Off
+            echo -e $Green "Generate .DMG file" $Color_Off
             dos2unix ./dmg_create.sh
             echo
             ./dmg_create.sh
@@ -627,7 +626,7 @@ then
             rm -R ./$pyInstall_Name.app
             cd ..
             echo
-            echo -e $BGreen "DMG file is OK" $Color_Off
+            echo -e $Green "DMG file is OK" $Color_Off
             echo   
         else
             ls -alGh ./dist
@@ -657,7 +656,8 @@ then
         then
             if [[ -f "./Innosetup_create_install.iss" ]]
             then
-                echo -e $BGreen "Inno Setup" $Color_Off
+                echo -e $BGreen "Create Inno Setup installer application" $Color_Off
+                echo
                 "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "./Innosetup_create_install.iss"
                 if [ $? -eq 0 ]
                 then
@@ -667,7 +667,7 @@ then
                         if [[ -f "./dist/scbeditor2_install.exe" ]]
                         then
                             echo
-                            echo -e $BGreen "Inno Setup installator is created" $Color_Off
+                            echo -e $Green "Inno Setup installator is created" $Color_Off
                         fi
                     else
                         echo -e $Yellow "Inno Setup "$pyInstall_build"/scbeditor2_install.exe NOT FOUND" $Color_Off
@@ -719,59 +719,26 @@ then
         echo
         sAppName="$currentFolder""/""$pyInstall_dist""/""$pyInstall_Name""$pyInstall_version"
         # echo -e $Green  "sAppName             :" $sAppName $Color_Off
-        if [[ -e "$sAppName".* ]] # LINUX
-        then
-            file_size_kb=`du -k "$sAppName" | cut -f1`
-            echo -e $Green "Copying LINUX app    " "$sAppName" "     of " $file_size_kb "kb" $Color_Off
-            cp -fpv "$sAppName" "$targetDir" # "/""$pyInstall_Name""$pyInstall_version"
-            echo
-        fi
-        if [[ -f *.deb ]]   # LINUX
-        then
-            cd ./dist
-            file_size_kb=`du -k *.deb | cut -f1`
-            echo -e $Green "Copying LINUX package .deb     of " $file_size_kb "kb" $Color_Off
-            cp -fpv *.deb "../""$targetDir"
-            cd ..
-            echo
-        fi
-        if [[ -f *.rpm ]]   # LINUX
-        then
-            cd ./dist
-            file_size_kb=`du -k *.rpm | cut -f1`
-            echo -e $Green "Copying LINUX package .rpm     of " $file_size_kb "kb" $Color_Off
-            cp -fpv *.rpm "../""$targetDir"
-            cd ..
-            echo
-        fi
-        if [[ -f "$sAppName"".exe" ]]   # WINDOWS
-        then   
-            file_size_kb=`du -k "$sAppName"".exe" | cut -f1`
-            echo -e $Green "Copying WINDOWS app  " "$sAppName"".exe  of " $file_size_kb "kb" $Color_Off
-            cp -fpv "$sAppName"".exe" "$targetDir"
-            echo
-        fi
-        if [[ -f "$sAppName"".dmg" ]]  # MAC OSX
-        then    
-            file_size_kb=`du -k "$sAppName"".dmg" | cut -f1`
-            echo -e $Green "Copying Mac OS X app " "$sAppName"".dmg" " of " $file_size_kb "kb" $Color_Off
-            cp -fpv "$sAppName"".dmg" "$targetDir"
-            echo
-        fi
 
-        cp -fp *.spec "$targetDir"
+        # Copy the original IIGS application 
+        cp -fp "scbeditor.img" "$targetDir"
+
         cp -fp *.icns "$targetDir"
         cp -fp *.desktop "$targetDir"
         cp -fp *.code-workspace "$targetDir"
-        # copy icon in folder /Pictures. These icons are in base64 in the source code
-        if [[ -d "Pictures" ]]
-        then
-            cp -R "Pictures" "$targetDir""/Pictures"
-        fi
+        # copy icons in folder /images/. They are integrated in the application by pyInnstaller.
+        mkdir -p "$targetDir""/images/"
+        find ./images/ -type f -name "*.png" -exec cp {} "$targetDir""/images/" \;   
         # copy manual in folder /Documents.
-        cp -R "Documents" "$targetDir""/Documents"
+        cp -fR "./Documents" "$targetDir""/Documents/"
+        # copy code source in folder /Documents.
+        mkdir -p "$targetDir""/src/"
+        find ./src/ -type f -name "*.py" -exec cp {} "$targetDir""/src/" \;   
+
         cp -fp "README.md" "$targetDir"
         cp -fp "LICENSE" "$targetDir"
+        cp -fp "GNU_GPLv3.txt" "$targetDir"
+
         # history of the development of the project
         if [[ -f "Evolution_Release.md" ]]
         then
@@ -789,24 +756,14 @@ then
 		fi
         # Copy Python source code
         cp -fp "$pyInstall_Name"".py" "$targetDir"
-        cp -R "src" "$targetDir""/src"
-        # Copy info files
-        cp -fp "../URL_Python_install.txt" "$targetDir"
-        # Copy script for platforms
-        cp -fp Delivery.sh "$targetDir"
-        cp -fp linuxInstall.sh "$targetDir"
-        cp -fp deb_create.sh "$targetDir"
     	cp -fp *.desktop "$targetDir"
     	cp -fp *.png "$targetDir"
-        cp -fp dmg_create.sh "$targetDir"
         cp -fp "$pyInstall_Name""_version.txt" "$targetDir"
         cp -fp *.spec "$targetDir"
         rm -f "$currentFolder""/""$targetDir""/""$pyInstall_Name"".spec"
-        cp -fp Display_Version.sh "$targetDir"
-        cp -fp right_linux.sh "$targetDir"
-        cp -fp right_mac.sh "$targetDir"
+        # Copy script for platforms
+        cp -fp *.sh "$targetDir"
         # Copy Quality
-        cp -fp Quality.sh "$targetDir"
         cp -fp Quality_pylint_log.md "$targetDir"
 		if [[ -f "unitTestShell.bat" ]]
 		then        
@@ -818,12 +775,12 @@ then
         echo
         if [[ -f $sevenZipPath ]]
         then
-            echo -e $IGreen "7ZIP backup folder to : " $targetDir".7z" $Color_Off
+            echo -e $Green "7ZIP backup folder to : " $targetDir".7z" $Color_Off
             # echo -e $Green "$sevenZipPath" a -t7z -mx9 -mmt4 -r -bt $currentFolder"/"$targetDir".7z" $currentFolder"/"$targetDir $Color_Off
             "$sevenZipPath" a -t7z -mx9 -mmt4 -r -bt "$currentFolder""/""$targetDir"".7z" "$currentFolder""/"$targetDir
         elif [[ -f $sevenZrPath ]]
         then
-            echo -e $IGreen "P7ZIP backup folder :" $Color_Off
+            echo -e $Green "P7ZIP backup folder :" $Color_Off
             sDest=$currentFolder'/'$targetDir".7z"
             sSrc=$currentFolder'/'$targetDir
             echo -e $Green "  from  =" ${sSrc} $Color_Off
@@ -834,7 +791,7 @@ then
             ${sevenZrPath} a -t7z -mx9 -mmt4 -bt "$sDest" "$sSrc"
         elif [[ -f $zipPath ]]
         then
-            echo -e $IGreen "ZIP backup folder to : " "$targetDir"".zip" $Color_Off
+            echo -e $Green "ZIP backup folder to : " "$targetDir"".zip" $Color_Off
             sDest=$currentFolder'/'$targetDir".zip"
             sSrc=$currentFolder'/'$targetDir
             echo -e $Green "  from  =" ${sSrc} $Color_Off
@@ -844,15 +801,22 @@ then
             # echo -e $Green ${zipPath} -9 -r ${sDest} ${sSrc} $Color_Off
             "$zipPath" -9 -r "$sDest" "$sSrc"
         else
-            echo -e $Yellow "No compress application is present" $Color_Off
+            echo -e $BYellow "No compress application is present" $Color_Off
         fi
+
+        # Create archive to Linux format 
+    	echo
+        echo -e $Green "TAR archive folder to : " "$targetDir"".tar.gz" $Color_Off
+        echo
+        tar -czvf "$targetDir".tar.gz "$targetDir"
     else
-        echo -e $IYellow "Folder :" $targetDir "already exist." $Color_Off
+        echo -e $BYellow "Folder :" $targetDir "already exist." $Color_Off
     fi
 
     # Cleaning folder
     echo
     echo -e $BGreen "Cleaning" $Color_Off
+    echo
     if [[ -f "$pyInstallSpec" ]]
     then
         echo -e $Green "Delete spec file                :" "$pyInstallSpec" $Color_Off
@@ -868,7 +832,7 @@ then
 	echo -e $BGreen "Total build is done with success." $Color_Off
 	echo
 else
-    echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
+    echo -e $BRed "PyInstaller failed ! error =" $?  $Color_Off
 fi
 
 sleep 1  #Wait 1 seconds

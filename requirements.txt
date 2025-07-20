@@ -1,6 +1,6 @@
-altgraph==0.17.4
+altgraph==0.17
 packaging==24.1
-pillow==10.4.0
-pyinstaller==6.10.0
-pyinstaller-hooks-contrib==2024.8
-setuptools==75.1.0
+pillow==11.2
+pyinstaller==6.14
+pyinstaller-hooks-contrib==2025.5
+setuptools==80.9

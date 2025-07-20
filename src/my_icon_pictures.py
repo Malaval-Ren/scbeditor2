@@ -96,7 +96,6 @@ class MyIconPictures:
                 ("up_arrow_photo", "Arrow_Up_T_16x16.png"),
                 ("down_arrow_photo", "Arrow_Down_T_16x16.png")
             ]
-            
             MyIconPictures.__init( MyIconPictures._instance)
         return MyIconPictures._instance
 
