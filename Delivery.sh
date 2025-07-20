@@ -738,6 +738,8 @@ then
         cp -fp "README.md" "$targetDir"
         cp -fp "LICENSE" "$targetDir"
         cp -fp "GNU_GPLv3.txt" "$targetDir"
+        cp -fp "requirements.txt" "$targetDir"
+        cp -fp ".desktop" "$targetDir"
 
         # history of the development of the project
         if [[ -f "Evolution_Release.md" ]]
