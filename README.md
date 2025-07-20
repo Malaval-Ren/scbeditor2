@@ -1,7 +1,8 @@
 
 # **SCB Editor II**
 
-![Alt text](scbeditor2_T_256x256.png "scbeditor2")
+![Alt text](scbeditor2_T_256x256.png "scbeditor2")    ![Alt text](./gplv3-127x51.png "license GPL v3")
+
 
 _Creation: December 31th, 2023..2025, by Renaud Malaval_  
 _Last review: July 19th, 2025, by Renaud Malaval_
@@ -97,15 +98,15 @@ pip install -r requirements.txt
 
 ### **macOS** install Python with homebrew
 
+brew install git
 brew install midnight-commander
+brew install python
 brew install pillow
 brew install pylint
 brew install pyinstaller
 brew install create-dmg
 brew install imagemagick
-brew install git
 brew install dos2unix
-brew install pillow
 brew install gnu-sed gawk coreutils findutils
 
 ### Source code
