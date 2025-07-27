@@ -31,7 +31,7 @@
 import platform
 import tkinter as tk_gui
 
-from tkinter import Label, Button, Toplevel, Scale, Radiobutton, IntVar, font
+from tkinter import Label, Button, Toplevel, Scale, Radiobutton, IntVar, font, Canvas, Checkbutton
 from tkinter.ttk import Combobox
 from PIL import ImageTk
 
@@ -88,13 +88,16 @@ class MyScbPalletWindow:
         self.scb_background = 'darkgray'
         self.i_selected_pallet = -1                     # source of index pallet to copy
         self.i_selected_pallet_in_main_windows = -1     # target of destination index
-        self.a_zoom_lbl                     : Label = None
+        self.a_zoom_cnv                     : Canvas = None
         self.a_zoom_work_img                : ImageTk.PhotoImage = None
+        self.a_zoom_work_img_original       : ImageTk.PhotoImage = None
         self.a_render_zoom                  : ImageTk.PhotoImage = None
         self.var_rdx_btn                    : IntVar = IntVar()
         self.a_scb_cnvs                     : list = None
         self.a_the_color_new_lbl            : Label = None
         self.a_frontier_scale               : Scale = None
+        self.a_show_var                     : IntVar = IntVar( value = 0)
+        self.a_show_chk                     : Checkbutton = None
         self.a_pallet_to_begin_combo        : Combobox = None
         self.a_pallet_to_end_combo          : Combobox = None
         self.a_down_begin_lbl               : Label = None
@@ -103,14 +106,15 @@ class MyScbPalletWindow:
     # ####################### __scbw_do_leave_scb_dialog ########################
     def __scbw_do_leave_scb_dialog( self):
         """ Do commun stuff when press button ok or cancel on the scb window """
-        self.a_zoom_lbl.unbind( '<Motion>')
-        self.a_zoom_lbl.unbind( '<Button>')
+        self.a_zoom_cnv.unbind( '<Motion>')
+        self.a_zoom_cnv.unbind( '<Button>')
         self.w_scb_window.grab_release()
         self.w_scb_window.quit()
 
     # ####################### __scbw_change_pallet_for_lines ########################
     def __scbw_change_pallet_for_lines( self, i_new_pallet_to_use, i_from, i_to):
         """ Change the pallet used by a scb to another one """
+        self.c_the_log.add_string_to_log( 'scbw_change_pallet_for_lines(): i_new_pallet_to_use= ' + str(i_new_pallet_to_use) + ' from line: ' + str(i_from) + ' to line: ' + str(i_to))
         for i_picture_line_y in range( i_from, i_to, 1):
             for i_loop in range( 0, 320, 1):
                 i_first_color_offset = self.a_original_part_image.getpixel( ( i_loop, i_picture_line_y))
@@ -136,13 +140,11 @@ class MyScbPalletWindow:
                 # Change the pallet on top part of the image band
                 self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y0) + int(self.a_frontier_scale.get())+1)
                 self.__scbw_do_leave_scb_dialog()
-                self.c_the_log.add_string_to_log( 'Do split up scb close with ok')
                 b_result = True
             if self.i_selected_pallet_line != i_bottom_selected_pallet_line:
                 # Change the pallet on bottom part of the image band
                 self.__scbw_change_pallet_for_lines( i_bottom_selected_pallet_line, int(f_y0) + int(self.a_frontier_scale.get() + 1), int(f_y1)+1)
                 self.__scbw_do_leave_scb_dialog()
-                self.c_the_log.add_string_to_log( 'Do split down scb close with ok')
                 b_result = True
         else:
             i_top_selected_pallet_line = int( self.a_pallet_to_all_combo.get())
@@ -150,10 +152,10 @@ class MyScbPalletWindow:
             if self.i_selected_pallet_line != i_top_selected_pallet_line:
                 self.__scbw_change_pallet_for_lines( i_top_selected_pallet_line, int(f_y0), int(f_y1)+1)
                 self.__scbw_do_leave_scb_dialog()
-                self.c_the_log.add_string_to_log( 'Do change scb close with ok')
                 b_result = True
 
         if b_result is True:
+            self.c_the_log.add_string_to_log( 'Do change scb close with ok')
             self.a_main_window.mw_update_main_window( self.s_original_filename, self.a_original_part_image)
             w_parent_window = self.a_main_window.mw_get_main_window()
             w_parent_window.update()
@@ -164,6 +166,33 @@ class MyScbPalletWindow:
         """ Button cancel of the scb window """
         self.__scbw_do_leave_scb_dialog()
         self.c_the_log.add_string_to_log( 'Do SCB edit close with cancel')
+
+    # ####################### __invert_rectangle_on_canvas ########################
+    def __invert_rectangle_on_canvas( self):
+        """ Invert the color indices in the selected rectangle for Apple II GS SCB format """
+        i_height = int(self.a_frontier_scale.get()) * 3
+        i_width = self.a_zoom_work_img.width
+        self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas zoom: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
+        self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas i_height= ' + str( i_height) + '  i_width= ' + str( i_width))
+
+        # For each line in the rectangle
+        for y in range(i_height):
+            # Determine which palette line is used for this line
+            # Example: palette_line = self.i_selected_pallet_line
+            palette_line = self.i_selected_pallet_line
+            base_index = palette_line * 16
+            for x in range(i_width):
+                idx = self.a_zoom_work_img.getpixel((x, y))
+                # Only invert if index is in the current palette line
+                if base_index <= idx < base_index + 16:
+                    # Invert index within palette line
+                    new_idx = base_index + (15 - (idx - base_index))
+                    self.a_zoom_work_img.putpixel((x, y), new_idx)
+
+        # Update the PhotoImage
+        self.a_render_zoom = ImageTk.PhotoImage(self.a_zoom_work_img)
+        self.a_zoom_cnv.create_image(0, 0, anchor='nw', image=self.a_render_zoom)
+        self.a_zoom_cnv.image = self.a_render_zoom
 
     # ####################### __scbw_print_coord_under_mouse ########################
     def __scbw_print_coord_under_mouse( self, event):
@@ -183,14 +212,35 @@ class MyScbPalletWindow:
         i_red, i_green, i_blue = a_pallet_list[i_base:i_base+3]
         self.a_the_color_new_lbl.configure( background= f"#{i_red:02x}{i_green:02x}{i_blue:02x}")
 
+    # ####################### __scbw_show_chk_toggled ########################
+    def __scbw_show_chk_toggled( self):
+        """ Toggle the visibility of the rectangle on the canvas """
+        self.a_zoom_work_img = self.a_zoom_work_img_original.copy()
+        if self.a_show_var.get() == 1:
+            self.__invert_rectangle_on_canvas()
+        else:
+            self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
+            self.a_zoom_cnv.create_image( 0, 0, anchor='nw', image=self.a_render_zoom)
+            self.a_zoom_cnv.image = self.a_render_zoom
+
     # ####################### __scbw_update_begin ########################
     def __scbw_update_begin( self, s_value):
-        """" Scale is moving update the label """
+        """Called when the scale is moved. Update the label, Invert rectangle if checkbox is set."""
         i_value = int( s_value)
         if len( s_value) == 1 and i_value < 9:
             self.a_down_begin_lbl.configure( text="  " + str( i_value + 1))
         else:
             self.a_down_begin_lbl.configure( text=str( i_value + 1))
+
+        # Always restore the original before inverting
+        self.a_zoom_work_img = self.a_zoom_work_img_original.copy()
+        if self.a_show_var.get() == 1:   # Checkbox is checked
+            self.__invert_rectangle_on_canvas()
+        else:
+            # Just redraw the original image
+            self.a_render_zoom = ImageTk.PhotoImage(self.a_zoom_work_img)
+            self.a_zoom_cnv.create_image(0, 0, anchor='nw', image=self.a_render_zoom)
+            self.a_zoom_cnv.image = self.a_render_zoom
 
     # ####################### __scbw_click_on_picture ########################
     def __scbw_click_on_picture( self, event):
@@ -200,6 +250,7 @@ class MyScbPalletWindow:
 
     # ####################### __scbw_selection_rdx_btn ########################
     def __scbw_selection_rdx_btn( self):
+        """ Change the state of the comboboxes and scale when the radio button is selected """
         if self.var_rdx_btn.get() == 1:
             self.a_pallet_to_all_combo.config( state="disabled")
             self.a_frontier_scale.config( state="normal")
@@ -214,14 +265,15 @@ class MyScbPalletWindow:
     # ####################### __scbw_scb_block_top ########################
     def __scbw_scb_block_top( self, top_frame, i_part_width, i_part_height):
         """ Create a SCB top dialog """
-        self.a_zoom_lbl = Label( top_frame, image=self.a_render_zoom, background=constant.BACKGROUD_COLOR_UI, width=i_part_width * 3, height=i_part_height * 3, borderwidth=0, compound="center", highlightthickness=0)
+        self.a_zoom_cnv = Canvas( top_frame, width=i_part_width * 3, height=i_part_height * 3, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+        self.a_zoom_cnv.create_image( 0, 0, anchor='nw', image=self.a_render_zoom)
         # if self.s_platform in [ "Darwin", "Linux" ]:
         #     self.a_zoom_lbl.pack( side='left', padx=4)
         # else:
-        self.a_zoom_lbl.pack( side='left', padx=4)
-        self.a_zoom_lbl.photo = self.a_render_zoom
-        self.a_zoom_lbl.bind( '<Motion>', self.__scbw_print_coord_under_mouse)
-        self.a_zoom_lbl.bind( '<Button>', self.__scbw_click_on_picture)
+        self.a_zoom_cnv.pack( side='left', padx=4)
+
+        self.a_zoom_cnv.bind( '<Motion>', self.__scbw_print_coord_under_mouse)
+        self.a_zoom_cnv.bind( '<Button>', self.__scbw_click_on_picture)
 
     # ####################### __scbw_scb_block_middle_up ########################
     def __scbw_scb_block_middle_up( self, middle_up_frame, up_middle_middle_frame, middle_middle_frame, i_part_height):
@@ -256,6 +308,8 @@ class MyScbPalletWindow:
         self.a_pallet_to_begin_combo = Combobox( middle_middle_frame, values=self.SCB_NUMBER_LST, width=3, state="readonly")
         self.a_pallet_to_begin_combo.pack( side='left', padx=4)
         self.a_pallet_to_begin_combo.current( self.i_selected_pallet_line)
+        self.a_show_chk = Checkbutton( middle_middle_frame, text = "Show", variable = self.a_show_var, onvalue = 1, offvalue = 0, height=1, width=5, background=constant.BACKGROUD_COLOR_UI, foreground='black', command=self.__scbw_show_chk_toggled )
+        self.a_show_chk.pack( side='left', padx=2)
 
     # ####################### __scbw_scb_block_middle_down ########################
     def __scbw_scb_block_middle_down( self, middle_down_frame, up_middle_down_frame, down_middle_down_frame, i_part_height):
@@ -424,6 +478,12 @@ class MyScbPalletWindow:
             self.c_the_log.add_string_to_log( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
             self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
             self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
+            self.c_the_log.add_string_to_log( 'scbw_scb_block() a_zoom_work_img: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
+            self.c_the_log.add_string_to_log( 'scbw_scb_block()   a_render_zoom: height= ' + str( self.a_render_zoom.height()) + '  width= ' + str( self.a_render_zoom.width()))
+
+            # After creating self.a_zoom_work_img
+            self.a_zoom_work_img_original = self.a_zoom_work_img.copy()
+
             self.i_width = width * 3
             self.i_height = height * 3
 
