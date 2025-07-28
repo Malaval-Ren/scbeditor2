@@ -86,6 +86,7 @@ class MyMainWindowIconsBar:
 
     # ####################### __mwib_ensure_bmp_extension ########################
     def __mwib_ensure_bmp_extension(self, s_filename) -> str:
+        """ Ensure the filename has a .bmp extension """
         if not s_filename.lower().endswith( '.bmp'):
             root, _ = os.path.splitext( s_filename)
             return root + ".bmp"
@@ -105,6 +106,12 @@ class MyMainWindowIconsBar:
 
         return a_new_image
 
+    # ####################### __mwib_remove_file_if_exist ########################
+    def __mwib_remove_file_if_exist( self, s_filename):
+        """  Remove the file if it exists """
+        if os.path.exists( s_filename):
+            os.remove( s_filename)
+
     # ####################### __mwib_convert_bmp ########################
     def __mwib_convert_bmp( self, s_filename, a_image, b_do_all) -> Image:
         """ Convert bmp 4 bpp to 8 bpp """
@@ -113,6 +120,17 @@ class MyMainWindowIconsBar:
         i_number_of_colors = len( a_org_pal_list)
         if a_org_pal_list and i_number_of_colors:
             converted_bmp = self.__mwib_get_copy_of_image( s_filename, a_image)
+
+            # print( "The opened image :" )
+            # # For BMP, you can sometimes get bpp from info
+            # bpp = a_image.info.get( 'bits', None)
+            # if bpp:
+            #     print( "Bits per pixel:", bpp)
+            # print( a_image )
+            # print( "\n" )
+            # self.__mwib_dump_pallet_bmp( a_image)
+            # print( "\n" )
+
             a_image = None  # Free the memory of the original image
             a_conv_pal_list = converted_bmp.getpalette()
 
@@ -121,8 +139,23 @@ class MyMainWindowIconsBar:
                 for _ in range( 1, 16, 1):
                     for i_index in range( 0, i_number_of_colors, 1):
                         a_conv_pal_list.append( a_org_pal_list[i_index])
-                converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
-                a_conv_pal_list = converted_bmp.getpalette()
+            else:
+                # add empty palette (fill of black) at index 1 to 15
+                for _ in range( 1, 16, 1):
+                    for i_index in range( 0, i_number_of_colors, 1):
+                        a_conv_pal_list.append( 0)
+
+            converted_bmp.putpalette( a_conv_pal_list, rawmode='RGB')
+            a_conv_pal_list = converted_bmp.getpalette()
+
+            # print( "The converted_bmp :" )
+            # bpp = converted_bmp.info.get( 'bits', None)
+            # if bpp:
+            #     print( "Bits per pixel:", bpp)
+            # print( converted_bmp )
+            # print( "\n" )
+            # self.__mwib_dump_pallet_bmp( converted_bmp)
+            # print( "\n" )
             # self.c_the_log.add_string_to_log( "\na_org_pal_list= " + str( len( a_org_pal_list)) + "   a_conv_pal_list= " + str( len( a_conv_pal_list)))
 
             # Debug : use an another name to save it and using it
@@ -133,16 +166,14 @@ class MyMainWindowIconsBar:
             old_file = s_bmp_filename + ".old"
             # If file exists, rename to .old
             if os.path.exists( s_bmp_filename):
-                if os.path.exists( old_file):
-                    os.remove( old_file)
+                self.__mwib_remove_file_if_exist( old_file)
                 os.rename( s_bmp_filename, old_file)
 
             self.c_the_log.add_string_to_log( 'mwib_convert_bmp() : Saving : ' + s_bmp_filename)
             try:
                 converted_bmp.save( s_bmp_filename, 'BMP')
                 # Save succeeded, remove .old
-                if os.path.exists( old_file):
-                    os.remove( old_file)
+                self.__mwib_remove_file_if_exist( old_file)
                 self.c_the_log.add_string_to_log( "mwib_convert_bmp() : File saved successfully.")
             # pylint: disable=broad-exception-caught
             except Exception as error:
@@ -150,8 +181,7 @@ class MyMainWindowIconsBar:
                 self.c_the_log.add_string_to_log( f"Error saving file: {error}")
                 # Restore original file on any error during save
                 if os.path.exists( old_file):
-                    if os.path.exists( s_bmp_filename):
-                        os.remove( s_bmp_filename)
+                    self.__mwib_remove_file_if_exist( s_bmp_filename)
                     os.rename( old_file, s_bmp_filename)
                 self.c_the_log.add_string_to_log( "mwib_convert_bmp() : Original file restored.")
 
@@ -230,15 +260,18 @@ class MyMainWindowIconsBar:
         return s_filename, a_image
 
     # ####################### __mwib_dump_pallet_bmp ########################
-    # def __mwib_dump_pallet_bmp( self):
+    # def __mwib_dump_pallet_bmp( self, an_image):
     #     """ dump the pallet of the current image a_work_img """
-    #     if self.a_original_image:
-    #         a_pallet_list = self.a_original_image.getpalette()
+    #     if an_image:
+    #         a_pallet_list = an_image.getpalette()
+    #         i_number_of_colors = int( len( a_pallet_list) / 3)
     #         self.c_the_log.add_string_to_log( 'Pallet :')
     #         i_to = 0
-    #         for i_loop in range( 0, 16, 1):
+    #         for i_loop in range( 0, i_number_of_colors, 1):
     #             i_from = i_to
     #             i_to = i_to + 48
+    #             if i_to > len( a_pallet_list):
+    #                 break
     #             if i_loop < 10:
     #                 s_my_hex = "0" + str( i_loop) + " "
     #             else:
@@ -260,7 +293,7 @@ class MyMainWindowIconsBar:
         self.w_front_window = MyProgressBarWindow( self.c_main_class, self.a_list_application_info)
         self.w_front_window.pbw_create_progres_bar_window( 200, "BMP pallet checking", "Check bitmap to synchronize all lines to use right SCB.")
         # self.c_the_log.add_string_to_log( '\n')
-        # self.__dump_pallet_bmp()
+        # self.__dump_pallet_bmp( self.a_original_image)
         # self.c_the_log.add_string_to_log( '\n')
         # a_pallet_list = self.a_original_image.getpalette()
 
@@ -452,14 +485,19 @@ class MyMainWindowIconsBar:
     # ####################### mwib_open_box ########################
     def mwib_open_box( self, s_filepathname=''):
         """ Button load of the main window """
-        self.c_the_log.add_string_to_log( 'Do load picture')
+        self.c_the_log.add_string_to_log( 'mwib_open_box() : Do load picture')
+        s_ongoing_filename = ''
         if s_filepathname:
             self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( s_filepathname)
+            s_ongoing_filename = self.s_filename
         else:
-            self.s_filename = self.__mwib_select_load_bmp()
-            self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( self.s_filename)
+            s_ongoing_filename = self.__mwib_select_load_bmp()
+            if s_ongoing_filename:
+                self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( s_ongoing_filename)
+            else:
+                self.c_the_log.add_string_to_log( 'mwib_open_box() : Cancel by user')
 
-        if self.s_filename and self.a_original_image:
+        if self.s_filename and s_ongoing_filename and self.a_original_image:
             # Display image already in 8 bpp or a converted to 8 bpp
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
             self.w_main_windows.update()

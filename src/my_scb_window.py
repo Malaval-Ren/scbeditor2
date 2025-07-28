@@ -172,8 +172,8 @@ class MyScbPalletWindow:
         """ Invert the color indices in the selected rectangle for Apple II GS SCB format """
         i_height = int(self.a_frontier_scale.get()) * 3
         i_width = self.a_zoom_work_img.width
-        self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas zoom: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
-        self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas i_height= ' + str( i_height) + '  i_width= ' + str( i_width))
+        # self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas zoom: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
+        # self.c_the_log.add_string_to_log( 'invert_rectangle_on_canvas i_height= ' + str( i_height) + '  i_width= ' + str( i_width))
 
         # For each line in the rectangle
         for y in range(i_height):

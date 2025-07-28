@@ -271,8 +271,9 @@ def main( a_list_argv):
     __get_app_informations( LIST_APPLICATION_INFO)
 
     if getattr( sys, 'frozen', False) and hasattr( sys, '_MEIPASS'):
-        c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, 'private')
+        c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, '')
     else:
+        # c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, 'file')
         c_the_log = MyLogAnUsage( LIST_APPLICATION_INFO, 'console')
 
     c_the_log.add_date_to_log( ' ' + LIST_APPLICATION_INFO[0] + '\t\t\t: ')

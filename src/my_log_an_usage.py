@@ -53,12 +53,14 @@ class MyLogAnUsage:
     file:
         File is created with mame of the month user name and application name (without space)
         Content is created during usage of the application. and write on application exist
+    empty:
+        No log is created, but the class is instanciated to avoid error in the code
     windows :
-        console, mail or file
+        empty, console, mail or file
     linux :
-        console, file
+        empty, console, file
     Mac OS :
-        console, file
+        empty, console, file
     """
 
     _instance = None

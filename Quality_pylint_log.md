@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  dim. 27 juil. 2025 18:08:13
+date :  lun. 28 juil. 2025 21:52:16
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -14,7 +14,7 @@ date :  dim. 27 juil. 2025 18:08:13
 | Bash | 5.2.37(1)-release |
 | System | msys |
 | **Project** |  |
-| scbeditor2 | 2.9.28.126 |
+| scbeditor2 | 2.10.28.128 |
 
 &nbsp;
 
@@ -135,7 +135,7 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 *** Module src.my_main_window_pallet  
 
-src\my_main_window_pallet.py:1:0: C0302: Too many lines in module (1043/1000) (too-many-lines)
+src\my_main_window_pallet.py:1:0: C0302: Too many lines in module (1016/1000) (too-many-lines)
 
 ------------------------------------------------------------------
 Your code has been rated at 9.98/10 (previous run: 9.98/10, +0.00)

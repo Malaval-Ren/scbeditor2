@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "scbeditor2"
-#define MyAppVersion "2.9.27.125"
+#define MyAppVersion "2.10.28.128"
 #define MyAppPublisher "Disk Crack band"
 #define MyAppExeName MyAppName + "_v" + MyAppVersion + ".exe"
 
@@ -47,3 +47,26 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+; [Code]
+; var
+;   DataDirPage: TInputDirWizardPage;
+;   InstallSampleDataPage: TInputOptionWizardPage;
+;   DataDirVal: String;
+;
+; procedure InitializeWizard;
+; begin
+;   // Create a custom page to select the data directory
+;   DataDirPage := CreateInputDirPage(wpSelectDir, 'Select Installation Location', 'Choose where to install the application', 'Please select a location for the application.', False, '');
+;   DataDirPage.Add('');
+;   // Set default values, using settings that were stored last time if possible
+;   if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\MyCompanyProg', 'DataDir', DataDirVal) then
+;     DataDirPage.Values := DataDirVal
+;   else
+;     DataDirPage.Values := '{pf}\MyApp'; // Default to Program Files
+;
+;   // Create a custom page to choose between installing in the user's account or Program Files
+;   InstallSampleDataPage := CreateInputOptionPage(DataDirPage.ID, 'Installation Location', 'Choose the installation location', 'Select where to install the application:', True, False);
+;   InstallSampleDataPage.Add('Install in Program Files');
+;   InstallSampleDataPage.Add('Install in User Account');
+;   InstallSampleDataPage.Values := True;
+; end;

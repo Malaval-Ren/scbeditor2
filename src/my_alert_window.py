@@ -207,17 +207,17 @@ class MyAlertWindow:
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
         if self.s_platform == "Darwin":
-            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
-            a_ok_bpp_btn.pack( side='right', padx=2, pady=2 )
-            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_bpp_copy_btn.pack( side='right', padx=2, pady=2 )
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_btn.pack( side='right', padx=2, pady=2 )
             a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=2, pady=2 )
         else:
-            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
-            a_ok_bpp_btn.pack( side='right', padx=4, pady=4 )
-            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_copy_btn = Button( button_frame, text='8 bpp + copy pallet', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_button, relief='raised', highlightbackground=constant.COLOR_WINDOWS_MENU_BAR)
             a_ok_bpp_copy_btn.pack( side='right', padx=4, pady=4 )
+            a_ok_bpp_btn = Button( button_frame, text='8 bpp', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_ok_bpp_button, relief='raised', background=self.alert_background)
+            a_ok_bpp_btn.pack( side='right', padx=4, pady=4 )
             a_cancel_btn = Button( button_frame, text='Cancel', width=constant.DEFAULT_BUTTON_WIDTH + 9, compound='center', command=self.__aw_alert_cancel_button, relief='raised', background=self.alert_background)
             a_cancel_btn.pack( side='right', padx=4, pady=4 )
 
