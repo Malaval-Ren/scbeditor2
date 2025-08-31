@@ -211,6 +211,7 @@ def __get_sentense( s_ligne ) -> str:
 # ####################### print_font_info ########################
 def __get_app_informations( list_application_info):
     """
+        Fill the list_application_info with data from version file
         __softname__,   # 0
         __author__,     # 1
         __copyright__,  # 2

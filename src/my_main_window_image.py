@@ -668,24 +668,22 @@ class MyMainWindowImage:
         # self.c_the_log.add_string_to_log( "mwi_draw_bar_chart : i_offset= " + str( i_offset) + " i_position_x= " + str( i_position_y))
         self.a_bar_chart_cnvs.delete( "all")
         a_usage_color_rry = array.array( 'i')
-        a_usage_color_rry = [1] * 16
+        a_usage_color_rry = [0] * 16
         a_result_color_rry = array.array( 'i')
         a_result_color_rry = [0] * 16
         i_pallet_number = int( i_offset / 16) * 16
 
-        for i_loop in range( 0, constant.PICTURE_WIDTH, 2):
-            i_offset = self.a_work_img.getpixel( ( i_loop, i_position_y))
-            i_offset = i_offset - (int( i_offset / 16) * 16)
-            a_usage_color_rry[i_offset] +=1
+        for i_loop in range(0, constant.PICTURE_WIDTH, 2):
+            i_offset = self.a_work_img.getpixel((i_loop, i_position_y)) % 16
+            a_usage_color_rry[i_offset] += 1
 
         for i_loop in range( 0, 16, 1):
-            if a_usage_color_rry[i_loop] == 1:
-                a_usage_color_rry[i_loop] = 0
+            if a_usage_color_rry[i_loop] == 0:
+                a_result_color_rry[i_loop] = 0
+            elif a_usage_color_rry[i_loop] < 4:
+                a_result_color_rry[i_loop] = round(((a_usage_color_rry[i_loop] + 3) * 84) / 320)
             else:
-                if a_usage_color_rry[i_loop] < 4:
-                    a_result_color_rry[i_loop] = int( (((a_usage_color_rry[i_loop] + 3) * 84) / 320) + 0.5)
-                else:
-                    a_result_color_rry[i_loop] = int( ((a_usage_color_rry[i_loop] * 84) / 320) + 0.5)
+                a_result_color_rry[i_loop] = round((a_usage_color_rry[i_loop] * 84) / 320)
 
         i_colmun_x = 0
         for i_loop in range( 0, 16, 1):
