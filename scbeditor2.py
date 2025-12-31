@@ -5,7 +5,7 @@
 #
 # An application to do modification of bmp file to prepare convertion to a Apple IIGS pic file.
 #
-# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -64,8 +64,7 @@ from src.my_main_window import MyMainWindow
 __softname__    = ""
 __author__      = ""
 __copyright__   = ""
-__credits__     = ["Frédéric Mure",
-                    "Patrice Afflatet",
+__credits__     = ["Frédéric Mure", "Patrice Afflatet",
                     "Reion: https://www.flaticon.com/authors/reion",
                     "Pixelmeetup: https://www.flaticon.com/authors/pixelmeetup",
                     "HJ Studio: https://www.flaticon.com/authors/hj-studio",
@@ -179,7 +178,7 @@ def __get_licence_copyright_owner( s_ligne, list_application_info):
         # 3. Le reste aprsè la virgule
         list_application_info[1] = author_part.strip()
 
-        # valeur = match.group(1)  # Ex : 'GNU GPLv3 Copyright © 2023 … 2025, Renaud Malaval'
+        # valeur = match.group(1)  # Ex : 'GNU GPLv3 Copyright © 2023 … 2026, Renaud Malaval'
 
         # # 2. Découper la valeur
         # # a. Séparer à " Copyright"
@@ -252,22 +251,22 @@ def __get_app_informations( list_application_info):
         print( f"Version file : {s_version_file_name} not found.")
         sys.exit( int( 1))
 
-    # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
-    #
-    # #    #   ##   ### #    #
-    # ##  ##  #  #   #  ##   #
-    # # ## # #    #  #  # #  #
-    # #    # ######  #  #  # #
-    # #    # #    #  #  #   ##
-    # #    # #    # ### #    #
-    #
-    # ##########################################################################################
+# ##########################################################################################
+#  https://manytools.org/hacker-tools/ascii-banner/
+#
+#  #    #   ##   ### #    #
+#  ##  ##  #  #   #  ##   #
+#  # ## # #    #  #  # #  #
+#  #    # ######  #  #  # #
+#  #    # #    #  #  #   ##
+#  #    # #    # ### #    #
+#
+# ##########################################################################################
 
 # ####################### main ########################
-def main( a_list_argv):
+def main( a_list_argv) -> int:
     """ The entry function of the application """
-    i_value_for_exit = 0
+    i_value_for_exit : int = 0
 
     __get_app_informations( LIST_APPLICATION_INFO)
 

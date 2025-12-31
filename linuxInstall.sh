@@ -7,7 +7,7 @@
 #
 # From : https://github.com/linuxmint/nemo/issues/2385
 #
-# Copyright (C) 2020-2025 Renaud Malaval <renaud.malaval@free.fr>
+# Copyright (C) 2020-2026 Renaud Malaval <renaud.malaval@free.fr>
 # 
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

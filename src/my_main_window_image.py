@@ -5,7 +5,7 @@
 #
 # This application to do modification of bmp file to prepare convertion to a Apple IIGS pic file.
 #
-# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -120,15 +120,15 @@ class MyMainWindowImage:
         self.i_around_cursor = -1
 
     # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
+    #  https://manytools.org/hacker-tools/ascii-banner/
     #
-    # #     #                                  ######
-    # ##   ## # #####  #####  #      ######    #     # #  ####  ##### #    # #####  ######    #####    ##   #####  #####
-    # # # # # # #    # #    # #      #         #     # # #    #   #   #    # #    # #         #    #  #  #  #    #   #
-    # #  #  # # #    # #    # #      #####     ######  # #        #   #    # #    # #####     #    # #    # #    #   #
-    # #     # # #    # #    # #      #         #       # #        #   #    # #####  #         #####  ###### #####    #
-    # #     # # #    # #    # #      #         #       # #    #   #   #    # #   #  #         #      #    # #   #    #
-    # #     # # #####  #####  ###### ######    #       #  ####    #    ####  #    # ######    #      #    # #    #   #
+    #  #     #                                  ######
+    #  ##   ## # #####  #####  #      ######    #     # #  ####  ##### #    # #####  ######    #####    ##   #####  #####
+    #  # # # # # #    # #    # #      #         #     # # #    #   #   #    # #    # #         #    #  #  #  #    #   #
+    #  #  #  # # #    # #    # #      #####     ######  # #        #   #    # #    # #####     #    # #    # #    #   #
+    #  #     # # #    # #    # #      #         #       # #        #   #    # #####  #         #####  ###### #####    #
+    #  #     # # #    # #    # #      #         #       # #    #   #   #    # #   #  #         #      #    # #   #    #
+    #  #     # # #####  #####  ###### ######    #       #  ####    #    ####  #    # ######    #      #    # #    #   #
     #
     # ##########################################################################################
 
@@ -577,18 +577,18 @@ class MyMainWindowImage:
             self.a_more_y_btn = Button( a_arrow_frame, image=self.c_the_icons.get_down_arrow_photo(), command=self.__mwi_more_y_value_clicked, width=50, height=20, relief='raised', background=constant.BACKGROUD_COLOR_UI, repeatdelay=500, repeatinterval=100)
         self.a_more_y_btn.place( x=6+56+6, y=5+26+4+4, width=56)
 
-    # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
-    #
-    #   ######  #     # ######  #       ###  #####
-    #   #     # #     # #     # #        #  #     #
-    #   #     # #     # #     # #        #  #
-    #   ######  #     # ######  #        #  #
-    #   #       #     # #     # #        #  #
-    #   #       #     # #     # #        #  #     #
-    #   #        #####  ######  ####### ###  #####
-    #
-    # ##########################################################################################
+# ##########################################################################################
+#  https://manytools.org/hacker-tools/ascii-banner/
+#
+#  ######  #     # ######  #       ###  #####
+#  #     # #     # #     # #        #  #     #
+#  #     # #     # #     # #        #  #
+#  ######  #     # ######  #        #  #
+#  #       #     # #     # #        #  #
+#  #       #     # #     # #        #  #     #
+#  #        #####  ######  ####### ###  #####
+#
+# ##########################################################################################
 
     # ####################### mw_click_in_picture_center ########################
     def mwi_click_in_picture_center( self, pos_x=320, pos_y=200):

@@ -4,7 +4,7 @@
 #
 # Does quality analyse of all *.py file in a project with tool Pylint
 #
-# Copyright (C) 2020-2025 Renaud Malaval <renaud.malaval@free.fr>
+# Copyright (C) 2020-2026 Renaud Malaval <renaud.malaval@free.fr>
 # 
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.33'
+version='1.35'
 
 # definition all colors and styles to use with an echo
 
@@ -142,61 +142,61 @@ pylint_tmp="Quality_pylint_log.txt"
 
 if [[ "$OSTYPE" == "msys" ]]
 then
-	temp=$(python --version)
-	refLineLen=${#temp}
-	refLineLen=$refLineLen-7
+    temp=$(python --version)
+    refLineLen=${#temp}
+    refLineLen=$refLineLen-7
     python_version=${temp:7:$refLineLen}
-	tcl_tk_version=$(python -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
+    tcl_tk_version=$(python -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
     pyinstaller_version=$(pyinstaller --version)
-	# Get from string multi line the version
-	temp=$(pylint --version)
-	firstLine=$(sed -n "1{p;q}" <<<"$temp")
-	refLineLen=${#firstLine}
-	refLineLen=$refLineLen-7
-	pylint_version=${temp:7:$refLineLen}
-	temp=$(perl -v)
-	perl_version=${temp:44:6}
-	bash_version="${BASH_VERSION}"
-	os_version="${OSTYPE}"
+    # Get from string multi line the version
+    temp=$(pylint --version)
+    firstLine=$(sed -n "1{p;q}" <<<"$temp")
+    refLineLen=${#firstLine}
+    refLineLen=$refLineLen-7
+    pylint_version=${temp:7:$refLineLen}
+    temp=$(perl -v)
+    perl_version=${temp:44:6}
+    bash_version="${BASH_VERSION}"
+    os_version="${OSTYPE}"
 elif [[ "$OSTYPE" == "darwin"* ]]
 then
     python_version=$(python3 --version)
-	tcl_tk_version=$(python3 -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
+    tcl_tk_version=$(python3 -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
     pyinstaller_version=$(pyinstaller -v)
-	temp=$(pylint --version)
-	# Get from string the version
-	pylint_version=${temp:7:6}
-	temp=$(perl -v)
-	perl_version=${temp:44:6}
-	bash_version="${BASH_VERSION}"
-	os_version="${OSTYPE}"
+    temp=$(pylint --version)
+    # Get from string the version
+    pylint_version=${temp:7:6}
+    temp=$(perl -v)
+    perl_version=${temp:44:6}
+    bash_version="${BASH_VERSION}"
+    os_version="${OSTYPE}"
 elif [[ "$OSTYPE" == "linux-gnu"* ]]
 then
     python_version=$(python3 --version)
-	tcl_tk_version=$(python -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
+    tcl_tk_version=$(python -c "import tkinter; print(tkinter.Tcl().eval('info patchlevel'))")
     pyinstaller_version=$(pyinstaller --version)
-	# Get from string multi line the version
-	temp=$(pylint --version)
-	firstLine=$(sed -n "1{p;q}" <<<"$temp")
-	refLineLen=${#firstLine}
-	refLineLen=$refLineLen-7
-	pylint_version=${temp:7:$refLineLen}
-	temp=$(perl -v)
-	perl_version=${temp:44:6}
-	bash_version="${BASH_VERSION}"
-	if [ -f /etc/os-release ]
-	then
-		. /etc/os-release
-		os_version="${NAME} ${VERSION}"
-	else
-		temp=$(lsb_release -d | cut -f2)
-		if [ ! -z "${temp}" ]
-		then
-			os_version=$temp
-		else
-			os_version="${OSTYPE}"
-		fi
-	fi
+    # Get from string multi line the version
+    temp=$(pylint --version)
+    firstLine=$(sed -n "1{p;q}" <<<"$temp")
+    refLineLen=${#firstLine}
+    refLineLen=$refLineLen-7
+    pylint_version=${temp:7:$refLineLen}
+    temp=$(perl -v)
+    perl_version=${temp:44:6}
+    bash_version="${BASH_VERSION}"
+    if [ -f /etc/os-release ]
+    then
+        . /etc/os-release
+        os_version="${NAME} ${VERSION}"
+    else
+        temp=$(lsb_release -d | cut -f2)
+        if [ ! -z "${temp}" ]
+        then
+            os_version=$temp
+        else
+            os_version="${OSTYPE}"
+        fi
+    fi
 else
     echo -e $IRed "Unknown OS" $Color_Off
     exit $ERROR_SH_OS
@@ -224,6 +224,7 @@ echo -e $Green "Python version      :" "$python_version" $Color_Off
 echo -e $Green "Tkinter version     :" "$tcl_tk_version" $Color_Off
 echo -e $Green "PyInstaller version :" "$pyinstaller_version" $Color_Off
 echo -e $Green "Pylint version      :" "$pylint_version" $Color_Off
+# perl is used to do float operation
 echo -e $Green "perl version        :" "$perl_version" $Color_Off
 echo -e $Green "bash version        :" "$bash_version" $Color_Off
 
@@ -247,6 +248,14 @@ echo -e $Green "Current Folder      :" "$currentFolder" $Color_Off
 echo
 
 pyInstall_fileVersion="./"$pyInstall_Name"_version.txt"
+if [ ! -f "$pyInstall_fileVersion" ]
+then
+    pyInstall_fileVersion="./version.txt"
+    if [ ! -f "$pyInstall_fileVersion" ]
+    then
+        echo -e $Red "No version file found" $Color_Off
+    fi
+fi
 echo -e $Green "Get version from    :" $pyInstall_fileVersion $Color_Off
 
 if [ -f "$pyInstall_fileVersion" ]
@@ -259,32 +268,32 @@ then
     # echo -e $Green "refLineLen          :" "$refLineLen" $Color_Off
     refLineLen=$refLineLen-1
     # echo -e $Green "refLineLen-1        :" "$refLineLen" $Color_Off
-	for (( i = $refLineLen; i < ${#tempNoSpace}; ++i)); do
-	    # echo -e $Green "${tempNoSpace:$i:1}" $Color_Off
-		if [[ ${tempNoSpace:$i:1} != ")" ]]
-		then
-			tempver=$tempver${tempNoSpace:$i:1}
-		else
-			break
-		fi
-	done
+    for (( i = $refLineLen; i < ${#tempNoSpace}; ++i)); do
+        # echo -e $Green "${tempNoSpace:$i:1}" $Color_Off
+        if [[ ${tempNoSpace:$i:1} != ")" ]]
+        then
+            tempver=$tempver${tempNoSpace:$i:1}
+        else
+            break
+        fi
+    done
 
-	if [[ ${tempver:0:1} != "'" ]]
-	then
-	    # echo -e $Green "last char is a cote" $Color_Off
-		if [[ "$OSTYPE" == "darwin"* ]]
-		then
-			v2=${tempver:0:$((${#tempver} - 1))}
-			tempver=$v2
-		else
-			tempver=${tempver::-1}
-		fi
-	fi
-	# echo -e "version : ""$tempver""\n" >> "$pylint_log"
-	echo -e "| **Project** |  |" >> "$pylint_log"	
-	echo -e "| "$pyInstall_Name" |" "$tempver"" |" >> "$pylint_log"
-	echo -e "" >> "$pylint_log"
-	echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
+    if [[ ${tempver:0:1} != "'" ]]
+    then
+        # echo -e $Green "last char is a cote" $Color_Off
+        if [[ "$OSTYPE" == "darwin"* ]]
+        then
+            v2=${tempver:0:$((${#tempver} - 1))}
+            tempver=$v2
+        else
+            tempver=${tempver::-1}
+        fi
+    fi
+    # echo -e "version : ""$tempver""\n" >> "$pylint_log"
+    echo -e "| **Project** |  |" >> "$pylint_log"    
+    echo -e "| "$pyInstall_Name" |" "$tempver"" |" >> "$pylint_log"
+    echo -e "" >> "$pylint_log"
+    echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
 fi
 echo
 
@@ -303,164 +312,167 @@ notetotal=0.0
 tempval=0.0
 for i in $(find . -type f \( -iname "*.py" ! -iname "__*.py" \) ); 
 do
-	# Loop through each folder_ignore we does nothink
-	drop_it=0
-	for folder in "${folder_ignore[@]}"
-	do
-		if [[ "$i" =~ "$folder" ]]
-		then
-			drop_it=1
-			break
-		fi
-	done
+    # Loop through each folder_ignore we does nothink
+    drop_it=0
+    for folder in "${folder_ignore[@]}"
+    do
+        if [[ "$i" =~ "$folder" ]]
+        then
+            drop_it=1
+            break
+        fi
+    done
 
-	if [ $drop_it -eq 0 ]
-	then
-		echo -e $BGreen " ""$i" $Color_Off
-		# pylint --rcfile=pylint_config -E $i
-		echo -e "&nbsp;\n" >> "$pylint_log"
-		echo -e "## *""$i""*" >> "$pylint_log"
-		echo -e "" >> "$pylint_log"
-		temp=$(grep -F "$pylint_rules" "$i")
-		if [[ ! "$temp" == "" ]]
-		then
-			echo
-			# echo -e "temp          :" "$temp"
-			PylintWarningArr=()
-			while read -r line; do
-				PylintWarningArr+=("$line")
-			done <<< "$temp"
+    if [ $drop_it -eq 0 ]
+    then
+        echo -e $BGreen " ""$i" $Color_Off
+        # pylint --rcfile=pylint_config -E $i
+        echo -e "&nbsp;\n" >> "$pylint_log"
+        echo -e "## *""$i""*" >> "$pylint_log"
+        echo -e "" >> "$pylint_log"
+        temp=$(grep -F "$pylint_rules" "$i")
+        if [[ ! "$temp" == "" ]]
+        then
+            echo
+            # echo -e "temp          :" "$temp"
+            PylintWarningArr=()
+            while read -r line; do
+                PylintWarningArr+=("$line")
+            done <<< "$temp"
 
-			# Do a layout to display Pylint rule one by lines in .md 
-			totalnumberofrules=$(echo ${PylintWarningArr[@]} | grep -o '# ' | wc -l)
-			for k in "${PylintWarningArr[@]}"
-			do
-				tempNoSpace=$(echo $k | tr -s '# ' '  ')
-				echo -e $Green "$tempNoSpace" $Color_Off
-				if [ $totalnumberofrules -gt 1 ]
-				then
-					spaces="  "
-				else
-					spaces=""
-				fi
-				echo -e ">""$tempNoSpace""$spaces" >> "$pylint_log"
-			done
+            # Do a layout to display Pylint rule one by lines in .md 
+            totalnumberofrules=$(echo ${PylintWarningArr[@]} | grep -o '# ' | wc -l)
+            for k in "${PylintWarningArr[@]}"
+            do
+                tempNoSpace=$(echo $k | tr -s '# ' '  ')
+                echo -e $Green "$tempNoSpace" $Color_Off
+                if [ $totalnumberofrules -gt 1 ]
+                then
+                    spaces="  "
+                else
+                    spaces=""
+                fi
+                echo -e ">""$tempNoSpace""$spaces" >> "$pylint_log"
+            done
 
-			# Qdd separator if error are present
-			numberOfLine="${#PylintWarningArr[@]}"
-			borne=0
-			# echo -e $Green "numberOfLine :" "$numberOfLine" $Color_Off		
-			# echo -e $Green "borne        :" "$borne" $Color_Off		
-			if [ "$numberOfLine" -gt "$borne" ]
-			then
-				echo
-				echo -e "  " >> "$pylint_log"
-			fi
-			# echo
-		fi
+            # Qdd separator if error are present
+            numberOfLine="${#PylintWarningArr[@]}"
+            borne=0
+            # echo -e $Green "numberOfLine :" "$numberOfLine" $Color_Off        
+            # echo -e $Green "borne        :" "$borne" $Color_Off        
+            if [ "$numberOfLine" -gt "$borne" ]
+            then
+                echo
+                echo -e "  " >> "$pylint_log"
+            fi
+            # echo
+        fi
 
-		# Do the Pylint analyse
-		pylint $i > "$pylint_tmp"
-		pylint_error=$?
+        # Do the Pylint analyse
+        pylint $i > "$pylint_tmp"
+        pylint_error=$?
 
-		# Do a layout to display element name with only 3 * in .md 
-		# echo -e $Green "pylint_tmp           :" "$pylint_tmp" $Color_Off
-		numberoflines=$(wc -l < "$pylint_tmp")
-		# echo -e $Green "numberoflines        :" "$numberoflines" $Color_Off
-		firstline=$(head -1 < "$pylint_tmp")
-		# echo -e $Green "firstline            :" "$firstline" $Color_Off
-		short="${firstline:0:14}"
-		# echo -e $Green "short                :" "$short" $Color_Off
-		if [ "$short" == "************* " ]
-		then
-			firstline=${firstline:10}
-			firstline=$firstline"  "
-			# echo -e $Green "firstline            :" "$firstline" $Color_Off
-			echo -e "$firstline" >> "$pylint_log"
-			echo -e "" >> "$pylint_log"
-			# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
-			let "numberoflines -= 1"
-			let "numberoflines *= -1"
-			# echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
-			# Do a layout to display Pylint info in .md 
-			tagpart=$(tail $numberoflines < "$pylint_tmp" )
-			# echo -e $Green "tagpart              :" $Color_Off
-			# echo -e $Green "$tagpart" $Color_Off
-			echo -e "$tagpart" >> "$pylint_log"
-			echo -e "" >> "$pylint_log"
-		else
-			# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
-			let "numberoflines -= 1"
-			let "numberoflines *= -1"
-			# echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
-			# Do a layout to display Pylint info in .md 
-			tagpart=$(tail $numberoflines < "$pylint_tmp" )
-			# echo -e $Green "tagpart              :" $Color_Off
-			# echo -e $Green "$tagpart" $Color_Off
-			echo -e "$tagpart" >> "$pylint_log"
-			echo -e "" >> "$pylint_log"
-		fi
-		rm "$pylint_tmp"
+        # Do a layout to display element name with only 3 * in .md 
+        # echo -e $Green "pylint_tmp           :" "$pylint_tmp" $Color_Off
+        numberoflines=$(wc -l < "$pylint_tmp")
+        # echo -e $Green "numberoflines        :" "$numberoflines" $Color_Off
+        firstline=$(head -1 < "$pylint_tmp")
+        # echo -e $Green "firstline            :" "$firstline" $Color_Off
+        short="${firstline:0:14}"
+        # echo -e $Green "short                :" "$short" $Color_Off
+        if [ "$short" == "************* " ]
+        then
+            firstline=${firstline:10}
+            firstline=$firstline"  "
+            # echo -e $Green "firstline            :" "$firstline" $Color_Off
+            echo -e "$firstline" >> "$pylint_log"
+            echo -e "" >> "$pylint_log"
+            # echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
+            let "numberoflines -= 1"
+            let "numberoflines *= -1"
+            # echo -e $Green "numberoflines +      :" "$numberoflines" $Color_Off
+            # Do a layout to display Pylint info in .md 
+            tagpart=$(tail $numberoflines < "$pylint_tmp" )
+            # echo -e $Green "tagpart              :" $Color_Off
+            # echo -e $Green "$tagpart" $Color_Off
+            echo -e "$tagpart" >> "$pylint_log"
+            echo -e "" >> "$pylint_log"
+        else
+            # echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
+            let "numberoflines -= 1"
+            let "numberoflines *= -1"
+            # echo -e $Green "numberoflines -      :" "$numberoflines" $Color_Off
+            # Do a layout to display Pylint info in .md 
+            tagpart=$(tail $numberoflines < "$pylint_tmp" )
+            # echo -e $Green "tagpart              :" $Color_Off
+            # echo -e $Green "$tagpart" $Color_Off
+            echo -e "$tagpart" >> "$pylint_log"
+            echo -e "" >> "$pylint_log"
+        fi
+        rm "$pylint_tmp"
 
-
-		# Get last line of log file to display it and compute note 
-		tag=$(tail -2 < "$pylint_log" )
-		# echo -e $Green "tag                  :" $Color_Off
-		# echo -e $Green "$tag" $Color_Off
-		if [[ "$OSTYPE" == "darwin"* ]]
-		then
-			v2=${tag:0:$((${#tag} - 1))}
-			echo -e $Green '\t '$v2 $Color_Off
-		else
-			echo -e $Green '\t '${tag::-1} $Color_Off
-		fi
-		# Get from line the note
-		newnote=${tag:28:5}
-		# echo -e $Green "newnote              :" "$newnote" $Color_Off	
-		lastchar=${newnote: -1}
-		if [ $lastchar == '/' ]
-		then
-			if [[ "$OSTYPE" == "darwin"* ]]
-			then
-				v2=${newnote:0:$((${#newnote} - 1))}
-				newnote=$v2
-			else
-				newnote=${newnote::-1}
-			fi
-		fi
-		tempval=$(perl -E "say $notetotal+$newnote")
-		notetotal=$tempval
-		if [ $pylint_error -ne 0 ]
-		then
-			if [ $pylint_error -eq 1 ]
-			then
-				echo -e $Red '\t '"errors type = fatal message" $Color_Off
-			elif [ $pylint_error -eq 2 ]
-			then
-				echo -e $Yellow '\t '"errors type = error message" $Color_Off
-			elif [ $pylint_error -eq 4 ]
-			then
-				echo -e $Purple '\t '"errors type = warning message" $Color_Off
-			elif [ $pylint_error -eq 8 ]
-			then
-				echo -e $Green '\t '"errors type = refactor message" $Color_Off
-			elif [ $pylint_error -eq 16 ]
-			then
-				echo -e $Cyan '\t '"errors type = convention message" $Color_Off
-			else
-				echo -e $White '\t '"errors type =" "$pylint_error" "(usage error)" $Color_Off
-			fi
-		fi
-		echo
-		# note : does nothing : somefile,colorized
-		# pylint --output-format=json:somefile,colorized $i >> "$pylint_log"".json"
-		let "filecount += 1"
-	fi
+        # Get last line of log file to display it and compute note 
+        tag=$(tail -2 < "$pylint_log" )
+        # echo -e $Green "tag                  :" $Color_Off
+        # echo -e $Green "$tag" $Color_Off
+        if [[ "$OSTYPE" == "darwin"* ]]
+        then
+            v2=${tag:0:$((${#tag} - 1))}
+            echo -e $Green '\t '$v2 $Color_Off
+        else
+            echo -e $Green '\t '${tag::-1} $Color_Off
+        fi
+        # Get from line the note
+        # echo -e $Red "tag                  :" "$tag" $Color_Off
+        newnote=${tag:28:5}
+        # echo -e $Red "newnote              :" "$newnote" $Color_Off
+        lastchar=${newnote: -1}
+        # echo -e $Red "lastchar             :" "$lastchar" $Color_Off
+        if [ $lastchar == '/' ]
+        then
+            if [[ "$OSTYPE" == "darwin"* ]]
+            then
+                v2=${newnote:0:$((${#newnote} - 1))}
+                newnote=$v2
+            else
+                newnote=${newnote::-1}
+            fi
+        fi
+        # Add 2 floats values
+        tempval=$(perl -E "say $notetotal+$newnote")
+        notetotal=$tempval
+        if [ $pylint_error -ne 0 ]
+        then
+            if [ $pylint_error -eq 1 ]
+            then
+                echo -e $Red '\t '"errors type = fatal message" $Color_Off
+            elif [ $pylint_error -eq 2 ]
+            then
+                echo -e $Yellow '\t '"errors type = error message" $Color_Off
+            elif [ $pylint_error -eq 4 ]
+            then
+                echo -e $Purple '\t '"errors type = warning message" $Color_Off
+            elif [ $pylint_error -eq 8 ]
+            then
+                echo -e $Green '\t '"errors type = refactor message" $Color_Off
+            elif [ $pylint_error -eq 16 ]
+            then
+                echo -e $Cyan '\t '"errors type = convention message" $Color_Off
+            else
+                echo -e $White '\t '"errors type =" "$pylint_error" "(usage error)" $Color_Off
+            fi
+        fi
+        echo
+        # note : does nothing : somefile,colorized
+        # pylint --output-format=json:somefile,colorized $i >> "$pylint_log"".json"
+        let "filecount += 1"
+    fi
 
 done
 
 echo -e $BGreen "Pylint files analyzed = ""$filecount"  $Color_Off
 echo
+# Divide by the number of file to get the medium note notetotal is a float
 medium=$(perl -E "say $notetotal/$filecount")
 mediumcut=${medium:0:5}
 echo -e $BGreen "Quality medium note  = ""$mediumcut"" / 10"  $Color_Off

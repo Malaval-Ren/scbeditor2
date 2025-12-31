@@ -5,7 +5,7 @@
 #
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
-# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -55,8 +55,6 @@ BACKGROUD_COLOR_UI_MAC = '#696969'    #dimgray -> '#696969' or  #595959
 
 DARK_COLOR_UI = '#000000' # 'black'
 LIGHT_COLOR_UI = '#FFFFFF' # 'white'
-
-COLOR_WINDOWS_MENU_BAR = '#0063B1'  # rgb(0, 99, 177)
 
 PICTURE_WIDTH = 640
 PICTURE_HEIGHT = 400

@@ -5,7 +5,7 @@
 #
 # This application to do modification of bmp file to prepare convertion to a Apple IIGS pic file.
 #
-# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by

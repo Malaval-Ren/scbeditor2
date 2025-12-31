@@ -34,13 +34,13 @@ VSVersionInfo(
           StringStruct(u'FileDescription', u'SCB Editor II is an application to simplify modification of bmp file to prepare convertion to a Apple IIGS pic file.'),
           StringStruct(u'FileVersion', u'2.10.29'),
           StringStruct(u'InternalName', u'scbeditor2.py'),
-          StringStruct(u'LegalCopyright', u'GNU GPLv3 Copyright © 2023 … 2025, Renaud Malaval'),
+          StringStruct(u'LegalCopyright', u'GNU GPLv3 Copyright © 2023 … 2026, Renaud Malaval'),
           StringStruct(u'LegalTrademarks', u'Disk Crack Band'),
           StringStruct(u'OriginalFilename', u'scbeditor2.exe'),
           StringStruct(u'ProductName', u'SCB Editor II'),
           StringStruct(u'ProductVersion', u'2.10.29.131'),
           # Champs personnalisés
-          StringStruct(u'BuildDate', u'2025-08-31'),
+          StringStruct(u'BuildDate', u'2026-01-03'),
           StringStruct(u'Maintainer', u'renaud.malaval@free.fr')
         ])
       ]),

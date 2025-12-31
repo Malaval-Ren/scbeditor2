@@ -4,8 +4,8 @@
 ![Alt text](scbeditor2_T_256x256.png "scbeditor2")    ![Alt text](./gplv3-127x51.png "license GPL v3")
 
 
-_Creation: December 31th, 2023..2025, by Renaud Malaval_  
-_Last review: July 19th, 2025, by Renaud Malaval_
+_Creation: December 31th, 2023..2026, by Renaud Malaval_  
+_Last review: January 3rd, 2026, by Renaud Malaval_
 
 ## **Features**
 

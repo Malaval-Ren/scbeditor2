@@ -8,7 +8,7 @@
 # from : https://stackoverflow.com/questions/63099026/fomatted-text-in-tkinter
 # Copyright (C) Jul 26, 2020 Bryan Oakley
 #
-# Copyright (C) 2023-2025 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
