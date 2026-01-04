@@ -31,6 +31,7 @@
 # ###############################################################################################
 
 import platform
+import sys
 import os
 import array
 import inspect
@@ -297,26 +298,27 @@ class MyMainWindowImage:
     # ####################### __mv_entry_mouse_x_focus_in ########################
     def __mwi_entry_mouse_x_focus_in( self, _):
         """ entry mouse pos X take the focus """
-        self.w_tk_root.unbind( "<Key>")
+        # self.w_tk_root.unbind( "<Key>")
         self.c_the_log.add_string_to_log( "mv_entry_mouse_x_focus_in()")
 
     # ####################### __mv_entry_mouse_y_focus_in ########################
     def __mwi_entry_mouse_y_focus_in( self, _):
         """ entry mouse pos Y take the focus """
-        self.w_tk_root.unbind( "<Key>")
+        # self.w_tk_root.unbind( "<Key>")
         self.c_the_log.add_string_to_log( "mv_entry_mouse_y_focus_in()")
 
     # ####################### __mv_entry_mouse_x_y_focus_out ########################
     def __mwi_entry_mouse_x_y_focus_out( self, _):
         """ entry mouse pos X or Y loose the focus """
-        self.w_tk_root.bind( "<Key>" , self.mwi_on_single_key)
+        # self.w_tk_root.bind( "<Key>" , self.mwi_on_single_key)
         self.c_the_log.add_string_to_log( "mv_entry_mouse_x_y_focus_out()")
 
     # ####################### __mwi_set_max_len_to_four_chars_and_filter ########################
-    def __mwi_set_max_len_to_four_chars_and_filter( self, i_action, s_string_apres, s_insert) -> bool:
+    def __mwi_set_max_len_to_four_chars_and_filter( self, s_before, s_call, s_reason, s_name) -> bool:
         """ Validates each character as it is entered in the entry for a color value
-            parameter setup is '%d', '%s', '%S'
-            posibility are
+            parameter setup is '%P', '%S', '%V', '%W'
+            no used : '%d', '%i', '%s' '%v', '%W'
+            The posibilities for the parameters are as follows:
             '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
             '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
             '%P'	The value that the text will have if the change is allowed.
@@ -325,34 +327,40 @@ class MyMainWindowImage:
             '%v'	The current value of the widget's validate option.
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
-        """
-        self.c_the_log.add_string_to_log( " i_action       %d = " + str( i_action))
-        # self.c_the_log.add_string_to_log( "i_position     %i = " + str( i_position))
-        # self.c_the_log.add_string_to_log( "s_string_avant %P = " + s_string_avant)
-        self.c_the_log.add_string_to_log( " s_string_apres %s = " + s_string_apres)
-        self.c_the_log.add_string_to_log( " s_insert       %S = " + s_insert)
-        # self.c_the_log.add_string_to_log( "a_name         %W = " + s_name)
 
-        if 'a' <= s_insert <= 'f':
-        # if s_insert >= 'a' and s_insert <= 'f':
-            s_insert.upper()
+        """
+        # self.c_the_log.add_string_to_log( "__mwi_set_max_len_to_four_chars_and_filter()")
+        # self.c_the_log.add_string_to_log( " i_action       %d = " + str( i_action))
+        # self.c_the_log.add_string_to_log( "i_position     %i = " + str( i_position))
+        # self.c_the_log.add_string_to_log( "s_string_avant %P = " + s_before)
+        # self.c_the_log.add_string_to_log( " s_string_apres %s = " + s_string_apres)
+        # self.c_the_log.add_string_to_log( " s_call        %S = " + s_call)
+        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
+        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
+        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
+        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
+        a_widget = self.w_tk_root.nametowidget( s_name)
 
         b_result = False
-        if s_insert in '0123456789ABCDEF':
-            # print( '__mwi_set_max_len_to_four_chars_and_filter() : __s_value len = ' + str( len( __s_value) + 1) )
-            if int( i_action) == 0:     # deletion
-                # print( '__mwi_set_max_len_to_four_chars_and_filter() : action = deletion' )
-                if len( s_string_apres) + 1 > 8:
-                    b_result = True
-            elif int( i_action) == 1:   # insertion
-                # print( '__mwi_set_max_len_to_four_chars_and_filter() : action = insertion' )
-                if len( s_string_apres) + 1 < 16:
-                    b_result = True
-            else:
-                # self.c_the_log.add_string_to_log( '__mwi_set_max_len_to_four_chars_and_filter() : autre')
+        if s_reason == "focusin":
+            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
+            if a_widget == self.a_mouse_pos_x:
+                self.__mwi_entry_mouse_x_focus_in( None)
+                b_result = True
+            if a_widget == self.a_mouse_pos_y:
+                self.__mwi_entry_mouse_y_focus_in( None)
+                b_result = True
+        elif s_reason == "focusout":
+            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
+            self.__mwi_entry_mouse_x_y_focus_out( None)
+            b_result = True
+        elif s_reason == "key":
+            # self.c_the_log.add_string_to_log( "key")
+            if '0' <= s_call <= '9' and len( s_before) < 4:
                 b_result = True
         else:
-            self.c_the_log.add_string_to_log( '__mwi_set_max_len_to_four_chars_and_filter() : key= ' + str( s_insert) )
+            # self.c_the_log.add_string_to_log( "does nothing")
+            b_result = True
 
         return b_result
 
@@ -517,19 +525,20 @@ class MyMainWindowImage:
         a_pic_sep_lbl_h5 = Label( a_mouse_click_frame, text="X ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
         # font='-weight bold'
-        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
+        filter_command = a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter)
+        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%S', '%V', '%W'), background='white', foreground='black')
         self.a_mouse_pos_x.grid( row=i_index_base_block, column=3, padx=4, pady=2)
-        self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
-        self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
+        # self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
+        # self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
         self.a_pos_x_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_pos_x_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_mouse_click_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
-        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validatecommand=( a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter), '%d', '%s', '%S'), background='white', foreground='black')
+        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%s', '%S', '%V', '%W'), background='white', foreground='black')
         self.a_mouse_pos_y.grid( row=i_index_base_block, column=3, padx=4, pady=2)
-        self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
-        self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
+        # self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
+        # self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
         self.a_pos_y_true_lbl = Label( a_mouse_click_frame, text="   ", width=constant.DEFAULT_BUTTON_WIDTH-2, background='light grey', foreground='black')
         self.a_pos_y_true_lbl.grid( row=i_index_base_block, column=4, padx=4, pady=2, sticky='ew')
         i_index_base_block += 1
@@ -718,7 +727,9 @@ class MyMainWindowImage:
 
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
-            self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
+            self.c_the_log.add_string_to_log( "Variable i_rect_begin is equal to -1, falied to found the top Y of rectangle, exit program...")
+            # self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
+            sys.exit( 1)
 
         # all_y_ranges = []
         # for i_pallet_number in range( 0, 256, 16):
