@@ -30,6 +30,7 @@
 
 import platform
 import tkinter as tk_gui
+import inspect
 
 from tkinter import Label, Button, Toplevel, Scale, Radiobutton, IntVar, font, Canvas, Checkbutton
 from tkinter.ttk import Combobox
@@ -38,6 +39,7 @@ from PIL import ImageTk
 import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
+from src.my_alert_window import MyAlertWindow
 
 # __name__ = "MyScbPalletWindow"
 
@@ -444,13 +446,23 @@ class MyScbPalletWindow:
     # ####################### scbw_create_scb_window ########################
     def scbw_create_scb_window( self, s_filename, a_original_image, a_scb_cnvs, i_index_in_a_scb_cnvs_rect_lst):
         """ Design the scb box dialog """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
         if a_original_image and a_scb_cnvs:
-            self.c_the_log.add_string_to_log( 'scbw_create_scb_window()')
             w_parent_window = self.a_main_window.mw_get_main_window()
             self.s_original_filename = s_filename
             self.a_original_part_image = a_original_image
             self.a_scb_cnvs = a_scb_cnvs
             self.i_index_in_a_scb_cnvs_rect_lst = i_index_in_a_scb_cnvs_rect_lst
+
+            # Prepare the picture band
+            a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
+            self.c_the_log.add_string_to_log( f' a_cnvs_rect= {a_cnvs_rect}')
+            f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+
+            if f_y0 == f_y1:
+                c_alert_windows = MyAlertWindow( self.a_main_window, self.a_main_window.mw_get_application_info())
+                c_alert_windows.aw_create_alert_window( 3, "SCB on one line", "Can't use SCB Edit dialog.\n\nUse the scroller and\nvalidate with the button\n'Change pallet line number'.")
+                return
 
             self.w_scb_window = Toplevel( w_parent_window)
             self.w_scb_window.lift( aboveThis=w_parent_window)
@@ -460,26 +472,25 @@ class MyScbPalletWindow:
             self.w_scb_window.configure( background=constant.BACKGROUD_COLOR_UI)
             self.w_scb_window.title( ' SCB edit ')
 
-            # Prepare the picture band
-            a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
-            f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
-            self.c_the_log.add_string_to_log( f'scbw_scb_block() rect       size is: {f_x0:0.0f} {f_y0:0.0f} {f_x1:0.0f} {f_y1:0.0f}'.format(f_x0, f_y0, f_x1, f_y1))
+            self.c_the_log.add_string_to_log(f' rect       size is: ({f_x0:0.1f} {f_y0:0.1f}) ({f_x1:0.1f} {f_y1:0.1f}) {int(f_y1 - f_y0 + 1):d} lines')
             width, height = a_original_image.size
-            self.c_the_log.add_string_to_log( f'scbw_scb_block() org  image size is: {width:d} {height:d}'.format(width, height))
+            self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
 
-            f_y0 = (f_y0 + 0.5) / 2
-            f_y1 = (f_y1 + 0.5) / 2
-            if int(f_y0) == int(f_y1):
-                f_y1 = f_y0 + 1
+            f_y0 = f_y0  / 2
+            f_y1 = (f_y1  / 2) + 1
+            self.c_the_log.add_string_to_log(f' rect round size is: ({int(f_x0):d} {int(f_y0):d}) ({int(f_x1):d} {int(f_y1):d}) {int(f_y1 - f_y0 + 1):d} lines')
 
-            i_box_top = (0, int(f_y0), 320, int(f_y1))
+            i_box_top = (0, int(f_y0), 320, int(f_y1)) # left, upper, width, height
             a_part_image = a_original_image.crop( i_box_top)
+            width, height = a_original_image.size
+            self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
+
             width, height = a_part_image.size
-            self.c_the_log.add_string_to_log( f'scbw_scb_block() part image size is: {width:d} {height:d}'.format(width, height))
+            self.c_the_log.add_string_to_log( f' part image size is: {width:d} {height:d}'.format(width, height))
             self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
             self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
-            self.c_the_log.add_string_to_log( 'scbw_scb_block() a_zoom_work_img: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
-            self.c_the_log.add_string_to_log( 'scbw_scb_block()   a_render_zoom: height= ' + str( self.a_render_zoom.height()) + '  width= ' + str( self.a_render_zoom.width()))
+            self.c_the_log.add_string_to_log( ' a_zoom_work_img: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
+            self.c_the_log.add_string_to_log( '   a_render_zoom: height= ' + str( self.a_render_zoom.height()) + '  width= ' + str( self.a_render_zoom.width()))
 
             # After creating self.a_zoom_work_img
             self.a_zoom_work_img_original = self.a_zoom_work_img.copy()
@@ -489,6 +500,7 @@ class MyScbPalletWindow:
 
             self.__scbw_scb_block( width, height)
             self.__scbw_set_window_size()
+            self.c_the_log.add_string_to_log( "")
 
             self.w_scb_window.mainloop()
             self.w_scb_window.destroy()

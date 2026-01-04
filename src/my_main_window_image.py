@@ -33,9 +33,9 @@
 import platform
 import os
 import array
+import inspect
 
 from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar     #, Radiobutton
-#, Radiobutton
 from tkinter.ttk import Separator
 from PIL import ImageTk
 
@@ -622,22 +622,22 @@ class MyMainWindowImage:
             s_key = event.char
             self.c_the_log.add_string_to_log( 'mw_on_single_key() : key= ' + s_key )
 
-    # ####################### get_original_image ########################
+    # ####################### mwi_get_original_image ########################
     def mwi_get_original_image( self) -> ImageTk.PhotoImage:
         """ get original image the base bmp to the apple II GS resolution """
         return self.a_original_img
 
-    # ####################### get_working_image ########################
+    # ####################### mwi_get_working_image ########################
     def mwi_get_working_image( self) -> ImageTk.PhotoImage:
         """ get the resize and resised working image """
         return self.a_work_img
 
-    # ####################### get_mouse_pos_x_var ########################
+    # ####################### mwi_get_mouse_pos_x_var ########################
     def mwi_get_mouse_pos_x_var( self) -> int:
         """ get a_mouse_pos_x_input_var """
         return int( self.a_mouse_pos_x_input_var.get())
 
-    # ####################### get_mouse_pos_y_var ########################
+    # ####################### mwi_get_mouse_pos_y_var ########################
     def mwi_get_mouse_pos_y_var( self) -> int:
         """ get a_mouse_pos_y_input_var """
         return int( self.a_mouse_pos_y_input_var.get())
@@ -652,12 +652,12 @@ class MyMainWindowImage:
     #     """ get value of the latest position of the mouse Y """
     #     self.a_mouse_live_pos_y
 
-    # ####################### set_mouse_live_pos_x ########################
+    # ####################### mwi_set_mouse_live_pos_x ########################
     def mwi_set_mouse_live_pos_x( self, i_pos_x):
         """ set value of the latest position of the mouse X """
         self.a_mouse_live_pos_x.configure( text=str( i_pos_x))
 
-    # ####################### set_mouse_live_pos_y ########################
+    # ####################### mwi_set_mouse_live_pos_y ########################
     def mwi_set_mouse_live_pos_y( self, i_pos_y):
         """ set value of the latest position of the mouse Y """
         self.a_mouse_live_pos_y.configure( text=str( i_pos_y))
@@ -694,9 +694,11 @@ class MyMainWindowImage:
                     self.a_bar_chart_cnvs.create_text( i_colmun_x+9, 84-64, text=str( a_usage_color_rry[i_loop]), fill="black")
             i_colmun_x += 24
 
-    # ####################### mw_draw_scb_bar ########################
+    # ####################### mwi_draw_scb_bar ########################
     def mwi_draw_scb_bar( self, i_color_offset):
         """ Draw the bar with rectangles to display all the SCB usage """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
+
         i_pallet_number = int( i_color_offset / 16) * 16
         # self.c_the_log.add_string_to_log( "mwi_draw_scb_bar() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         self.a_scb_cnvs.delete( "all")
@@ -707,17 +709,40 @@ class MyMainWindowImage:
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_pallet_number:
                 if i_rect_begin == -1:
-                    i_rect_begin = i_loop   # te Y hight of the rectangle
+                    i_rect_begin = i_loop   # the Y height of the rectangle
             else:
                 if i_rect_begin != -1:
-                    self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop-1, fill='blue', outline='blue'))
+                    self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop-2, fill='blue', outline='blue'))
                     i_rect_begin = -1
                 i_inter = 0
 
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
             self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
-        # self.c_the_log.add_string_to_log( "mwi_draw_scb_bar() Number of rectangle created = " + str( len( self.a_scb_cnvs_rect_lst)))
+
+        # all_y_ranges = []
+        # for i_pallet_number in range( 0, 256, 16):
+        #     y_ranges = []
+        #     i_rect_begin = -1
+        #     for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
+        #         i_offset = self.a_work_img.getpixel( (0, i_loop))
+        #         i_inter = int( i_offset / 16) * 16
+        #         if i_inter == i_pallet_number:
+        #             if i_rect_begin == -1:
+        #                 i_rect_begin = i_loop
+        #         else:
+        #             if i_rect_begin != -1:
+        #                 y_ranges.append( (i_rect_begin, i_loop - 2))
+        #                 i_rect_begin = -1
+        #     if i_rect_begin != -1:
+        #         y_ranges.append( (i_rect_begin, i_loop))
+        #     # Optionally print or log for each pallet line
+        #     if y_ranges:
+        #         # Print each rectangle with its line count
+        #         y_ranges_str = ', '.join([f"({y0}, {y1}) {y1 - y0 + 1} lines" for (y0, y1) in y_ranges])
+        #         # print(f" Pallet {i_pallet_number // 16}: {y_ranges_str}")
+        #         self.c_the_log.add_string_to_log( f" Pallet {i_pallet_number // 16}: {y_ranges_str}")
+        #     all_y_ranges.extend( [(i_pallet_number, y0, y1) for y0, y1 in y_ranges])
 
     # ####################### mwi_count_number_of_scb ########################
     def mwi_count_number_of_scb( self, i_color_offset) -> int:
