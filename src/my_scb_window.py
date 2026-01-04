@@ -39,7 +39,7 @@ from PIL import ImageTk
 import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
-from src.my_alert_window import MyAlertWindow
+from .my_alert_window import MyAlertWindow
 
 # __name__ = "MyScbPalletWindow"
 
@@ -433,13 +433,13 @@ class MyScbPalletWindow:
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
     #
-    #   ######  #     # ######  #       ###  #####
-    #   #     # #     # #     # #        #  #     #
-    #   #     # #     # #     # #        #  #
-    #   ######  #     # ######  #        #  #
-    #   #       #     # #     # #        #  #
-    #   #       #     # #     # #        #  #     #
-    #   #        #####  ######  ####### ###  #####
+    #  ######  #     # ######  #       ###  #####
+    #  #     # #     # #     # #        #  #     #
+    #  #     # #     # #     # #        #  #
+    #  ######  #     # ######  #        #  #
+    #  #       #     # #     # #        #  #
+    #  #       #     # #     # #        #  #     #
+    #  #        #####  ######  ####### ###  #####
     #
     # ##########################################################################################
 
@@ -448,7 +448,6 @@ class MyScbPalletWindow:
         """ Design the scb box dialog """
         self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
         if a_original_image and a_scb_cnvs:
-            w_parent_window = self.a_main_window.mw_get_main_window()
             self.s_original_filename = s_filename
             self.a_original_part_image = a_original_image
             self.a_scb_cnvs = a_scb_cnvs
@@ -464,9 +463,9 @@ class MyScbPalletWindow:
                 c_alert_windows.aw_create_alert_window( 3, "SCB on one line", "Can't use SCB Edit dialog.\n\nUse the scroller and\nvalidate with the button\n'Change pallet line number'.")
                 return
 
-            self.w_scb_window = Toplevel( w_parent_window)
-            self.w_scb_window.lift( aboveThis=w_parent_window)
-            # window dialog is on top of w_parent_window
+            self.w_scb_window = Toplevel( self.a_main_window.mw_get_main_window())
+            self.w_scb_window.lift( aboveThis=self.a_main_window.mw_get_main_window())
+            # window dialog is on top of self.a_main_window.mw_get_main_window()
             self.w_scb_window.grab_set()
             self.w_scb_window.focus_set()
             self.w_scb_window.configure( background=constant.BACKGROUD_COLOR_UI)

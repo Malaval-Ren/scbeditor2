@@ -338,8 +338,8 @@ class MyMainWindowImage:
         # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
         # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
         # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
-        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
         a_widget = self.w_tk_root.nametowidget( s_name)
+        # self.c_the_log.add_string_to_log( "widget      = ", {a_widget})
 
         b_result = False
         if s_reason == "focusin":

@@ -38,13 +38,12 @@ from functools import partial
 
 # from ttkthemes              import ThemedTk, THEMES, ThemedStyle
 from PIL import ImageTk
-
+from PIL import ImageDraw
 
 import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
-from .my_tools import mt_hexlify_byte_string
 from .my_tool_tips import MyToolTip
 
 # __name__ = "MyMainWindowPallet"
@@ -382,7 +381,8 @@ class MyMainWindowPallet:
     # ####################### __mpw_entry_label ########################
     def __mpw_entry_label( self, a_color_bottom_frame, a_string_var, a_color_okay_command, i_index_base_block) -> tuple:
         """ create an entry and a label for the color edition hexadecimal and decimal """
-        an_entry = Entry( a_color_bottom_frame, textvariable=a_string_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( a_color_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
+        # all parameter available for a_color_okay_command are '%P', '%s', '%S', '%v', '%V'
+        an_entry = Entry( a_color_bottom_frame, textvariable=a_string_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( a_color_okay_command, '%P', '%S', '%V', '%W'), background=constant.LIGHT_COLOR_UI, foreground='green')
         an_entry.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         an_label = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
         an_label.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
@@ -405,7 +405,7 @@ class MyMainWindowPallet:
         a_color_name_lbl = Label( a_color_bottom_frame, text="RGB Color", background=constant.BACKGROUD_COLOR_UI)
         a_color_name_lbl.grid( row=i_index_base_block, column=2, columnspan=2, padx=4, pady=i_pad_y)
         # the text is the cursor style on the middle of the label
-        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="   _     _", background=constant.BACKGROUD_COLOR_UI, cursor=a_cursor, borderwidth=2, compound="center", highlightthickness=2)
+        self.a_zoom_lbl = Label( a_color_bottom_frame, image='', text="", background=constant.BACKGROUD_COLOR_UI, cursor=a_cursor, borderwidth=2, compound="center", highlightthickness=2)
         if self.s_platform in [ "Darwin", "Linux" ]:
             self.a_zoom_lbl.grid( row=i_index_base_block, rowspan=9, column=4, columnspan=8, padx=8, pady=i_pad_y+8, sticky='ewn')
         else:
@@ -413,13 +413,8 @@ class MyMainWindowPallet:
         self.a_zoom_lbl.bind( '<Button>', self.__mwp_click_on_picture_zoom)
 
         i_index_base_block += 1
-        red_okay_command = self.w_tk_root.register( self.mwp_red_max_of_two_chars_and_filter)
-        # all parameter available for self.mwp_red_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_red_ntr, self.a_red_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_red_input_var, red_okay_command, i_index_base_block)
-        # self.a_red_ntr = Entry( a_color_bottom_frame, textvariable=self.a_red_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate='all', validatecommand=( red_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='red')
-        # self.a_red_ntr.grid( row=i_index_base_block, column=0, columnspan=1, padx=4, sticky='w')
-        # self.a_red_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='red')
-        # self.a_red_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        filter_command = self.w_tk_root.register( self.__mwp_max_of_two_chars_and_filter)
+        self.a_red_ntr, self.a_red_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_red_input_var, filter_command, i_index_base_block)
 
         a_offset_lbl = Label( a_color_bottom_frame, text="New", background=constant.BACKGROUD_COLOR_UI)
         a_offset_lbl.grid( row=i_index_base_block, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ew')
@@ -434,26 +429,14 @@ class MyMainWindowPallet:
         self.a_the_color_new_lbl.grid( row=i_index_base_block, rowspan=3, column=2, columnspan=1, padx=4, pady=i_pad_y, sticky='ewns')
 
         i_index_base_block += 1
-        green_okay_command = self.w_tk_root.register( self.mwp_green_max_of_two_chars_and_filter)
-        # all parameter available for self.mwp_green_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_green_ntr, self.a_green_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_green_input_var, green_okay_command, i_index_base_block)
-        # self.a_green_ntr = Entry( a_color_bottom_frame, textvariable=self.a_green_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( green_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='green')
-        # self.a_green_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
-        # self.a_green_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
-        # self.a_green_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        self.a_green_ntr, self.a_green_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_green_input_var, filter_command, i_index_base_block)
 
         i_index_base_block += 1
         a_color_name_lbl = Label( a_color_bottom_frame, text="Blue", background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_color_name_lbl.grid( row=i_index_base_block, column=0, columnspan=2, padx=4, pady=i_pad_y)
 
         i_index_base_block += 1
-        blue_okay_command = self.w_tk_root.register( self.mwp_blue_max_of_two_chars_and_filter)
-        # all parameter available for self.mwp_blue_max_of_two_chars_and_filter are '%P', '%s', '%S', '%v', '%V'
-        self.a_blue_ntr, self.a_blue_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_blue_input_var, blue_okay_command, i_index_base_block)
-        # self.a_blue_ntr = Entry( a_color_bottom_frame, textvariable=self.a_blue_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( blue_okay_command, '%P', '%S', '%V'), background=constant.LIGHT_COLOR_UI, foreground='blue')
-        # self.a_blue_ntr.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
-        # self.a_blue_ntr_dec_lbl = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='blue')
-        # self.a_blue_ntr_dec_lbl.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
+        self.a_blue_ntr, self.a_blue_ntr_dec_lbl = self.__mpw_entry_label( a_color_bottom_frame, self.a_blue_input_var, filter_command, i_index_base_block)
 
         i_index_base_block = self.__mwp_pallet_zone_center_up_button( a_color_bottom_frame, i_index_base_block, i_index_base_block_for_old_button)
 
@@ -521,6 +504,60 @@ class MyMainWindowPallet:
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='w')
 
+    # ####################### __mwp_max_of_two_chars_and_filter ########################
+    def __mwp_max_of_two_chars_and_filter( self, s_before, s_call, s_reason, s_name) -> bool:
+        """ Validates each character as it is entered in the entry for a color value
+            parameter setup is '%P', '%S', '%V', '%W'
+            no used : '%d', '%s', '%v'
+            The posibilities for the parameters are as follows:
+            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
+            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
+            '%P'	The value that the text will have if the change is allowed.
+            '%s'	The text in the entry before the change.
+            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
+            '%v'	The current value of the widget's validate option.
+            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
+            '%W'	The name of the widget.
+        """
+        # self.c_the_log.add_string_to_log( "mwp_red_max_of_two_chars_and_filter() ")
+        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
+        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
+        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
+        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
+        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
+        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
+        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
+        a_widget = self.w_tk_root.nametowidget( s_name)
+        # self.c_the_log.add_string_to_log( "widget      = ", {a_widget})
+
+        b_result = False
+        if s_reason in ('focusin', 'focusout'):
+            # if s_reason == "focusin":
+                # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
+            # else:
+                # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
+            if a_widget == self.a_red_ntr:
+                self.__mwp_entry_red_focus_in( None)
+                b_result = True
+            if a_widget == self.a_green_ntr:
+                self.__mwp_entry_green_focus_in( None)
+                b_result = True
+            if a_widget == self.a_blue_ntr:
+                self.__mwp_entry_blue_focus_in( None)
+                b_result = True
+        elif s_reason == "key":
+            # self.c_the_log.add_string_to_log( "key")
+            if 'a' <= s_call <= 'f':
+                s_call = s_call.upper()
+
+            if ('A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
+                b_result = True
+        else:
+            # self.c_the_log.add_string_to_log( "does nothing")
+            b_result = True
+
+        return b_result
+
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
     #
@@ -575,157 +612,6 @@ class MyMainWindowPallet:
         i_index_base_block = self.__mwp_pallet_zone_center_down( a_color_bottom_frame, i_index_base_block)
         self.__mwp_pallet_zone_right( a_pallet_bottom_btn_frame, i_index_base_block)
         # self.w_tk_root.update()
-
-    # ####################### mwp_red_max_of_two_chars_and_filter ########################
-    def mwp_red_max_of_two_chars_and_filter( self, s_before, s_call, s_reason) -> bool:
-    # def mwp_red_max_of_two_chars_and_filter( self, s_before, s_after, s_call, s_value, s_reason) -> bool:
-        """ Validates each character as it is entered in the entry for a color value
-            parameter setup is '%P', '%s', '%S', '%v', '%V'
-            no used : '%d', '%W'
-            posibility are
-            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
-            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
-            '%P'	The value that the text will have if the change is allowed.
-            '%s'	The text in the entry before the change.
-            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
-            '%v'	The current value of the widget's validate option.
-            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
-            '%W'	The name of the widget.
-        """
-        # self.c_the_log.add_string_to_log( "mwp_red_max_of_two_chars_and_filter() ")
-        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
-        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
-        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
-        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
-        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
-        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
-        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
-        # a_widget = self.w_tk_root.nametowidget( s_name)
-        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
-
-        b_result = False
-        if s_reason == "focusin":
-            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
-            self.__mwp_entry_red_focus_in( None)
-            b_result = True
-        elif s_reason == "focusout":
-            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
-            self.__mwp_entry_red_focus_in( None)
-            b_result = True
-        elif s_reason == "key":
-            # self.c_the_log.add_string_to_log( "key")
-            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
-                b_result = True
-            else:
-                # self.c_the_log.add_string_to_log( "manage value")
-                if not s_call.isprintable() or not s_call.isspace():
-                    self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
-                    b_result = True
-        else:
-            # self.c_the_log.add_string_to_log( "does nothing")
-            b_result = True
-
-        return b_result
-
-    # ####################### mwp_green_max_of_two_chars_and_filter ########################
-    def mwp_green_max_of_two_chars_and_filter( self, s_before, s_call, s_reason) -> bool:
-    # def mwp_green_max_of_two_chars_and_filter( self, s_before, s_after, s_call, s_value, s_reason) -> bool:
-        """ Validates each character as it is entered in the entry for a color value
-            parameter setup is '%P', '%s', '%S', '%v', '%V'
-            no used : '%d', '%W'
-            posibility are
-            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
-            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
-            '%P'	The value that the text will have if the change is allowed.
-            '%s'	The text in the entry before the change.
-            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
-            '%v'	The current value of the widget's validate option.
-            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
-            '%W'	The name of the widget.
-        """
-        # self.c_the_log.add_string_to_log( "mwp_green_max_of_two_chars_and_filter() ")
-        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
-        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
-        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
-        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
-        # self.c_the_log.add_string_to_log( f"s_value   v : {s_value}")
-        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
-        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
-        # a_widget = self.w_tk_root.nametowidget( s_name)
-        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
-
-        b_result = False
-        if s_reason == "focusin":
-            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
-            self.__mwp_entry_green_focus_in( None)
-            b_result = True
-        elif s_reason == "focusout":
-            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
-            self.__mwp_entry_green_focus_in( None)
-            b_result = True
-        elif s_reason == "key":
-            # self.c_the_log.add_string_to_log( "key")
-            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
-                b_result = True
-            elif not s_call.isprintable() or not s_call.isspace():
-                self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
-                b_result = True
-        else:
-            # self.c_the_log.add_string_to_log( "does nothing")
-            b_result = True
-
-        return b_result
-
-    # ####################### mwp_blue_max_of_two_chars_and_filter ########################
-    def mwp_blue_max_of_two_chars_and_filter( self, s_before, s_call, s_reason) -> bool:
-    # def mwp_blue_max_of_two_chars_and_filter( self, s_before, s_after, s_call, s_value, s_reason) -> bool:
-        """ Validates each character as it is entered in the entry for a color value
-            parameter setup is '%P', '%s', '%S', '%v', '%V'
-            no used : '%d', '%W'
-            posibility are
-            '%d'	Action code: 0 for an attempted deletion, 1 for an attempted insertion, or -1 if the callback was called for focus in, focus out, or a change to the textvariable.
-            '%i'	When the user attempts to insert or delete text, this argument will be the index of the beginning of the insertion or deletion. If the callback was due to focus in, focus out, or a change to the textvariable, the argument will be -1.
-            '%P'	The value that the text will have if the change is allowed.
-            '%s'	The text in the entry before the change.
-            '%S'	If the call was due to an insertion or deletion, this argument will be the text being inserted or deleted.
-            '%v'	The current value of the widget's validate option.
-            '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
-            '%W'	The name of the widget.
-        """
-        # self.c_the_log.add_string_to_log( "mwp_blue_max_of_two_chars_and_filter() ")
-        # self.c_the_log.add_string_to_log( f"i_action  d : {i_action}")
-        # self.c_the_log.add_string_to_log( f"s_before  P : {s_before}")
-        # self.c_the_log.add_string_to_log( f"s_after   s : {s_after}")
-        # self.c_the_log.add_string_to_log( f"s_call    S : {s_call}")
-        # prself.c_the_log.add_string_to_lognt( f"s_value   v : {s_value}")
-        # self.c_the_log.add_string_to_log( f"s_reason  V : {s_reason}")
-        # self.c_the_log.add_string_to_log( f"s_name    W : {s_name}")
-        # a_widget = self.w_tk_root.nametowidget( s_name)
-        # self.c_the_log.add_string_to_log( "widget      = ", a_widget)
-
-        b_result = False
-        if s_reason == "focusin":
-            # self.c_the_log.add_string_to_log( "focusin set value to Slider, new label and old button")
-            self.__mwp_entry_blue_focus_in( None)
-            b_result = True
-        elif s_reason == "focusout":
-            # self.c_the_log.add_string_to_log( "focusout set value to Slider, new label and old button")
-            self.__mwp_entry_blue_focus_in( None)
-            b_result = True
-        elif s_reason == "key":
-            # self.c_the_log.add_string_to_log( "key")
-            if ('a' <= s_call <= 'f' or 'A' <= s_call <= 'F' or '0' <= s_call <= '9') and len( s_before) < 3:
-                b_result = True
-            else:
-                # self.c_the_log.add_string_to_log( "manage value")
-                if not s_call.isprintable() or not s_call.isspace():
-                    self.c_the_log.add_string_to_log( mt_hexlify_byte_string( b's_call', ":"))
-                    b_result = True
-        else:
-            # self.c_the_log.add_string_to_log( "does nothing")
-            b_result = True
-
-        return b_result
 
     # ####################### mwp_select_color_rad_btn ########################
     def mwp_select_color_rad_btn( self, i_offset):
@@ -968,16 +854,24 @@ class MyMainWindowPallet:
         width, height = a_part_image.size
 
         self.a_zoom_work_img = a_part_image.resize( (width * 4, height * 4))     # Total of zoom is x 8
-        self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
-        self.a_zoom_lbl.config( image=self.a_render_zoom)
-        self.a_zoom_lbl.photo = self.a_render_zoom
 
-        # Adapt color of the label text "   _     _"
+        # Draw a line from (10,10) to (50,50)
+        draw = ImageDraw.Draw( self.a_zoom_work_img)
+        # To do : get color of arroud pixels
         i_red   = int( self.a_red_ntr_dec_lbl.cget( "text"))
         i_green = int( self.a_green_ntr_dec_lbl.cget( "text"))
         i_blue  = int( self.a_blue_ntr_dec_lbl.cget( "text"))
-        bright_components = sum( c > 128 for c in (i_red, i_green, i_blue))
-        self.a_zoom_lbl.config( fg='black' if bright_components >= 2 else 'white')
+        bright_components = (i_red + i_green + i_blue) // 3
+        # self.c_the_log.add_string_to_log( f'bright_components= {bright_components}')
+        line_color = 'black' if bright_components >= 128 else 'white'
+        draw.line(((width*2)-8, (height*2)+3, (width*2)-1, (height*2)+3), fill=line_color, width=2)     # horizontal left
+        draw.line(((width*2)+8, (height*2)+3, (width*2)+15, (height*2)+3), fill=line_color, width=2)    # horizontal right
+        draw.line(((width*2)+4, (height*2)-1, (width*2)+4, (height*2)-8), fill=line_color, width=2)     # vertical top
+        draw.line(((width*2)+3, (height*2)+8, (width*2)+3, (height*2)+15), fill=line_color, width=2)    # vertical bottom
+
+        self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
+        self.a_zoom_lbl.config( image=self.a_render_zoom)
+        self.a_zoom_lbl.photo = self.a_render_zoom
 
     # ####################### mwp_get_around_cursor ########################
     def mwp_get_around_cursor( self) -> int:
@@ -1010,7 +904,7 @@ class MyMainWindowPallet:
         """ The state for cursor """
         self.i_around_cursor = -1
 
-    # ####################### __mv_entry_red_focus_out ########################
+    # ####################### mwp_entry_black_focus_out ########################
     def mwp_entry_black_focus_out( self):
         """ No selected entry widget focus events restore color to black """
         self.a_color_slider.config( troughcolor='light grey')
