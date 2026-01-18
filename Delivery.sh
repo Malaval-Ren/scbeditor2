@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='2.00'
+version='2.10'
 
 # definition all colors and styles to use with an echo
 
@@ -244,174 +244,55 @@ echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
 #  ### #    #  ####       ##   ###### #    #  ####  #  ####  #    # 
 #
 # ##########################################################################################
-# Utilise sed pour capturer les 4 numéros et increase last number by +1  WINDOWS
-if [[ "$OSTYPE" == "msys" ]]
-then
-    sed -E -i'' -e '
-    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
-        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]
-then
-    sed -E -i'' -e '
-    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
-        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion"
-elif [[ "$OSTYPE" == "darwin"* ]]
-then
-    gsed -E -i'' -e '
-    /^[[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''\)/ {
-        s/^([[:space:]]*StringStruct\(u'\''ProductVersion'\'', u'\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''\))/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion"
-fi
-# Get new version to display it
-nouvelle_version=$(grep "StringStruct(u'ProductVersion'" "$pyInstall_fileVersion" | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
-echo -e $IGreen "Version             :" "$nouvelle_version" $Color_Off
 
-# Utilise sed pour capturer les 4 numéros et increase last number by +1  MAC OS X
-if [[ "$OSTYPE" == "msys" ]]
-then
-    sed -E -i'' '
-    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
-    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion_osx"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]
-then
-    sed -E -i'' '
-    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
-    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion_osx"
-elif [[ "$OSTYPE" == "darwin"* ]]
-then
-    gsed -E -i'' '
-    /^[[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+'\''/ {
-    s/^([[:space:]]*version='\''[0-9]+\.[0-9]+\.[0-9]+\.)([0-9]+)('\''.*)/echo "\1$((\2+1))\3"/e
-    }
-    ' "$pyInstall_fileVersion_osx"
-fi
-
-# Utilise sed pour incrémenter la dernière partie (après le tiret)  Linux
-if [[ "$OSTYPE" == "msys" ]]
-then
-    sed -E -i'' '
-    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
-    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
-    }
-    ' "$pyInstall_fileVersion_lnx"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]
-then
-    sed -E -i'' '
-    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
-    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
-    }
-    ' "$pyInstall_fileVersion_lnx"
-elif [[ "$OSTYPE" == "darwin"* ]]
-then
-    gsed -E -i'' '
-    /^Version=[0-9]+\.[0-9]+\.[0-9]+-[0-9]+/ {
-    s/^(Version=[0-9]+\.[0-9]+\.[0-9]+-)([0-9]+)/echo "\1$((\2+1))"/e
-    }
-    ' "$pyInstall_fileVersion_lnx"
-fi
-
-# git update file in local
-# git add $pyInstall_fileVersion_lnx
-# git add $pyInstall_fileVersion_osx
-# git add $pyInstall_fileVersion
-# git commit -m "update BuildDate and ProductVersion field"
 echo
-
-
-# store arguments in a special array 
-args=("$@") 
-# get number of elements 
-ELEMENTS=${#args[@]}
-borne=$((ELEMENTS-1))
-# echo each element in array  
-# echo "Parameter(s) :"
-oldparameter=""
-release_num=""
-for (( i=0; i<$ELEMENTS; i++));
-do
-    parameter=${args[${i}]}
-    # echo " #"$i" : "$parameter
-    if [ "$parameter" == "-ev" ] && [ $i -eq $borne ]
-    then
-        release_num="justBuild"
-    else
-        if [ "$parameter" != "-ev" ]
-        then
-            release_num=$release_num" "$parameter
-        fi
-    fi
-done
-# echo
-
-if [ "$release_num" == "" ];
+# update all the version where it is stored
+if [[ "$OSTYPE" == "msys" ]]
 then
-    echo -e $BGreen "Don't increase release version" $Color_Off
-else
-    increase_build_number_path=""
-    cd ..
-    upfolderis=$(pwd)
-    if [[ ! -d "$upfolderis""/eversioning""/" ]]
+    new_version_file=ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+    if [ -z "$new_version_file" ]
     then
-        cd ..
-        upfolderis=$(pwd)
-        increase_build_number_path=$upfolderis"/eversioning/eversioning/eversioning.py"
-        if [[ ! -f "${increase_build_number_path}" ]]
-        then
-            increase_build_number_path=$upfolderis"/eversioning/eversioning.py"
-        fi
-    else
-        increase_build_number_path=$upfolderis"/eversioning/eversioning/eversioning.py"
-        if [[ ! -f "${increase_build_number_path}" ]]
-        then
-            increase_build_number_path=$upfolderis"/eversioning/eversioning.py"
-        fi        
+        echo -e $Green "No version file found, create it and increase version number" $Color_Off
+        temp_version=$(grep "StringStruct(u'ProductVersion'" scbeditor2_version.txt | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+        # temp_version="${temp_version%.*}.$(( ${temp_version##*.} + 1 ))"
+        touch "$temp_version"
     fi
-    cd $currentFolder
-    echo -e $Green "UP Folder           :" "$upfolderis" $Color_Off
-    echo -e $Green "Release_num         :" "$release_num" $Color_Off
-    echo -e $Green "Inc build part with :" "$increase_build_number_path" $Color_Off
 
-    if [[ -f "${increase_build_number_path}" ]]
+    new_version_file=ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+    if [ -n "$new_version_file" ]
     then
-        echo
-        echo -e $Green "in file             :" $currentFolder"/"$pyInstall_Name"_version.txt" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name".desktop" $Color_Off
-        echo -e $Green "and in file         :" $currentFolder"/"$pyInstall_Name"_osx.spec" $Color_Off
-        echo
-        if [ "$release_num" == "justBuild" ]
-        then
-            cmd_content="${increase_build_number_path}"" ""${pyInstall_fileVersion}"
-        else
-            cmd_content="${increase_build_number_path}"" ""${pyInstall_fileVersion}"" ""$release_num"
-        fi
-        echo -e $Green "Call                :" "$cmd_content" $Color_Off
-        temp=$(python $cmd_content)
-        if [ $? -eq 0 ]
-        then
-            echo -e $Green "$temp" $Color_Off
-        else
-            exit $ERROR_SH_INC_VERSION
-        fi
+        # echo -e $IGreen "Version             :" "$new_version_file" $Color_Off
+        # Update all Windows files
+        sed -i "s/^#define MyAppVersion \".*\"/#define MyAppVersion \"${new_version_file}\"/" Innosetup_create_install.iss
+        sed -i "s/\(StringStruct(u'ProductVersion', u'\)[^']*\(',\)/\1${new_version_file}\2/" $pyInstall_fileVersion
+        short_version="${new_version_file%.*}"
+        sed -i "s/\(StringStruct(u'FileVersion', u'\)[^']*\(',\)/\1${short_version}\2/" $pyInstall_fileVersion
+        commated_version="${new_version_file//./, }"
+        sed -i "s/\(filevers=(\)[^)]*\(),\)/\1${commated_version}\2/" $pyInstall_fileVersion
+        sed -i "s/\(prodvers=(\)[^)]*\(),\)/\1${commated_version}\2/" $pyInstall_fileVersion
+        # Update all OSx86 file
+        sed -i "s/^ *version='[^']*',/    version='${new_version_file}',/" scbeditor2_osx.spec
+        # Update all Linux file
+        linux_version="${new_version_file//./-}"
+        # sed -i "s/^Version=.*/Version=${linux_version}/" scbeditor2.desktop
+        sed -i "s/^Version=[^-]*-.*/Version=${linux_version}/" scbeditor2.desktop
+        # manual file
+        sed -i "s/\(_Version: \)[^_]*\(_\)/\1${new_version_file}\2/" ./Documents/manual.md
+        pyInstall_version="_v""$new_version_file"
+        echo -e $IGreen "Version             :" "$pyInstall_version" $Color_Off
+
+        # git pull
+        # git add Innosetup_create_install.iss
+        # git add $pyInstall_fileVersion_lnx
+        # git add $pyInstall_fileVersion_osx
+        # git add $pyInstall_fileVersion
+        # git add ./Documents/manual.md
+        # git commit -m "update BuildDate and ProductVersion field"
+        # git push
     else
-        echo -e $IRed "eversioning not Found" $Color_Off 
+        echo -e $BRed "No version file found" $Color_Off
         exit $ERROR_SH_INC_VERSION
     fi
-fi
-echo
-
-if [[ -f "${pyInstall_fileVersion}" ]]
-then
-    pyInstall_version="_v""$nouvelle_version"
-    echo -e $IGreen "Version             :" "$pyInstall_version" $Color_Off
 fi
 
 echo
