@@ -100,7 +100,7 @@ app = BUNDLE(
     name='scbeditor2.app',
     icon='appIcon_T_1024x1024.icns',
     bundle_identifier='com.malaval.scbeditor2',
-    version='2.10.28.128',
+    version='2.11.33.134',
     info_plist={
         'CFBundleName': 'SCB Editor II',
         'CFBundleDisplayName': 'SCB Editor II',
