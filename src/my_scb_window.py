@@ -65,7 +65,7 @@ class MyScbPalletWindow:
     BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
-    def __init__( self, a_main_window_image, a_the_main_window: "MyMainWindow" , a_scb_cnvs_rect_lst, i_selected_pallet_line):
+    def __init__( self, a_main_window_image, a_the_main_window: "MyMainWindow", a_scb_cnvs_rect_lst, i_selected_pallet_line):
         """
             all this parameter are created in main()
             a_main_window : the parent windows
@@ -115,7 +115,7 @@ class MyScbPalletWindow:
         self.a_zoom_cnv.unbind( '<Motion>')
         self.a_zoom_cnv.unbind( '<Button>')
         self.w_scb_window.grab_release()
-        self.w_scb_window.quit()
+        self.w_scb_window.destroy()
 
     # ####################### __scbw_change_pallet_for_lines ########################
     def __scbw_change_pallet_for_lines( self, i_new_pallet_to_use, i_from, i_to):
@@ -308,7 +308,10 @@ class MyScbPalletWindow:
 
         a_label = Label( middle_middle_frame, text="The UPPER part, from 0 to", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
         a_label.pack( side='left', padx=2)
-        self.a_frontier_scale = Scale( middle_middle_frame, from_=0, to=i_part_height-2, length=500, command=self.__scbw_update_begin, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor='light grey')
+        if self.s_platform == "Linux":
+            self.a_frontier_scale = Scale( middle_middle_frame, from_=0, to=i_part_height-2, length=480, command=self.__scbw_update_begin, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor='light grey')
+        else:
+            self.a_frontier_scale = Scale( middle_middle_frame, from_=0, to=i_part_height-2, length=500, command=self.__scbw_update_begin, orient='horizontal', background=constant.BACKGROUD_COLOR_UI, highlightbackground='light grey', borderwidth=0, highlightthickness=0, troughcolor='light grey')
         self.a_frontier_scale.pack( side='left', padx=2)
         self.a_frontier_scale.set(int(i_part_height/3))
         a_label = Label( middle_middle_frame, text="use the pallet line (scb number)", height=1, anchor='center', background=constant.BACKGROUD_COLOR_UI, foreground='black')
@@ -452,7 +455,7 @@ class MyScbPalletWindow:
     # ####################### scbw_create_scb_window ########################
     def scbw_create_scb_window( self, s_filename, a_original_image, a_scb_cnvs, i_index_in_a_scb_cnvs_rect_lst):
         """ Design the scb box dialog """
-        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
+        # self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
         if a_original_image and a_scb_cnvs:
             self.s_original_filename = s_filename
             self.a_original_part_image = a_original_image
@@ -461,7 +464,7 @@ class MyScbPalletWindow:
 
             # Prepare the picture band
             a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
-            self.c_the_log.add_string_to_log( f' a_cnvs_rect= {a_cnvs_rect}')
+            # self.c_the_log.add_string_to_log( f' a_cnvs_rect= {a_cnvs_rect}')
             f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
 
             if f_y0 == f_y1:
@@ -469,33 +472,43 @@ class MyScbPalletWindow:
                 c_alert_windows.aw_create_alert_window( 3, "SCB on one line", "Can't use SCB Edit dialog.\n\nUse the scroller and\nvalidate with the button\n'Change pallet line number'.")
                 return
 
-            self.w_scb_window = Toplevel( self.a_main_window.mw_get_main_window())
-            self.w_scb_window.lift( aboveThis=self.a_main_window.mw_get_main_window())
+            w_parent_window = self.a_main_window.mw_get_main_window()
+            self.w_scb_window = Toplevel( w_parent_window)
+            self.w_scb_window.lift( aboveThis=w_parent_window)
             # window dialog is on top of self.a_main_window.mw_get_main_window()
             self.w_scb_window.grab_set()
             self.w_scb_window.focus_set()
             self.w_scb_window.configure( background=constant.BACKGROUD_COLOR_UI)
+
+            # ####################### disable_event ########################
+            # disable click on the X on top right of the window
+            def disable_event():
+                self.__scbw_scb_cancel_button()
+                # pass
+
+            self.w_scb_window.protocol( "WM_DELETE_WINDOW", disable_event)
+
             self.w_scb_window.title( ' SCB edit ')
 
-            self.c_the_log.add_string_to_log(f' rect       size is: ({f_x0:0.1f} {f_y0:0.1f}) ({f_x1:0.1f} {f_y1:0.1f}) {int(f_y1 - f_y0 + 1):d} lines')
+            # self.c_the_log.add_string_to_log(f' rect       size is: ({f_x0:0.1f} {f_y0:0.1f}) ({f_x1:0.1f} {f_y1:0.1f}) {int(f_y1 - f_y0 + 1):d} lines')
             width, height = a_original_image.size
-            self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
+            # self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
 
             f_y0 = f_y0  / 2
             f_y1 = (f_y1  / 2) + 1
-            self.c_the_log.add_string_to_log(f' rect round size is: ({int(f_x0):d} {int(f_y0):d}) ({int(f_x1):d} {int(f_y1):d}) {int(f_y1 - f_y0 + 1):d} lines')
+            # self.c_the_log.add_string_to_log(f' rect round size is: ({int(f_x0):d} {int(f_y0):d}) ({int(f_x1):d} {int(f_y1):d}) {int(f_y1 - f_y0 + 1):d} lines')
 
             i_box_top = (0, int(f_y0), 320, int(f_y1)) # left, upper, width, height
             a_part_image = a_original_image.crop( i_box_top)
             width, height = a_original_image.size
-            self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
+            # self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
 
             width, height = a_part_image.size
-            self.c_the_log.add_string_to_log( f' part image size is: {width:d} {height:d}'.format(width, height))
+            # self.c_the_log.add_string_to_log( f' part image size is: {width:d} {height:d}'.format(width, height))
             self.a_zoom_work_img = a_part_image.resize( (width * 3, height * 3))     # Total of zoom is x 3
             self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
-            self.c_the_log.add_string_to_log( ' a_zoom_work_img: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
-            self.c_the_log.add_string_to_log( '   a_render_zoom: height= ' + str( self.a_render_zoom.height()) + '  width= ' + str( self.a_render_zoom.width()))
+            # self.c_the_log.add_string_to_log( ' a_zoom_work_img: height= ' + str( self.a_zoom_work_img.height) + '  width= ' + str( self.a_zoom_work_img.width))
+            # self.c_the_log.add_string_to_log( '   a_render_zoom: height= ' + str( self.a_render_zoom.height()) + '  width= ' + str( self.a_render_zoom.width()))
 
             # After creating self.a_zoom_work_img
             self.a_zoom_work_img_original = self.a_zoom_work_img.copy()
@@ -505,7 +518,7 @@ class MyScbPalletWindow:
 
             self.__scbw_scb_block( width, height)
             self.__scbw_set_window_size()
-            self.c_the_log.add_string_to_log( "")
+            # self.c_the_log.add_string_to_log( "")
 
             self.w_scb_window.mainloop()
             # self.w_scb_window.destroy()
