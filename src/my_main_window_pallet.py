@@ -41,6 +41,9 @@ from PIL import ImageTk
 from PIL import ImageDraw
 
 import src.my_constants as constant
+from .my_main_window import MyMainWindow
+from .my_main_window_icons_bar import MyMainWindowIconsBar
+from .my_main_window_image import MyMainWindowImage
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
@@ -58,7 +61,7 @@ class MyMainWindowPallet:
     """ Create the main Windows Pallet part of the application. """
 
     # ####################### __init__ ########################
-    def __init__( self, w_root_windows, c_main_window):
+    def __init__( self, w_root_windows, c_main_window: MyMainWindow):
         """
             All this parameter are created in main()
             w_root_windows : the windows created by tk
@@ -78,9 +81,9 @@ class MyMainWindowPallet:
         self.i_main_window_height = c_main_window.mw_get_main_window_height()
         self.c_alert_windows = MyAlertWindow( c_main_window, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
-        self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
-        self.c_main_image = None                   # top icon menu bar : MyMainWindowPicture
-        self.c_main_pallet = None                  # top icon menu bar : MyMainWindowPallet
+        self.c_main_icon_bar : MyMainWindowIconsBar = None  # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_image : MyMainWindowImage = None        # top picture : MyMainWindowPicture
+        self.c_main_pallet : MyMainWindowPallet = None      # bottom pallet : MyMainWindowPallet
 
         self.a_pallet_horizontal_number_lst : list = []
         self.a_pallet_vertical_number_lst   : list = []
@@ -842,32 +845,48 @@ class MyMainWindowPallet:
         """ De selected an entry widget, when a button is clicked ie the pallet button """
         event.widget.focus_set()
 
-    # ####################### mwp_draw_zoom_square ########################
-    def mwp_draw_zoom_square( self, i_position_x, i_position_y):
-        """ Draw the zoom square part * 8 of the picture """
-        # self.c_the_log.add_string_to_log( "mwp_draw_zoom_square : i_position_x= " + str( i_position_x) + " i_position_x= " + str( i_position_y))
-        i_contour = 26
+    # ####################### __mwp_get_color_to_use ########################
+    def __mwp_get_color_to_use( self, a_work_img, a_pallet_list, i_pos_x, i_pos_y) -> str:
+        """ Get the color to use for the bar chart """
+        # 3 * is to avoid to do 2 multiplications later
+        palette_index = 3 * a_work_img.getpixel( ( i_pos_x, i_pos_y))
+        # without the 3 * we would have: 3*palette_index:3*palette_index+3
+        i_red, i_green, i_blue = a_pallet_list[palette_index : palette_index+3]
+        relative_luminance = ((54 * i_red) + (183 *i_green) + (19*i_blue)) >> 8
+        # self.c_the_log.add_string_to_log( f" /i_red= {i_red} , i_green= {i_green} , i_blue= {i_blue} , relative_luminance= {relative_luminance}")
+        if relative_luminance < 128:
+            s_color = "white"
+        else:
+            s_color = "black"
+        # self.c_the_log.add_string_to_log( f" \\i_pos_x= {i_pos_x} , i_pos_y= {i_pos_y} , palette_index= {palette_index}, s_color= {s_color}")
+        return s_color
 
+    # ####################### mwp_draw_zoom_square ########################
+    def mwp_draw_zoom_square( self, i_position_x : int, i_position_y : int):
+        """ Draw the zoom square part * 8 of the picture """
+        # self.c_the_log.add_string_to_log( f"mwp_draw_zoom_square : i_position_x= {i_position_x} , i_position_y= {i_position_y}")
+        i_contour = 26
         i_box_top = (i_position_x - i_contour, i_position_y - i_contour, i_position_x + i_contour, i_position_y + i_contour)
         a_work_img = self.c_main_image.mwi_get_working_image()
+        # print(f" a_work_img: {type(a_work_img).__name__}")
+        a_pallet_list = a_work_img.getpalette()
+        #width, height = a_work_img.size
+        # self.c_the_log.add_string_to_log( f" width= {width} , height= {height}")
         a_part_image = a_work_img.crop( i_box_top)
         width, height = a_part_image.size
-
         self.a_zoom_work_img = a_part_image.resize( (width * 4, height * 4))     # Total of zoom is x 8
 
-        # Draw a line from (10,10) to (50,50)
         draw = ImageDraw.Draw( self.a_zoom_work_img)
-        # To do : get color of arroud pixels
-        i_red   = int( self.a_red_ntr_dec_lbl.cget( "text"))
-        i_green = int( self.a_green_ntr_dec_lbl.cget( "text"))
-        i_blue  = int( self.a_blue_ntr_dec_lbl.cget( "text"))
-        bright_components = (i_red + i_green + i_blue) // 3
-        # self.c_the_log.add_string_to_log( f'bright_components= {bright_components}')
-        line_color = 'black' if bright_components >= 128 else 'white'
-        draw.line(((width*2)-8, (height*2)+3, (width*2)-1, (height*2)+3), fill=line_color, width=2)     # horizontal left
-        draw.line(((width*2)+8, (height*2)+3, (width*2)+15, (height*2)+3), fill=line_color, width=2)    # horizontal right
-        draw.line(((width*2)+4, (height*2)-1, (width*2)+4, (height*2)-8), fill=line_color, width=2)     # vertical top
-        draw.line(((width*2)+3, (height*2)+8, (width*2)+3, (height*2)+15), fill=line_color, width=2)    # vertical bottom
+        double_width = width * 2
+        double_height = height * 2
+        s_line_color = self.__mwp_get_color_to_use( a_work_img, a_pallet_list, i_position_x - 1, i_position_y)      # horizontal left
+        draw.line((double_width-8, double_height+3, double_width-1, double_height+3), fill=s_line_color, width=2)   # horizontal left
+        s_line_color = self.__mwp_get_color_to_use( a_work_img, a_pallet_list, i_position_x + 2, i_position_y)      # horizontal right
+        draw.line((double_width+8, double_height+3, double_width+15, double_height+3), fill=s_line_color, width=2)  # horizontal right
+        s_line_color = self.__mwp_get_color_to_use( a_work_img, a_pallet_list, i_position_x, i_position_y - 1)      # vertical top
+        draw.line((double_width+4, double_height-1, double_width+4, double_height-8), fill=s_line_color, width=2)   # vertical top
+        s_line_color = self.__mwp_get_color_to_use( a_work_img, a_pallet_list, i_position_x, i_position_y + 2)      # vertical bottom
+        draw.line((double_width+3, double_height+8, double_width+3, double_height+15), fill=s_line_color, width=2)  # vertical bottom
 
         self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
         self.a_zoom_lbl.config( image=self.a_render_zoom)

@@ -210,8 +210,10 @@ class MyScbPalletWindow:
         self.a_mouse_live_pos_y_lbl.configure( text=str( int(event.y / 3)))
 
         a_pallet_list = self.a_zoom_work_img.getpalette()
-        i_base = 3 * self.a_zoom_work_img.getpixel((i_pos_x, i_pos_y))
-        i_red, i_green, i_blue = a_pallet_list[i_base:i_base+3]
+        # 3 * is to avoid to do 2 multiplications later
+        palette_index = 3 * self.a_zoom_work_img.getpixel((i_pos_x, i_pos_y))
+        # without the 3 * we would have: 3*palette_index:3*palette_index+3
+        i_red, i_green, i_blue = a_pallet_list[palette_index:palette_index+3]
         self.a_the_color_new_lbl.configure( background= f"#{i_red:02x}{i_green:02x}{i_blue:02x}")
 
     # ####################### __scbw_show_chk_toggled ########################
