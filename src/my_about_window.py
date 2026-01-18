@@ -33,6 +33,7 @@ import tkinter as tk_gui
 from tkinter import Label, Button, Toplevel
 
 import src.my_constants as constant
+from .my_main_window import MyMainWindow
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_widget_rich_text import MyRichTextWidget
@@ -49,7 +50,7 @@ class MyAboutWindow:
     # number is reasonable in this case these are all the icons of the main windows and the application icons
 
     # ####################### __init__ ########################
-    def __init__( self, c_the_main_window, list_application_info):
+    def __init__( self, c_the_main_window: MyMainWindow, list_application_info):
         """
             all this parameter are created in main()
             c_the_main_window : the parent windows

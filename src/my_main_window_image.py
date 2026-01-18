@@ -31,16 +31,17 @@
 # ###############################################################################################
 
 import platform
-import sys
 import os
 import array
-import inspect
 
 from tkinter import Frame, font, Label, Button, Entry, Canvas, Scale, StringVar     #, Radiobutton
 from tkinter.ttk import Separator
 from PIL import ImageTk
 
 import src.my_constants as constant
+from .my_main_window import MyMainWindow
+from .my_main_window_icons_bar import MyMainWindowIconsBar
+from .my_main_window_pallet import MyMainWindowPallet
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
@@ -62,7 +63,7 @@ class MyMainWindowImage:
     # __slots__ = ["w_root_windows", "a_list_application_info" ]
 
     # ####################### __init__ ########################
-    def __init__( self, w_root_windows, c_main_window):
+    def __init__( self, w_root_windows, c_main_window: MyMainWindow):
         """
             All this parameter are created in main()
             w_root_windows : the windows created by tk
@@ -82,11 +83,11 @@ class MyMainWindowImage:
         self.i_main_window_height = c_main_window.mw_get_main_window_height()
         self.c_alert_windows = MyAlertWindow( c_main_window, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
-        self.c_main_icon_bar = None                # top icon menu bar : MyMainWindowIconsBar
-        self.c_main_pallet = None                 # top icon menu bar : MyMainWindowPallet
+        self.c_main_icon_bar : MyMainWindowIconsBar = None  # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_pallet : MyMainWindowPallet = None      # bottom pallet : MyMainWindowPallet
 
         self.a_original_img = None
-        self.a_work_img = None
+        self.a_work_img                     : ImageTk.Image = None
         self.a_picture_lbl = None
         self.a_scb_cnvs                     : Canvas = None
         self.a_scb_cnvs_rect_lst            : list = []
@@ -174,6 +175,7 @@ class MyMainWindowImage:
             # self.c_the_log.add_string_to_log( "mw_click_on_picture() i_offset = ", str( i_offset))
             self.c_main_pallet.mwp_color_btn_rad( i_offset)
 
+            self.w_tk_root.update()
             # Display zoom of a part of the picture
             self.c_main_pallet.mwp_draw_zoom_square( i_pos_x, i_pos_y)
 
@@ -327,7 +329,6 @@ class MyMainWindowImage:
             '%v'	The current value of the widget's validate option.
             '%V'	The reason for this callback: one of 'focusin', 'focusout', 'key', or 'forced' if the textvariable was changed.
             '%W'	The name of the widget.
-
         """
         # self.c_the_log.add_string_to_log( "__mwi_set_max_len_to_four_chars_and_filter()")
         # self.c_the_log.add_string_to_log( " i_action       %d = " + str( i_action))
@@ -706,14 +707,13 @@ class MyMainWindowImage:
     # ####################### mwi_draw_scb_bar ########################
     def mwi_draw_scb_bar( self, i_color_offset):
         """ Draw the bar with rectangles to display all the SCB usage """
-        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
-
+        # self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
         i_pallet_number = int( i_color_offset / 16) * 16
         # self.c_the_log.add_string_to_log( "mwi_draw_scb_bar() offset= " + str( i_color_offset) + "  pallet_number= " + str( i_pallet_number))
         self.a_scb_cnvs.delete( "all")
         self.a_scb_cnvs_rect_lst.clear()
         i_rect_begin = -1
-        for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
+        for i_loop in range( 0, constant.PICTURE_HEIGHT - 2, 2):
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_pallet_number:
@@ -721,15 +721,13 @@ class MyMainWindowImage:
                     i_rect_begin = i_loop   # the Y height of the rectangle
             else:
                 if i_rect_begin != -1:
-                    self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop-2, fill='blue', outline='blue'))
+                    self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
                     i_rect_begin = -1
                 i_inter = 0
 
         # Add last rectangle for the exit of the for i_loop without created it
         if i_rect_begin != -1:
-            self.c_the_log.add_string_to_log( "Variable i_rect_begin is equal to -1, falied to found the top Y of rectangle, exit program...")
-            # self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
-            sys.exit( 1)
+            self.a_scb_cnvs_rect_lst.append( self.a_scb_cnvs.create_rectangle( 0, i_rect_begin, 24, i_loop, fill='blue', outline='blue'))
 
         # all_y_ranges = []
         # for i_pallet_number in range( 0, 256, 16):

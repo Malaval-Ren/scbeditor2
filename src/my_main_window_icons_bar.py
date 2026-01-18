@@ -38,6 +38,8 @@ from tkinter import Button, Menu
 from PIL import Image
 
 import src.my_constants as constant
+from .my_main_window import MyMainWindow
+from .my_main_window_image import MyMainWindowImage
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_about_window import MyAboutWindow
@@ -60,7 +62,7 @@ class MyMainWindowIconsBar:
     """ Create the icon bar to the main Windows of the application. """
 
     # ####################### __init__ ########################
-    def __init__( self, c_main_class, w_main_windows, list_application_info, a_top_frame_of_main_window):
+    def __init__( self, c_main_class: MyMainWindow, w_main_windows: MyMainWindow, list_application_info, a_top_frame_of_main_window):
         """
             All this parameters come from main()
             c_main_class : the class who manage w_main_windows
@@ -80,7 +82,7 @@ class MyMainWindowIconsBar:
         self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)
         self.s_filename = ''
         self.a_original_image = None
-        self.c_mains_image = None
+        self.c_mains_image :MyMainWindowImage = None
         self.imported_pallet_lst = []
         self.i_selected_pallet_in_main_windows = -1
 

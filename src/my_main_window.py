@@ -90,9 +90,9 @@ class MyMainWindow:
 
         self.c_alert_windows = MyAlertWindow( self, list_application_info)
         self.s_init_pathname = os.getcwd()
-        self.c_main_icon_bar = None             # top icon menu bar : MyMainWindowIconsBar
-        self.c_main_image = None                # top icon menu bar : MyMainWindowImage
-        self.c_main_pallet = None               # top icon menu bar : MyMainWindowPallet
+        self.c_main_icon_bar :MyMainWindowIconsBar = None   # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_image :MyMainWindowImage = None         # top icon menu bar : MyMainWindowImage
+        self.c_main_pallet :MyMainWindowPallet = None       # top icon menu bar : MyMainWindowPallet
 
     # ####################### __repr__ ########################
     def __repr__( self) -> str:
