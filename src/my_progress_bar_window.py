@@ -41,7 +41,7 @@ from .my_icon_pictures import MyIconPictures
 
 if TYPE_CHECKING:
     from .my_main_window import MyMainWindow
-    
+
 # __name__ = "MyProgressBarWindow"
 
 # ###############################################################################################
