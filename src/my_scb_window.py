@@ -504,7 +504,7 @@ class MyScbPalletWindow:
             self.c_the_log.add_string_to_log( "")
 
             self.w_scb_window.mainloop()
-            self.w_scb_window.destroy()
+            # self.w_scb_window.destroy()
 
     # ####################### scbw_close_scb_window ########################
     def scbw_close_scb_window( self):

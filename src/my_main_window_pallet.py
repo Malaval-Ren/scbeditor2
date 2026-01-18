@@ -31,6 +31,7 @@
 
 import platform
 import os
+from typing import TYPE_CHECKING
 
 from tkinter import Frame, font, Label, Button, Entry, Scale, StringVar, Radiobutton, IntVar
 from tkinter.ttk import Separator
@@ -41,13 +42,15 @@ from PIL import ImageTk
 from PIL import ImageDraw
 
 import src.my_constants as constant
-from .my_main_window import MyMainWindow
-from .my_main_window_icons_bar import MyMainWindowIconsBar
-from .my_main_window_image import MyMainWindowImage
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
 from .my_tool_tips import MyToolTip
+
+if TYPE_CHECKING:
+    from .my_main_window import MyMainWindow
+    from .my_main_window_icons_bar import MyMainWindowIconsBar
+    from .my_main_window_image import MyMainWindowImage
 
 # __name__ = "MyMainWindowPallet"
 
@@ -61,29 +64,29 @@ class MyMainWindowPallet:
     """ Create the main Windows Pallet part of the application. """
 
     # ####################### __init__ ########################
-    def __init__( self, w_root_windows, c_main_window: MyMainWindow):
+    def __init__( self, w_root_windows, c_main_window: "MyMainWindow"):
         """
             All this parameter are created in main()
             w_root_windows : the windows created by tk
             c_main_window : the main window
         """
         self.w_tk_root = w_root_windows        # root window the first window created
-        self.c_main_windows = c_main_window
+        self.c_main_windows: "MyMainWindow" = c_main_window
         # Position of the main windows
         self.i_main_window_x = 20
         self.i_main_window_y = 20
         self.w_tk_root.background = constant.BACKGROUD_COLOR_UI
-        self.c_the_log = MyLogAnUsage( None)
-        self.c_the_icons = MyIconPictures( self.w_tk_root)
+        self.c_the_log: "MyLogAnUsage" = MyLogAnUsage( None)
+        self.c_the_icons: "MyIconPictures" = MyIconPictures( self.w_tk_root)
         self.s_platform = platform.system()
         # Size of the main windows
         self.i_main_window_width = c_main_window.mw_get_main_window_width()
         self.i_main_window_height = c_main_window.mw_get_main_window_height()
         self.c_alert_windows = MyAlertWindow( c_main_window, c_main_window.mw_get_application_info())
         self.s_init_pathname = os.getcwd()
-        self.c_main_icon_bar : MyMainWindowIconsBar = None  # top icon menu bar : MyMainWindowIconsBar
-        self.c_main_image : MyMainWindowImage = None        # top picture : MyMainWindowPicture
-        self.c_main_pallet : MyMainWindowPallet = None      # bottom pallet : MyMainWindowPallet
+        self.c_main_icon_bar : "MyMainWindowIconsBar" = None  # top icon menu bar : MyMainWindowIconsBar
+        self.c_main_image : "MyMainWindowImage" = None        # top picture : MyMainWindowPicture
+        self.c_main_pallet : "MyMainWindowPallet" = None      # bottom pallet : MyMainWindowPallet
 
         self.a_pallet_horizontal_number_lst : list = []
         self.a_pallet_vertical_number_lst   : list = []

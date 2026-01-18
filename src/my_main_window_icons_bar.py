@@ -33,12 +33,13 @@
 import platform
 import os
 import sys
+from typing import TYPE_CHECKING
 
 from tkinter import Button, Menu
 from PIL import Image
 
 import src.my_constants as constant
-from .my_main_window import MyMainWindow
+
 from .my_main_window_image import MyMainWindowImage
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
@@ -46,8 +47,10 @@ from .my_about_window import MyAboutWindow
 from .my_import_window import MyImportPalletWindow
 from .my_alert_window import MyAlertWindow
 from .my_progress_bar_window import MyProgressBarWindow
-
 from .my_tools import mt_open_file
+
+if TYPE_CHECKING:
+    from .my_main_window import MyMainWindow
 
 # __name__ = "MyMainWindowIconsBar"
 
@@ -57,12 +60,12 @@ from .my_tools import mt_open_file
 
 # ###############################################################################################
 # #######=========================     GUI     =========================
-# ####################### MyMainWindowIconsBar ########################
+# ####################### MyMainWindowIconsBar ### #####################
 class MyMainWindowIconsBar:
     """ Create the icon bar to the main Windows of the application. """
 
     # ####################### __init__ ########################
-    def __init__( self, c_main_class: MyMainWindow, w_main_windows: MyMainWindow, list_application_info, a_top_frame_of_main_window):
+    def __init__( self, c_main_class: "MyMainWindow", w_root_windows, list_application_info, a_top_frame_of_main_window):
         """
             All this parameters come from main()
             c_main_class : the class who manage w_main_windows
@@ -70,19 +73,19 @@ class MyMainWindowIconsBar:
             a_list_application_info : about information of this software
             a_top_frame_of_main_window :  the top frame
         """
-        self.c_main_class = c_main_class
-        self.w_main_windows = w_main_windows
+        self.c_main_class: "MyMainWindow" = c_main_class
+        self.w_main_windows = w_root_windows
         self.a_list_application_info = list_application_info
         self.a_top_frame_of_main_window = a_top_frame_of_main_window
         self.a_dico_mw_gui_element = None
         self.w_front_window = None
-        self.c_the_log = MyLogAnUsage( None)
-        self.c_the_icons = MyIconPictures( None)
+        self.c_the_log: "MyLogAnUsage" = MyLogAnUsage( None)
+        self.c_the_icons: "MyIconPictures" = MyIconPictures( None)
         self.s_platform = platform.system()
-        self.c_alert_windows = MyAlertWindow( self.c_main_class, list_application_info)
+        self.c_alert_windows: "MyAlertWindow" = MyAlertWindow( self.c_main_class, list_application_info)
         self.s_filename = ''
         self.a_original_image = None
-        self.c_mains_image :MyMainWindowImage = None
+        self.c_mains_image : "MyMainWindowImage" = None
         self.imported_pallet_lst = []
         self.i_selected_pallet_in_main_windows = -1
 

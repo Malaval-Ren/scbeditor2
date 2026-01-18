@@ -30,6 +30,7 @@
 
 import platform
 import tkinter as tk_gui
+from typing import TYPE_CHECKING
 
 from tkinter import font, Label, Button, Toplevel, Radiobutton, IntVar
 from tkinter.ttk import Combobox
@@ -37,10 +38,13 @@ from functools import partial
 from PIL import ImageTk
 
 import src.my_constants as constant
-from .my_main_window import MyMainWindow
-from .my_main_window_image import MyMainWindowImage
+
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
+
+if TYPE_CHECKING:
+    from .my_main_window import MyMainWindow
+    from .my_main_window_image import MyMainWindowImage
 
 # __name__ = "MyImportPalletWindow"
 
@@ -62,17 +66,17 @@ class MyImportPalletWindow:
     BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
-    def __init__( self, a_the_main_window: MyMainWindow, a_main_window_image: MyMainWindowImage, file_path_name):
+    def __init__( self, a_the_main_window: "MyMainWindow", a_main_window_image: "MyMainWindowImage", file_path_name):
         """
             all this parameter are created in main()
             a_main_window : the parent windows
             a_main_window_image : the top right part class who manage the iamge
         """
-        self.a_main_window = a_the_main_window
-        self.a_main_window_image = a_main_window_image
+        self.a_main_window: "MyMainWindow" = a_the_main_window
+        self.a_main_window_image: "MyMainWindowImage" = a_main_window_image
         self.s_original_filename = file_path_name
-        self.c_the_log = MyLogAnUsage( None)
-        self.c_the_icons = MyIconPictures( None)
+        self.c_the_log: "MyLogAnUsage" = MyLogAnUsage( None)
+        self.c_the_icons: "MyIconPictures" = MyIconPictures( None)
         self.s_platform = platform.system()
         self.w_import_window = None
         self.a_work_img = None

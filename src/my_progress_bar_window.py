@@ -29,16 +29,19 @@
 # ###############################################################################################
 
 import platform
+from typing import TYPE_CHECKING
 
 import tkinter as tk_gui
 from tkinter import Label, Button, Toplevel, font
 from tkinter.ttk import Progressbar, Style
 
 import src.my_constants as constant
-from .my_main_window import MyMainWindow
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 
+if TYPE_CHECKING:
+    from .my_main_window import MyMainWindow
+    
 # __name__ = "MyProgressBarWindow"
 
 # ###############################################################################################
@@ -54,15 +57,15 @@ class MyProgressBarWindow:
     answer_done = 1
 
     # ####################### __init__ ########################
-    def __init__( self, c_the_main_window: MyMainWindow, list_application_info):
+    def __init__( self, c_the_main_window: "MyMainWindow", list_application_info):
         """
             all this parameter are created in main()
             w_parent_windows : the parent windows
         """
-        self.c_the_main_window = c_the_main_window
+        self.c_the_main_window: "MyMainWindow" = c_the_main_window
         self.a_list_application_info = list_application_info
-        self.c_the_log = MyLogAnUsage( None)
-        self.c_the_icons = MyIconPictures( None)
+        self.c_the_log: "MyLogAnUsage" = MyLogAnUsage( None)
+        self.c_the_icons: "MyIconPictures" = MyIconPictures( None)
         self.s_platform = platform.system()
         self.w_progres_bar_window = None
         self.i_height = 0
