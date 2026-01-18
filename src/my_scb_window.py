@@ -31,6 +31,7 @@
 import platform
 import tkinter as tk_gui
 import inspect
+from typing import TYPE_CHECKING
 
 from tkinter import Label, Button, Toplevel, Scale, Radiobutton, IntVar, font, Canvas, Checkbutton
 from tkinter.ttk import Combobox
@@ -40,6 +41,9 @@ import src.my_constants as constant
 from .my_log_an_usage import MyLogAnUsage
 from .my_icon_pictures import MyIconPictures
 from .my_alert_window import MyAlertWindow
+
+if TYPE_CHECKING:
+    from .my_main_window import MyMainWindow
 
 # __name__ = "MyScbPalletWindow"
 
@@ -61,18 +65,18 @@ class MyScbPalletWindow:
     BOTTOM_FRAME_HEIGHT = 34
 
     # ####################### __init__ ########################
-    def __init__( self, a_main_window_image, a_the_main_window, a_scb_cnvs_rect_lst, i_selected_pallet_line):
+    def __init__( self, a_main_window_image, a_the_main_window: "MyMainWindow" , a_scb_cnvs_rect_lst, i_selected_pallet_line):
         """
             all this parameter are created in main()
             a_main_window : the parent windows
         """
-        self.a_main_window                  = a_the_main_window
+        self.a_main_window: "MyMainWindow"  = a_the_main_window
         self.a_main_window_image            = a_main_window_image
         self.a_scb_cnvs_rect_lst            : list = a_scb_cnvs_rect_lst
         self.i_selected_pallet_line         = i_selected_pallet_line
 
-        self.c_the_log                      = MyLogAnUsage( None)
-        self.c_the_icons                    = MyIconPictures( None)
+        self.c_the_log: "MyLogAnUsage"      = MyLogAnUsage( None)
+        self.c_the_icons: "MyIconPictures"  = MyIconPictures( None)
         self.s_platform                     = platform.system()
         self.w_scb_window                   = None
         self.a_work_img                     = None
