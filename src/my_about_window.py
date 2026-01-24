@@ -224,9 +224,14 @@ class MyAboutWindow:
         self.w_about_window.update()
         self.__aw_set_window_size()
 
+        self.w_about_window.bind("<Escape>", lambda event: self.__aw_about_cancel_button())
+        self.w_about_window.bind("<Return>", lambda event: self.__aw_about_ok_button())
+
         self.w_about_window.mainloop()
         # w_parent_window.focus_set()
         # self.c_the_log.add_string_to_log( 'pw_create_preference_window() : exit' )
+        self.w_about_window.unbind("<Escape>" )
+        self.w_about_window.unbind("<Return>" )
 
     # ####################### pw_close_preference_window ########################
     def aw_close_preference_window( self):

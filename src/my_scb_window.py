@@ -520,7 +520,14 @@ class MyScbPalletWindow:
             self.__scbw_set_window_size()
             # self.c_the_log.add_string_to_log( "")
 
+            self.w_scb_window.bind("<Escape>", lambda event: self.__scbw_scb_cancel_button())
+            self.w_scb_window.bind("<Return>", lambda event: self.__scbw_scb_ok_button())
+
             self.w_scb_window.mainloop()
+
+            self.w_scb_window.unbind("<Escape>")
+            self.w_scb_window.unbind("<Return>")
+
             # self.w_scb_window.destroy()
 
     # ####################### scbw_close_scb_window ########################

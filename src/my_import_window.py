@@ -364,7 +364,13 @@ class MyImportPalletWindow:
             self.w_import_window.update()
             self.__ipw_set_window_size()
 
+            self.w_import_window.bind("<Escape>", lambda event: self.__ipw_import_cancel_button())
+            self.w_import_window.bind("<Return>", lambda event: self.__ipw_import_ok_button())
+
             self.w_import_window.mainloop()
+
+            self.w_import_window.unbind("<Escape>" )
+            self.w_import_window.unbind("<Return>" )
             self.w_import_window.destroy()
 
     # ####################### ipw_close_import_window ########################

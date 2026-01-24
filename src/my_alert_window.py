@@ -377,7 +377,14 @@ class MyAlertWindow:
         self.w_alert_window.update()
         self.__aw_set_window_size( i_type)
 
+        self.w_alert_window.bind("<Escape>", lambda event: self.__aw_alert_cancel_button())
+        self.w_alert_window.bind("<Return>", lambda event: self.__aw_alert_ok_button())
+
         self.w_alert_window.mainloop()
+
+        self.w_alert_window.bind("<Escape>" )
+        self.w_alert_window.bind("<Return>" )
+
         self.w_alert_window.destroy()
         return self.answers
 
