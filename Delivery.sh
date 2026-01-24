@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='2.10'
+version='2.11'
 
 # definition all colors and styles to use with an echo
 
@@ -249,7 +249,8 @@ echo
 # update all the version where it is stored
 if [[ "$OSTYPE" == "msys" ]]
 then
-    new_version_file=ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+    new_version_file=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+    echo -e $BRed "new_version_file :" $new_version_file $Color_Off
     if [ -z "$new_version_file" ]
     then
         echo -e $Green "No version file found, create it and increase version number" $Color_Off
@@ -258,7 +259,8 @@ then
         touch "$temp_version"
     fi
 
-    new_version_file=ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$'
+    new_version_file=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+    echo -e $BRed "new_version_file :" $new_version_file $Color_Off
     if [ -n "$new_version_file" ]
     then
         # echo -e $IGreen "Version             :" "$new_version_file" $Color_Off
