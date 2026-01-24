@@ -455,7 +455,7 @@ class MyScbPalletWindow:
     # ####################### scbw_create_scb_window ########################
     def scbw_create_scb_window( self, s_filename, a_original_image, a_scb_cnvs, i_index_in_a_scb_cnvs_rect_lst):
         """ Design the scb box dialog """
-        # self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
         if a_original_image and a_scb_cnvs:
             self.s_original_filename = s_filename
             self.a_original_part_image = a_original_image
@@ -463,9 +463,9 @@ class MyScbPalletWindow:
             self.i_index_in_a_scb_cnvs_rect_lst = i_index_in_a_scb_cnvs_rect_lst
 
             # Prepare the picture band
-            a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
+            # a_cnvs_rect = self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst]
             # self.c_the_log.add_string_to_log( f' a_cnvs_rect= {a_cnvs_rect}')
-            f_x0, f_y0, f_x1, f_y1 = self.a_scb_cnvs.coords( a_cnvs_rect)
+            _f_x0, f_y0, _f_x1, f_y1 = self.a_scb_cnvs.coords( self.a_scb_cnvs_rect_lst[self.i_index_in_a_scb_cnvs_rect_lst])
 
             if f_y0 == f_y1:
                 c_alert_windows = MyAlertWindow( self.a_main_window, self.a_main_window.mw_get_application_info())
@@ -487,20 +487,19 @@ class MyScbPalletWindow:
                 # pass
 
             self.w_scb_window.protocol( "WM_DELETE_WINDOW", disable_event)
-
             self.w_scb_window.title( ' SCB edit ')
 
             # self.c_the_log.add_string_to_log(f' rect       size is: ({f_x0:0.1f} {f_y0:0.1f}) ({f_x1:0.1f} {f_y1:0.1f}) {int(f_y1 - f_y0 + 1):d} lines')
-            width, height = a_original_image.size
+            # width, height = a_original_image.size
             # self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
 
             f_y0 = f_y0  / 2
             f_y1 = (f_y1  / 2) + 1
             # self.c_the_log.add_string_to_log(f' rect round size is: ({int(f_x0):d} {int(f_y0):d}) ({int(f_x1):d} {int(f_y1):d}) {int(f_y1 - f_y0 + 1):d} lines')
 
-            i_box_top = (0, int(f_y0), 320, int(f_y1)) # left, upper, width, height
-            a_part_image = a_original_image.crop( i_box_top)
-            width, height = a_original_image.size
+            # i_box_top = (0, int(f_y0), 320, int(f_y1)) # left, upper, width, height
+            a_part_image = a_original_image.crop( (0, int(f_y0), 320, int(f_y1)) )   # left, upper, width, height
+            # width, height = a_original_image.size
             # self.c_the_log.add_string_to_log( f' org  image size is: {width:d} {height:d}'.format(width, height))
 
             width, height = a_part_image.size

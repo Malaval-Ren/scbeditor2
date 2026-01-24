@@ -2,19 +2,19 @@
 
 ## *Context*
 
-date :  lun. 28 juil. 2025 21:52:16
+date :  sam. 24 janv. 2026 13:59:40
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
-| Python | 3.12.10 |
+| Python | 3.14.2 |
 | Tkinter | 8.6.15 |
-| PyInstaller | 6.14.2 |
-| Pylint | 3.3.7 |
+| PyInstaller | 6.17.0 |
+| Pylint | 4.0.4 |
 | Perl | 5.38.2 |
 | Bash | 5.2.37(1)-release |
 | System | msys |
 | **Project** |  |
-| scbeditor2 | 2.10.28.128 |
+| scbeditor2 | 2.11.33.134 |
 
 &nbsp;
 
@@ -133,12 +133,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
-*** Module src.my_main_window_pallet  
-
-src\my_main_window_pallet.py:1:0: C0302: Too many lines in module (1016/1000) (too-many-lines)
-
-------------------------------------------------------------------
-Your code has been rated at 9.98/10 (previous run: 9.98/10, +0.00)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 
@@ -157,8 +153,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 9.97/10, +0.03)
 
 &nbsp;
 
@@ -192,5 +188,5 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 &nbsp;
 
 ## **Quality** :
-**note = 9.998 / 10**
+**note = 10 / 10**
 
