@@ -215,6 +215,30 @@ class MyMainWindow:
         """ De selected an entry widget, when a button is clicked ie the pallet button """
         event.widget.focus_set()
 
+    # ####################### __mw_on_closing ########################
+    def __mw_on_closing( self):
+        s_filename = self.c_main_icon_bar.mwib_get_get_path_filename()
+        if os.path.exists(s_filename + ".old") and os.path.exists( s_filename):
+            self.c_the_log.add_string_to_log( "Application closed by user, pathname : " + s_filename)
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Do you want to save the changes?")
+            if i_result == 1:
+                if os.path.exists( s_filename + ".old"):
+                    os.remove( s_filename + ".old")
+            else:
+                os.remove( s_filename)
+                os.rename( s_filename + ".old", s_filename)
+
+            self.w_tk_root.destroy()
+
+        elif os.path.exists( s_filename):
+            self.c_the_log.add_string_to_log( "Exit wihout saving your change")
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Exit wihout saving your change?")
+            if i_result == 1:
+                self.w_tk_root.destroy()
+
+        else:
+            self.w_tk_root.destroy()
+
     # ####################### __mw_set_windows_attribute ########################
     def __mw_set_windows_attribute( self):
         """ Set windows attribute """
@@ -229,6 +253,7 @@ class MyMainWindow:
         self.w_tk_root.iconphoto( True, self.c_the_icons.get_app_photo())
         self.w_tk_root.title( self.a_list_application_info[0])
         self.w_tk_root.update()
+        self.w_tk_root.wm_protocol( "WM_DELETE_WINDOW", self.__mw_on_closing)
 
     # ####################### __mw_create_windows_part ########################
     def __mw_create_windows_part( self, a_top_bar_frame, a_pic_frame, a_pallet_frame, b_vertical):
@@ -275,7 +300,6 @@ class MyMainWindow:
             i_element += 1
 
         return i_element
-
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/

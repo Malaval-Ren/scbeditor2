@@ -178,7 +178,7 @@ class MyMainWindowIconsBar:
             try:
                 converted_bmp.save( s_bmp_filename, 'BMP')
                 # Save succeeded, remove .old
-                self.__mwib_remove_file_if_exist( old_file)
+                # self.__mwib_remove_file_if_exist( old_file)
                 self.c_the_log.add_string_to_log( "mwib_convert_bmp() : File saved successfully.")
             # pylint: disable=broad-exception-caught
             except Exception as error:

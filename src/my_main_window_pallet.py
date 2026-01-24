@@ -31,6 +31,7 @@
 
 import platform
 import os
+import inspect
 from typing import TYPE_CHECKING
 
 from tkinter import Frame, font, Label, Button, Entry, Scale, StringVar, Radiobutton, IntVar
@@ -91,6 +92,7 @@ class MyMainWindowPallet:
         self.a_pallet_horizontal_number_lst : list = []
         self.a_pallet_vertical_number_lst   : list = []
         self.a_pallet_button_lst            : list = []
+        self.a_cancel_btn                   : Button = None
 
         self.color_radio_button = IntVar()
         self.i_selected_pallet_line = 0
@@ -116,19 +118,31 @@ class MyMainWindowPallet:
         self.i_color_to_copy_offset = -1
         self.i_color_line_to_copy_offset = -1
         self.i_color_to_swap_offset = -1
+        self.i_index_base_block = 0
+
+        self.w_tk_root.bind("<Escape>", self.__mwp_on_escape_key)
 
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
     #
-    # ######
-    # #     #  ####  ##### #####  ####  #    #    #####    ##   #       #      ###### #####    #####    ##   #####  #####
-    # #     # #    #   #     #   #    # ##  ##    #    #  #  #  #       #      #        #      #    #  #  #  #    #   #
-    # ######  #    #   #     #   #    # # ## #    #    # #    # #       #      #####    #      #    # #    # #    #   #
-    # #     # #    #   #     #   #    # #    #    #####  ###### #       #      #        #      #####  ###### #####    #
-    # #     # #    #   #     #   #    # #    #    #      #    # #       #      #        #      #      #    # #   #    #
-    # ######   ####    #     #    ####  #    #    #      #    # ######  ###### ######   #      #      #    # #    #   #
+    #  ######
+    #  #     #  ####  ##### #####  ####  #    #    #####    ##   #       #      ###### #####    #####    ##   #####  #####
+    #  #     # #    #   #     #   #    # ##  ##    #    #  #  #  #       #      #        #      #    #  #  #  #    #   #
+    #  ######  #    #   #     #   #    # # ## #    #    # #    # #       #      #####    #      #    # #    # #    #   #
+    #  #     # #    #   #     #   #    # #    #    #####  ###### #       #      #        #      #####  ###### #####    #
+    #  #     # #    #   #     #   #    # #    #    #      #    # #       #      #        #      #      #    # #   #    #
+    #  ######   ####    #     #    ####  #    #    #      #    # ######  ###### ######   #      #      #    # #    #   #
     #
     # ##########################################################################################
+
+    # ####################### __on_escape_key ########################
+    def __mwp_on_escape_key( self, _event):
+        print("ESC key pressed!")
+        self.i_color_to_copy_offset = -1
+        self.i_color_line_to_copy_offset = -1
+        self.i_color_to_swap_offset = -1
+        self.i_around_cursor = -1
+        self.a_cancel_btn.grid_forget()
 
     # ####################### __mwp_restore_old_color ########################
     def __mwp_restore_old_color( self):
@@ -225,9 +239,9 @@ class MyMainWindowPallet:
             self.a_color_slider.config( command=self.__mwp_update_blue_entry )
 
     # ####################### __mwp_click_on_picture_zoom ########################
-    def __mwp_click_on_picture_zoom( self, _):
+    def __mwp_click_on_picture_zoom( self, event):
         """ Show position of the mouse in the loaded picture and repair SCB to draw a rect """
-        # self.c_the_log.add_string_to_log( "mw_click_on_picture()  ", event)
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  x={event.x} y={event.y}")
         self.mwp_entry_black_focus_out()
         a_original_img = self.c_main_image.mwi_get_original_image()
         if a_original_img:
@@ -245,11 +259,20 @@ class MyMainWindowPallet:
                     # Display zoom of a part of the picture
                     self.mwp_draw_zoom_square( i_pox_x, i_pox_y)
 
+                    self.i_around_cursor = -1
+                    self.a_cancel_btn.grid_forget()
+
     # ####################### __mwp_set_pen_color ########################
     def __mwp_set_pen_color( self):
         """ Set a new color value in pallet  """
         if self.c_main_image.mwi_get_original_image():
             self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
+            if self.s_platform == "Darwin":
+                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+            elif self.s_platform == "Linux":
+                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+            else:
+                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
 
     # ####################### __mwp_copy_a_color ########################
     def __mwp_copy_a_color( self):
@@ -257,6 +280,12 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_to_copy_offset == -1:
                 self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
+                if self.s_platform == "Darwin":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                elif self.s_platform == "Linux":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                else:
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
 
     # ####################### __mwp_swap_a_color ########################
     def __mwp_swap_a_color( self):
@@ -264,6 +293,12 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_to_swap_offset == -1:
                 self.i_color_to_swap_offset = int( self.a_btn_offset_lbl.cget( "text"))
+                if self.s_platform == "Darwin":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                elif self.s_platform == "Linux":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                else:
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
 
     # ####################### __mwp_copy_line_color ########################
     def __mwp_copy_line_color( self):
@@ -271,6 +306,12 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_line_to_copy_offset == -1:
                 self.i_color_line_to_copy_offset = int( self.a_btn_x_lbl.cget( "text"))
+                if self.s_platform == "Darwin":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                elif self.s_platform == "Linux":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                else:
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
 
     # ####################### __mwp_top_line_with_titles ########################
     def __mwp_top_line_with_titles( self, a_bottom_frame, i_pic_frame_width):
@@ -491,6 +532,7 @@ class MyMainWindowPallet:
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
+            self.a_cancel_btn = Button( a_pallet_bottom_btn_frame, text="Cancel", command=lambda: self.__mwp_on_escape_key(None), width=len("Pen color"), height=1, relief='raised', highlightbackground=constant.BACKGROUD_COLOR_UI)
         elif self.s_platform == "Linux":
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=2, pady=0, sticky='w')
@@ -500,6 +542,7 @@ class MyMainWindowPallet:
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=2, pady=0, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=2, pady=0, sticky='w')
+            self.a_cancel_btn = Button( a_pallet_bottom_btn_frame, text="Cancel", command=lambda: self.__mwp_on_escape_key(None), width=len("Cancel")-2, height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI, highlightcolor='white', highlightbackground='black')
         else:
             a_change_color_btn = Button( a_pallet_bottom_btn_frame, text="Copy color", command=self.__mwp_copy_a_color, width=len("Copy color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_change_color_btn.grid( row=i_index_base_block, column=0, padx=4, pady=4, sticky='w')
@@ -509,6 +552,13 @@ class MyMainWindowPallet:
             a_copy_line_color_btn.grid( row=i_index_base_block, column=2, padx=4, pady=4, sticky='w')
             a_pen_color_btn = Button( a_pallet_bottom_btn_frame, text="Pen color", command=self.__mwp_set_pen_color, width=len("Pen color"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
             a_pen_color_btn.grid( row=i_index_base_block, column=4, padx=4, pady=4, sticky='w')
+            self.a_cancel_btn = Button( a_pallet_bottom_btn_frame, text="Cancel", command=lambda: self.__mwp_on_escape_key(None), width=len("Cancel"), height=1, relief='raised', background=constant.BACKGROUD_COLOR_UI)
+
+        self.a_cancel_btn.grid_forget()
+        MyToolTip( widget=a_change_color_btn, text="Click on source color, click on the button and click on target color")
+        MyToolTip( widget=a_swap_color_btn, text="Click on source color, click on the button and click on target color in the same line")
+        MyToolTip( widget=a_copy_line_color_btn, text="Click on source color, click on the button and click on target color")
+        MyToolTip( widget=self.a_cancel_btn, text="cancel the current operation")
 
     # ####################### __mwp_max_of_two_chars_and_filter ########################
     def __mwp_max_of_two_chars_and_filter( self, s_before, s_call, s_reason, s_name) -> bool:
@@ -564,66 +614,6 @@ class MyMainWindowPallet:
 
         return b_result
 
-    # ##########################################################################################
-    # https://manytools.org/hacker-tools/ascii-banner/
-    #
-    #   ######  #     # ######  #       ###  #####
-    #   #     # #     # #     # #        #  #     #
-    #   #     # #     # #     # #        #  #
-    #   ######  #     # ######  #        #  #
-    #   #       #     # #     # #        #  #
-    #   #       #     # #     # #        #  #     #
-    #   #        #####  ######  ####### ###  #####
-    #
-    # ##########################################################################################
-
-    # ####################### get_from_pal_btn_lst_color ########################
-    def get_from_pal_btn_lst_color(self, i_offset) -> str:
-        """ Frame with the pallet button to left, and details to right """
-        return self.a_pallet_button_lst[i_offset].cget( 'bg')
-
-    # ####################### mwp_pallet_zone ########################
-    def mwp_pallet_zone( self, i_pic_frame_width, a_bottom_frame, c_main_image, c_main_icon_bar):
-        """ Frame with the pallet button to left, and details to right """
-        self.c_main_image = c_main_image
-        self.c_main_icon_bar = c_main_icon_bar
-        self.__mwp_top_line_with_titles( a_bottom_frame, i_pic_frame_width)
-        # self.w_tk_root.update()
-
-        # Create pallet button left frame
-        a_pallet_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if self.s_platform == "Darwin":
-            a_pallet_bottom_frame.place( x=0, y=24, width=590, height=276 )
-        else:
-            a_pallet_bottom_frame.place( x=0, y=24, width=570, height=276 )
-
-        self.__mwp_pallet_zone_left( a_pallet_bottom_frame)
-        # self.w_tk_root.update()
-
-        # Create color button right frame
-        a_color_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
-        if self.s_platform == "Darwin":
-            a_color_bottom_frame.place( x=592, y=24, width=self.i_main_window_width - 592, height=276-12 )
-        else:
-            a_color_bottom_frame.place( x=572, y=24, width=self.i_main_window_width - 572, height=276-40 )
-
-        # Create botom button frame
-        a_pallet_bottom_btn_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
-        if self.s_platform == "Darwin":
-            a_pallet_bottom_btn_frame.place( x=592, y=276, width=self.i_main_window_width - 592, height=38 )
-        else:
-            a_pallet_bottom_btn_frame.place( x=572, y=266, width=self.i_main_window_width - 572, height=38 )
-
-        i_index_base_block = self.__mwp_pallet_zone_center_up( a_color_bottom_frame, 0)
-        i_index_base_block = self.__mwp_pallet_zone_center_down( a_color_bottom_frame, i_index_base_block)
-        self.__mwp_pallet_zone_right( a_pallet_bottom_btn_frame, i_index_base_block)
-        # self.w_tk_root.update()
-
-    # ####################### mwp_select_color_rad_btn ########################
-    def mwp_select_color_rad_btn( self, i_offset):
-        """ Select the radio button color in the pallet """
-        self.a_pallet_button_lst[i_offset].select()
-
     # ####################### __mwp_color_btn_rad_default ########################
     def __mwp_color_btn_rad_default( self, i_number):
         """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
@@ -667,47 +657,6 @@ class MyMainWindowPallet:
                 # Set value for import a pallet from an another windows
                 self.i_selected_pallet_line = __i_complete
                 self.c_main_icon_bar.mwib_set_selected_pallet_line( __i_complete)
-
-    # ####################### mwp_color_btn_rad ########################
-    def mwp_color_btn_rad( self, i_number):
-        """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
-        if self.i_color_to_copy_offset != -1:
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
-            self.i_color_to_copy_offset = -1
-            if i_result == 1:
-                self.__mwp_set_color_in_pallet( i_number)
-        elif self.i_color_line_to_copy_offset != -1:
-            i_complete = int( i_number / 16)
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
-            i_color_line_to_copy_offset = self.i_color_line_to_copy_offset
-            self.i_color_line_to_copy_offset = -1
-            if i_result == 1:
-                self.__mwp_set_line_in_pallet( i_complete, i_color_line_to_copy_offset)
-        elif self.i_color_to_swap_offset != -1:
-            if int( i_number / 16) == int( self.i_color_to_swap_offset / 16):
-                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
-                i_from = self.i_color_to_swap_offset
-                self.i_color_to_swap_offset = -1
-                if i_result == 1:
-                    self.__mwp_swap_color_in_pallet( i_from, i_number)
-            else:
-                self.i_color_to_swap_offset = -1
-                self.c_alert_windows.aw_create_alert_window( 1, "Swap two colors in a pallet line", "The selected colors must be in the same line.")
-        else:
-            self.__mwp_color_btn_rad_default( i_number)
-
-    # ####################### mwp_update_color_number_vertical_used ########################
-    def mwp_update_color_number_vertical_used( self):
-        """ Parse heigth of the original image to change color of label white when pallet is used """
-        for i_loop in range( 0, 16, 1):
-            i_counter = self.c_main_image.mwi_count_number_of_scb( i_loop * 16)
-            a_label = self.a_pallet_vertical_number_lst[i_loop]
-            if i_counter > 0:
-                a_label.configure( foreground='white')
-            else:
-                a_label.configure( foreground='black')
-
-        self.w_tk_root.update()
 
     # ####################### __mwp_set_color_in_pallet ########################
     def __mwp_set_color_in_pallet( self, i_new_index):
@@ -843,11 +792,6 @@ class MyMainWindowPallet:
             else:
                 self.w_tk_root.update()
 
-    # ####################### mwp_change_focus ########################
-    def mwp_change_focus( self, event):
-        """ De selected an entry widget, when a button is clicked ie the pallet button """
-        event.widget.focus_set()
-
     # ####################### __mwp_get_color_to_use ########################
     def __mwp_get_color_to_use( self, a_work_img, a_pallet_list, i_pos_x, i_pos_y) -> str:
         """ Get the color to use for the bar chart """
@@ -864,10 +808,122 @@ class MyMainWindowPallet:
         # self.c_the_log.add_string_to_log( f" \\i_pos_x= {i_pos_x} , i_pos_y= {i_pos_y} , palette_index= {palette_index}, s_color= {s_color}")
         return s_color
 
+# ##########################################################################################
+#  https://manytools.org/hacker-tools/ascii-banner/
+#
+#   ######  #     # ######  #       ###  #####
+#   #     # #     # #     # #        #  #     #
+#   #     # #     # #     # #        #  #
+#   ######  #     # ######  #        #  #
+#   #       #     # #     # #        #  #
+#   #       #     # #     # #        #  #     #
+#   #        #####  ######  ####### ###  #####
+#
+# ##########################################################################################
+
+    # ####################### mwp_update_color_number_vertical_used ########################
+    def mwp_update_color_number_vertical_used( self):
+        """ Parse heigth of the original image to change color of label white when pallet is used """
+        for i_loop in range( 0, 16, 1):
+            i_counter = self.c_main_image.mwi_count_number_of_scb( i_loop * 16)
+            a_label = self.a_pallet_vertical_number_lst[i_loop]
+            if i_counter > 0:
+                a_label.configure( foreground='white')
+            else:
+                a_label.configure( foreground='black')
+
+        self.w_tk_root.update()
+
+    # ####################### get_from_pal_btn_lst_color ########################
+    def get_from_pal_btn_lst_color(self, i_offset) -> str:
+        """ Frame with the pallet button to left, and details to right """
+        return self.a_pallet_button_lst[i_offset].cget( 'bg')
+
+    # ####################### mwp_pallet_zone ########################
+    def mwp_pallet_zone( self, i_pic_frame_width, a_bottom_frame, c_main_image, c_main_icon_bar):
+        """ Frame with the pallet button to left, and details to right """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  i_pic_frame_width={i_pic_frame_width}")
+        self.c_main_image = c_main_image
+        self.c_main_icon_bar = c_main_icon_bar
+        self.__mwp_top_line_with_titles( a_bottom_frame, i_pic_frame_width)
+        # self.w_tk_root.update()
+
+        # Create pallet button left frame
+        a_pallet_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if self.s_platform == "Darwin":
+            a_pallet_bottom_frame.place( x=0, y=24, width=590, height=276 )
+        else:
+            a_pallet_bottom_frame.place( x=0, y=24, width=570, height=276 )
+
+        self.__mwp_pallet_zone_left( a_pallet_bottom_frame)
+        # self.w_tk_root.update()
+
+        # Create color button right frame
+        a_color_bottom_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey'
+        if self.s_platform == "Darwin":
+            a_color_bottom_frame.place( x=592, y=24, width=self.i_main_window_width - 592, height=276-12 )
+        else:
+            a_color_bottom_frame.place( x=572, y=24, width=self.i_main_window_width - 572, height=276-40 )
+
+        # Create botom button frame
+        a_pallet_bottom_btn_frame = Frame( a_bottom_frame, padx=0, pady=2, background=constant.BACKGROUD_COLOR_UI)     # background='darkgray' or 'light grey' or constant.BACKGROUD_COLOR_UI
+        if self.s_platform == "Darwin":
+            a_pallet_bottom_btn_frame.place( x=592, y=276, width=self.i_main_window_width - 592, height=38 )
+        else:
+            a_pallet_bottom_btn_frame.place( x=572, y=266, width=self.i_main_window_width - 572, height=38 )
+
+        i_index_base_block = self.__mwp_pallet_zone_center_up( a_color_bottom_frame, 0)
+        i_index_base_block = self.__mwp_pallet_zone_center_down( a_color_bottom_frame, i_index_base_block)
+        self.i_index_base_block = i_index_base_block
+        self.__mwp_pallet_zone_right( a_pallet_bottom_btn_frame, i_index_base_block)
+        # self.w_tk_root.update()
+
+    # ####################### mwp_select_color_rad_btn ########################
+    def mwp_select_color_rad_btn( self, i_offset):
+        """ Select the radio button color in the pallet """
+        self.a_pallet_button_lst[i_offset].select()
+
+    # ####################### mwp_color_btn_rad ########################
+    def mwp_color_btn_rad( self, i_number):
+        """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  i_number={i_number}")
+        if self.i_color_to_copy_offset != -1:
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
+            self.i_color_to_copy_offset = -1
+            if i_result == 1:
+                self.__mwp_set_color_in_pallet( i_number)
+            self.a_cancel_btn.grid_forget()
+        elif self.i_color_line_to_copy_offset != -1:
+            i_complete = int( i_number / 16)
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
+            i_color_line_to_copy_offset = self.i_color_line_to_copy_offset
+            self.i_color_line_to_copy_offset = -1
+            if i_result == 1:
+                self.__mwp_set_line_in_pallet( i_complete, i_color_line_to_copy_offset)
+            self.a_cancel_btn.grid_forget()
+        elif self.i_color_to_swap_offset != -1:
+            if int( i_number / 16) == int( self.i_color_to_swap_offset / 16):
+                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
+                i_from = self.i_color_to_swap_offset
+                self.i_color_to_swap_offset = -1
+                if i_result == 1:
+                    self.__mwp_swap_color_in_pallet( i_from, i_number)
+            else:
+                self.i_color_to_swap_offset = -1
+                self.c_alert_windows.aw_create_alert_window( 1, "Swap two colors in a pallet line", "The selected colors must be in the same line.")
+            self.a_cancel_btn.grid_forget()
+        else:
+            self.__mwp_color_btn_rad_default( i_number)
+
+    # ####################### mwp_change_focus ########################
+    def mwp_change_focus( self, event):
+        """ De selected an entry widget, when a button is clicked ie the pallet button """
+        event.widget.focus_set()
+
     # ####################### mwp_draw_zoom_square ########################
     def mwp_draw_zoom_square( self, i_position_x : int, i_position_y : int):
-        """ Draw the zoom square part * 8 of the picture """
-        # self.c_the_log.add_string_to_log( f"mwp_draw_zoom_square : i_position_x= {i_position_x} , i_position_y= {i_position_y}")
+        """ Draw the zoom square part * 8 of the picture, called when click on the picture on top of the pallet """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  x={i_position_x} y={i_position_y}")
         i_contour = 26
         i_box_top = (i_position_x - i_contour, i_position_y - i_contour, i_position_x + i_contour, i_position_y + i_contour)
         a_work_img = self.c_main_image.mwi_get_working_image()
@@ -894,6 +950,9 @@ class MyMainWindowPallet:
         self.a_render_zoom = ImageTk.PhotoImage( self.a_zoom_work_img)
         self.a_zoom_lbl.config( image=self.a_render_zoom)
         self.a_zoom_lbl.photo = self.a_render_zoom
+
+        # Pen color is canceled on zoom square draw
+        self.__mwp_on_escape_key( None)
 
     # ####################### mwp_get_around_cursor ########################
     def mwp_get_around_cursor( self) -> int:
