@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='1.35'
+version='1.37'
 
 # definition all colors and styles to use with an echo
 
@@ -296,6 +296,12 @@ then
     echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
 fi
 echo
+
+ongoing_version=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+if [ -n "$ongoing_version" ]
+then
+    echo -e $Green "ongoing version     :" $BGreen"$ongoing_version" $Color_Off
+fi
 
 # zone for test
 
