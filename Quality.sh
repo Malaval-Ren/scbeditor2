@@ -295,13 +295,13 @@ then
     echo -e "" >> "$pylint_log"
     echo -e $Green "Version             :" $BGreen"$tempver" $Color_Off
 fi
-echo
 
 ongoing_version=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
 if [ -n "$ongoing_version" ]
 then
-    echo -e $Green "ongoing version     :" $BGreen"$ongoing_version" $Color_Off
+    echo -e $Green "Ongoing version     :" $BGreen"$ongoing_version" $Color_Off
 fi
+echo
 
 # zone for test
 

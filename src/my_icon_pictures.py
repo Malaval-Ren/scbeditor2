@@ -57,6 +57,7 @@ class MyIconPictures:
     app_photo: Optional[PhotoImage] = None
     about_photo: Optional[PhotoImage] = None
     open_photo: Optional[PhotoImage] = None
+    reload_photo: Optional[PhotoImage] = None
     save_photo: Optional[PhotoImage] = None
     color_palett_photo: Optional[PhotoImage] = None
     cursor_photo: Optional[PhotoImage] = None
@@ -81,6 +82,7 @@ class MyIconPictures:
                 ("app_photo", "ScbEditorII_T_16x16.png"),
                 ("about_photo", "ScbEditorII_b_T_81x81.png"),
                 ("open_photo", "openfile_b_T_81x81.png"),
+                ("reload_photo", "reloadfile_b_T_81x81.png"),
                 ("save_photo", "savefile_b_T_81x81.png"),
                 ("color_palett_photo", "color-pallet_b_T_81x81.png"),
                 ("cursor_photo", "curseur_b_T_81x81.png"),
@@ -182,6 +184,12 @@ class MyIconPictures:
         """Get open icon for the main windows"""
         assert self.open_photo is not None
         return self.open_photo
+
+    # ####################### get_reload_photo ########################
+    def get_reload_photo( self) -> PhotoImage:
+        """Get reload icon for the main windows"""
+        assert self.reload_photo is not None
+        return self.reload_photo
 
     # ####################### get_save_photo ########################
     def get_save_photo( self) -> PhotoImage:

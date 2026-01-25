@@ -33,6 +33,7 @@
 import platform
 import os
 import sys
+import inspect
 from typing import TYPE_CHECKING
 
 from tkinter import Button, Menu
@@ -48,6 +49,7 @@ from .my_import_window import MyImportPalletWindow
 from .my_alert_window import MyAlertWindow
 from .my_progress_bar_window import MyProgressBarWindow
 from .my_tools import mt_open_file
+from .my_tool_tips import MyToolTip
 
 if TYPE_CHECKING:
     from .my_main_window import MyMainWindow
@@ -88,6 +90,14 @@ class MyMainWindowIconsBar:
         self.c_mains_image : "MyMainWindowImage" = None
         self.imported_pallet_lst = []
         self.i_selected_pallet_in_main_windows = -1
+
+        if getattr( sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+			# PyInstaller creates a temp folder and stores path in _MEIPASS
+            # pylint: disable=protected-access
+            self.b_debug_mode = False
+            # pylint: enable=protected-access
+        else:
+            self.b_debug_mode = True
 
     # ####################### __mwib_ensure_bmp_extension ########################
     def __mwib_ensure_bmp_extension(self, s_filename) -> str:
@@ -228,7 +238,7 @@ class MyMainWindowIconsBar:
     def __mwib_load_check_bmp( self, s_filename) -> tuple:
         """ Check size and number of color in bmp """
         a_image = None
-        self.c_the_log.add_string_to_log( 'mwib_load_check_bmp() : Loading : ' + s_filename)
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  Loading : {s_filename}")
         if s_filename:
             # Open the image file
             with Image.open( s_filename) as a_img:
@@ -377,6 +387,31 @@ class MyMainWindowIconsBar:
             self.c_the_log.add_string_to_log( '__mwib_cursor_box()')
             self.c_alert_windows.aw_test_all_alert()
 
+    # ####################### __mwib_darwin_menu_bar ########################
+    def __mwib_darwin_menu_bar( self):
+        """ Create the apple menu bar for macOS """
+        if self.s_platform == "Darwin":
+            # Create a custom menu bar
+            menu_bar = Menu( self.w_main_windows)
+            # Add a custom "File" menu (or other menus you want)
+            file_menu = Menu( menu_bar, tearoff=0)
+            file_menu.add_command( label="Open BMP image…", command=self.mwib_open_box)
+            menu_bar.add_cascade( label="File", menu=file_menu)
+            # Set the custom menu bar
+            self.w_main_windows.config( menu=menu_bar)
+
+    # ####################### __mwib_grid_and_increment_col ########################
+    def __mwib_grid_and_increment_col( self, a_widget, row, col) -> int:
+        """ Grid the widget and increment the column """
+        a_widget.grid( row=row, column=col, padx=2, pady=2, sticky='nse')
+        return col + 1
+
+    # ####################### __mwib_grid_and_increment_row ########################
+    def __mwib_grid_and_increment_row( self, a_widget, row, col) -> int:
+        """ Grid the widget and increment the row """
+        a_widget.grid( row=row, column=col, padx=2, pady=2, sticky='nse')
+        return row + 1
+
     # ##########################################################################################
     # https://manytools.org/hacker-tools/ascii-banner/
     #
@@ -393,47 +428,52 @@ class MyMainWindowIconsBar:
     # ####################### mwib_create_top_bar_icons ########################
     def mwib_create_top_bar_icons( self, i_row_line) -> int:
         """ Design the top row for the main windows """
-        # self.c_the_log.add_string_to_log( "mwib_create_top_bar_icons() color : " + self.w_main_windows['background'])
-        self.c_the_log.add_string_to_log( 'mwib_create_top_bar_icons()')
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  i_row_line= {i_row_line}")
 
         s_button_style = 'flat'
         i_column = 0
+        a_button_cursor = None
         if self.s_platform == "Darwin":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            # Create a custom menu bar
-            menu_bar = Menu( self.w_main_windows)
-            # Add a custom "File" menu (or other menus you want)
-            file_menu = Menu( menu_bar, tearoff=0)
-            file_menu.add_command( label="Open BMP image…", command=self.mwib_open_box)
-            menu_bar.add_cascade( label="File", menu=file_menu)
-            # Set the custom menu bar
-            self.w_main_windows.config( menu=menu_bar)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            self.__mwib_darwin_menu_bar()
         elif self.s_platform == "Linux":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
 
-        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
-        i_column += 1
-        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_column += 1
-        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_column += 1
-        a_button_pallet.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_column += 1
-        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_column = self.__mwib_grid_and_increment_col( a_button_about, i_row_line, i_column)
+        i_column = self.__mwib_grid_and_increment_col( a_button_open, i_row_line, i_column)
+        i_column = self.__mwib_grid_and_increment_col( a_button_reload, i_row_line, i_column)
+        i_column = self.__mwib_grid_and_increment_col( a_button_save, i_row_line, i_column)
+        i_column = self.__mwib_grid_and_increment_col( a_button_pallet, i_row_line, i_column)
+        if self.b_debug_mode:
+            i_column = self.__mwib_grid_and_increment_col( a_button_cursor, i_row_line, i_column)
+
+        MyToolTip( widget=a_button_about, text="About...")
+        MyToolTip( widget=a_button_open, text="Open BMP image...")
+        MyToolTip( widget=a_button_reload, text="Reload BMP image")
+        MyToolTip( widget=a_button_save, text="Save as BMP image...")
+        MyToolTip( widget=a_button_pallet, text="Import color pallet from an another BMP image...")
+        if self.b_debug_mode:
+            MyToolTip( widget=a_button_cursor, text="Cursor tool (Test alert dialogs)")
 
         i_row_line += 1
         return i_row_line
@@ -441,48 +481,53 @@ class MyMainWindowIconsBar:
     # ####################### mwib_create_left_bar_icons ########################
     def mwib_create_left_bar_icons( self, i_row_line) -> int:
         """ Design the left row for the main windows """
-        # self.c_the_log.add_string_to_log( "mwib_create_left_bar_icons() color : " + self.w_main_windows['background'])
-        self.c_the_log.add_string_to_log( 'mwib_create_left_bar_icons()')
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  i_row_line= {i_row_line}")
 
         s_button_style = 'flat'
         i_column = 0
         i_row_line = 0
+        a_button_cursor = None
         if self.s_platform == "Darwin":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, bg=constant.BACKGROUD_COLOR_UI_MAC, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, bg=constant.BACKGROUD_COLOR_UI_MAC, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            # Create a custom menu bar
-            menu_bar = Menu( self.w_main_windows)
-            # Add a custom "File" menu (or other menus you want)
-            file_menu = Menu( menu_bar, tearoff=0)
-            file_menu.add_command( label="Open BMP image…", command=self.mwib_open_box)
-            menu_bar.add_cascade( label="File", menu=file_menu)
-            # Set the custom menu bar
-            self.w_main_windows.config( menu=menu_bar)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            self.__mwib_darwin_menu_bar()
         elif self.s_platform == "Linux":
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
             a_button_about = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_about_photo(), compound='center', command=self.__mwib_about_dialog_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_open = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_open_photo(), compound='center', command=self.mwib_open_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
-            a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            if self.b_debug_mode:
+                a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
 
-        a_button_about.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse' )
-        i_row_line += 1
-        a_button_open.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_row_line += 1
-        a_button_save.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_row_line += 1
-        a_button_pallet.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
-        i_row_line += 1
-        a_button_cursor.grid( row=i_row_line, column=i_column, padx=2, pady=2, sticky='nse')  # , sticky='nse'
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_about, i_row_line, i_column)
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_open, i_row_line, i_column)
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_reload, i_row_line, i_column)
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_save, i_row_line, i_column)
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_pallet, i_row_line, i_column)
+        if self.b_debug_mode:
+            i_row_line = self.__mwib_grid_and_increment_row( a_button_cursor, i_row_line, i_column)
+
+        MyToolTip( widget=a_button_about, text="About...")
+        MyToolTip( widget=a_button_open, text="Open BMP image...")
+        MyToolTip( widget=a_button_reload, text="Reload BMP image")
+        MyToolTip( widget=a_button_save, text="Save as BMP image...")
+        MyToolTip( widget=a_button_pallet, text="Import color pallet from an another BMP image...")
+        if self.b_debug_mode:
+            MyToolTip( widget=a_button_cursor, text="Cursor tool (Test alert dialogs)")
 
         i_row_line += 1
         return i_row_line
@@ -490,7 +535,7 @@ class MyMainWindowIconsBar:
     # ####################### mwib_open_box ########################
     def mwib_open_box( self, s_filepathname=''):
         """ Button load of the main window """
-        self.c_the_log.add_string_to_log( 'mwib_open_box() : Do load picture')
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  Do load picture : {s_filepathname}")
         s_ongoing_filename = ''
         if s_filepathname:
             self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( s_filepathname)
@@ -500,7 +545,7 @@ class MyMainWindowIconsBar:
             if s_ongoing_filename:
                 self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( s_ongoing_filename)
             else:
-                self.c_the_log.add_string_to_log( 'mwib_open_box() : Cancel by user')
+                self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  Cancel by user")
 
         if self.s_filename and s_ongoing_filename and self.a_original_image:
             # Display image already in 8 bpp or a converted to 8 bpp
@@ -512,6 +557,27 @@ class MyMainWindowIconsBar:
             self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
             self.w_main_windows.update()
             self.c_mains_image.mwi_click_in_picture_center()
+
+    # ####################### mwib_reload_box ########################
+    def mwib_reload_box( self):
+        """ Button reload of the main window """
+        self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}")
+        if self.s_filename:
+            # self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( self.s_filename)
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", f"Reload {self.s_filename},\nyou will lose your current modification in it?")
+            if i_result == 1:
+                if self.s_filename and self.a_original_image:
+                    # Display image already in 8 bpp or a converted to 8 bpp
+                    self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
+                    self.w_main_windows.update()
+                    self.c_mains_image.mwi_click_in_picture_center()
+                    # Increase valeur index to use the right line to be SCB ready
+                    self.__mwib_validate_scb_in_bmp()
+                    self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
+                    self.w_main_windows.update()
+                    self.c_mains_image.mwi_click_in_picture_center()
+        else:
+            self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name} : No file to reload")
 
     # ####################### mwib_get_frame ########################
     def mwib_get_frame( self) -> object:

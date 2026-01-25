@@ -526,8 +526,7 @@ class MyScbPalletWindow:
 
             self.w_scb_window.unbind("<Escape>")
             self.w_scb_window.unbind("<Return>")
-
-            # self.w_scb_window.destroy()
+            self.w_scb_window.destroy()
 
     # ####################### scbw_close_scb_window ########################
     def scbw_close_scb_window( self):

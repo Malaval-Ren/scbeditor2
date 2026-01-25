@@ -98,7 +98,7 @@ class MyAboutWindow:
 
         top_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=background_color)   # darkgray or light grey
         top_frame.pack( side='top', fill='both', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=336)
+        button_frame = tk_gui.Frame( self.w_about_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=348)
         button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
 
         # #### TOP LEFT #####
@@ -121,17 +121,18 @@ class MyAboutWindow:
             '  ' + self.a_list_application_info[3][0] + ", " + self.a_list_application_info[3][1] + '\n' + \
             '  ' + self.a_list_application_info[3][2] + '\n' + \
             '  ' + self.a_list_application_info[3][3] + '\n' + \
-            '  ' + self.a_list_application_info[3][4] + '\n'
+            '  ' + self.a_list_application_info[3][4] + '\n' + \
+            '  ' + self.a_list_application_info[3][5] + '\n'
         __s_7_part = '\n' + 'License' + '\n  ' + self.a_list_application_info[4] + '\n'
         __s_9_part = '  ' + self.a_list_application_info[2] + '\n  All rights reserved\n\n' + \
             'eMail' + '\t' + self.a_list_application_info[6] + '\n'
 
         if self.s_platform == "Darwin":
-            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=67, height=19)  # , exportselection=0, takefocus=0
+            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=68, height=20)  # , exportselection=0, takefocus=0
         elif self.s_platform == "Windows":
-            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
+            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=61, height=20)  # , exportselection=0, takefocus=0
         else:
-            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=60, height=19)  # , exportselection=0, takefocus=0
+            a_middle_text = MyRichTextWidget( top_left_frame, background=self.about_background, relief='sunken', tabs=('7c', '16c'), width=61, height=20)  # , exportselection=0, takefocus=0
 
         a_middle_text.insert( '2.0', __s_0_part, 'h1') # '1.0' -> line 1, character 0
         a_middle_text.insert( 'end', __s_1_part)
@@ -157,14 +158,14 @@ class MyAboutWindow:
     def __aw_set_window_size( self):
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
         if self.s_platform == "Linux":
-            self.i_width = 592
-            self.i_height = 374
+            self.i_width = 602
+            self.i_height = 384
         elif self.s_platform == "Darwin":
-            self.i_width = 592
-            self.i_height = 306
+            self.i_width = 602
+            self.i_height = 316
         elif self.s_platform == "Windows":
-            self.i_width = 592
-            self.i_height = 356
+            self.i_width = 602
+            self.i_height = 366
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
@@ -224,14 +225,14 @@ class MyAboutWindow:
         self.w_about_window.update()
         self.__aw_set_window_size()
 
-        self.w_about_window.bind("<Escape>", lambda event: self.__aw_about_cancel_button())
-        self.w_about_window.bind("<Return>", lambda event: self.__aw_about_ok_button())
+        self.w_about_window.bind( "<Escape>", lambda event: self.__aw_about_cancel_button())
+        self.w_about_window.bind( "<Return>", lambda event: self.__aw_about_ok_button())
 
         self.w_about_window.mainloop()
-        # w_parent_window.focus_set()
-        # self.c_the_log.add_string_to_log( 'pw_create_preference_window() : exit' )
-        self.w_about_window.unbind("<Escape>" )
-        self.w_about_window.unbind("<Return>" )
+
+        self.w_about_window.unbind( "<Escape>" )
+        self.w_about_window.unbind( "<Return>" )
+        self.w_about_window.destroy()
 
     # ####################### pw_close_preference_window ########################
     def aw_close_preference_window( self):

@@ -66,8 +66,9 @@ __author__      = ""
 __copyright__   = ""
 __credits__     = ["Frédéric Mure", "Patrice Afflatet",
                     "Reion: https://www.flaticon.com/authors/reion",
-                    "Pixelmeetup: https://www.flaticon.com/authors/pixelmeetup",
+                    "PixelMeetUp: https://www.flaticon.com/authors/pixelmeetup",
                     "HJ Studio: https://www.flaticon.com/authors/hj-studio",
+                    "OnLineWebFonts: https://www.onlinewebfonts.com/icon/559310",
                     ]
 __license__     = ""
 __version__     = ""

@@ -382,10 +382,10 @@ class MyAlertWindow:
 
         self.w_alert_window.mainloop()
 
-        self.w_alert_window.bind("<Escape>" )
-        self.w_alert_window.bind("<Return>" )
-
+        self.w_alert_window.unbind("<Escape>" )
+        self.w_alert_window.unbind("<Return>" )
         self.w_alert_window.destroy()
+
         return self.answers
 
     # ####################### aw_close_alert_window ########################
