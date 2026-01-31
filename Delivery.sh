@@ -161,6 +161,8 @@ pyInstall_Parameter=""
 
 livraisons_folder="../Livraisons/"
 
+# compute the number of images used in the application - Curently 17
+pyInstall_images_count=$(find ./images -type f -iname "*.png" | wc -l)
 
 # brew install gnu-sed gawk coreutils findutils
 
@@ -443,7 +445,7 @@ then
                 exit $ERROR_SH_FAILED
             fi
             i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
-            if [ $i_number_of_picture -ne 15 ]
+            if [ $i_number_of_picture -ne ($pyInstall_images_count - 1) ]
             then
                 echo
                 echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
@@ -465,7 +467,7 @@ then
                 exit $ERROR_SH_FAILED
             fi
             i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name" | grep png | grep -c "^")
-            if [ $i_number_of_picture -ne 16 ]
+            if [ $i_number_of_picture -ne $pyInstall_images_count ]
             then
                 echo
                 echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
