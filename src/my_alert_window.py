@@ -76,28 +76,25 @@ class MyAlertWindow:
     def __aw_alert_ok_button( self):
         """ Button ok of the alert window """
         self.w_alert_window.grab_release()
-        # self.w_alert_window.destroy()
-        self.w_alert_window.quit()
-        self.c_the_log.add_string_to_log( 'Do alert close with ok')
+        self.c_the_log.add_string_to_log( 'Do alert close with ok1')
         self.answers = self.answer_all_ok
+        self.w_alert_window.destroy()
 
     # ####################### __aw_alert_ok_bpp_button ########################
     def __aw_alert_ok_bpp_button( self):
         """ Button ok of the alert window """
         self.w_alert_window.grab_release()
-        # self.w_alert_window.destroy()
-        self.w_alert_window.quit()
-        self.c_the_log.add_string_to_log( 'Do alert close with ok')
+        self.c_the_log.add_string_to_log( 'Do alert close with ok2')
         self.answers = self.answer_bpp_ok
+        self.w_alert_window.destroy()
 
     # ####################### __aw_alert_cancel_button ########################
     def __aw_alert_cancel_button( self):
         """ Button cancel of the alert window """
         self.w_alert_window.grab_release()
-        # self.w_alert_window.destroy()
-        self.w_alert_window.quit()
         self.c_the_log.add_string_to_log( 'Do alert close with cancel')
         self.answers = self.answer_cancel
+        self.w_alert_window.destroy()
 
     # ####################### __aw_alert_frame ########################
     def __aw_alert_frame( self, top_frame) -> tk_gui.Frame:
@@ -138,7 +135,8 @@ class MyAlertWindow:
 
         # #### BOTTOM #####
         # width size of a button is number of charracters 15 + 2 charracters
-        Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, background=self.alert_background).pack( side='right', padx=4, pady=4 )
+        a_ok_btn = Button( button_frame, text='Ok', width=constant.DEFAULT_BUTTON_WIDTH + 2, compound='center', command=self.__aw_alert_ok_button, relief='raised', background=self.alert_background)
+        a_ok_btn.pack( side='right', padx=4, pady=4 )
 
         self.w_alert_window.update()
 
@@ -380,11 +378,9 @@ class MyAlertWindow:
         self.w_alert_window.bind("<Escape>", lambda event: self.__aw_alert_cancel_button())
         self.w_alert_window.bind("<Return>", lambda event: self.__aw_alert_ok_button())
 
-        self.w_alert_window.mainloop()
+        self.w_alert_window.wait_window()
 
-        self.w_alert_window.unbind("<Escape>" )
-        self.w_alert_window.unbind("<Return>" )
-        self.w_alert_window.destroy()
+        # Window is already destroyed by wait_window when closed
 
         return self.answers
 
@@ -392,7 +388,6 @@ class MyAlertWindow:
     def aw_close_alert_window( self):
         """ Close the preference window """
         self.__aw_alert_cancel_button()
-        self.w_alert_window.quit()
 
     # ####################### aw_test_all_alert ########################
     def aw_test_all_alert( self):

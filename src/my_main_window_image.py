@@ -601,6 +601,11 @@ class MyMainWindowImage:
 #
 # ##########################################################################################
 
+    # ####################### mwi_get_palette_number_line ########################
+    def mwi_get_palette_number_line( self) -> int:
+        """ Get the pallet number for a line number """
+        return self.a_scb_lbl.cget( "text")
+
     # ####################### mw_click_in_picture_center ########################
     def mwi_click_in_picture_center( self, pos_x=320, pos_y=200):
         """ Click on the center of the picture only after loaded it """

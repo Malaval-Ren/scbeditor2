@@ -83,8 +83,7 @@ class MyProgressBarWindow:
     def __pbw_alert_ok_button( self):
         """ Button ok of the alert window """
         self.w_progres_bar_window.grab_release()
-        # self.w_progres_bar_window.destroy()
-        self.w_progres_bar_window.quit()
+        self.w_progres_bar_window.destroy()
         self.c_the_log.add_string_to_log( 'Do alert close with ok')
         self.answers = self.answer_done
 
@@ -92,8 +91,7 @@ class MyProgressBarWindow:
     def __pbw_progress_bar_cancel_button( self):
         """ Button cancel of the alert window """
         self.w_progres_bar_window.grab_release()
-        # self.w_progres_bar_window.destroy()
-        self.w_progres_bar_window.quit()
+        self.w_progres_bar_window.destroy()
         self.c_the_log.add_string_to_log( 'Do alert close with cancel')
         self.answers = self.answer_cancel
 
@@ -229,7 +227,6 @@ class MyProgressBarWindow:
         """ Design the about box dialog """
         self.progres_bar.stop()
         self.value_lbl['text'] = self.__pbw_update_progress_label()
-        # self.w_progres_bar_window.quit()
         self.w_progres_bar_window.destroy()
         self.w_progres_bar_window = None
 
@@ -237,6 +234,4 @@ class MyProgressBarWindow:
     def pbw_close_progress_bar_window( self):
         """ Close the preference window """
         self.__pbw_progress_bar_cancel_button()
-        self.w_progres_bar_window.destroy()
         self.w_progres_bar_window = None
-        # self.w_progres_bar_window.quit()

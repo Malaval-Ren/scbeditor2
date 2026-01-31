@@ -166,6 +166,8 @@ class MyScbPalletWindow:
             w_parent_window = self.a_main_window.mw_get_main_window()
             w_parent_window.update()
             self.a_main_window_image.mwi_click_in_picture_center()
+        else:
+            self.__scbw_scb_cancel_button()
 
     # ####################### __scbw_scb_cancel_button ########################
     def __scbw_scb_cancel_button( self):
@@ -522,11 +524,9 @@ class MyScbPalletWindow:
             self.w_scb_window.bind("<Escape>", lambda event: self.__scbw_scb_cancel_button())
             self.w_scb_window.bind("<Return>", lambda event: self.__scbw_scb_ok_button())
 
-            self.w_scb_window.mainloop()
+            self.w_scb_window.wait_window()
 
-            self.w_scb_window.unbind("<Escape>")
-            self.w_scb_window.unbind("<Return>")
-            self.w_scb_window.destroy()
+            # Window is already destroyed by wait_window when closed
 
     # ####################### scbw_close_scb_window ########################
     def scbw_close_scb_window( self):

@@ -265,14 +265,18 @@ class MyMainWindowPallet:
     # ####################### __mwp_set_pen_color ########################
     def __mwp_set_pen_color( self):
         """ Set a new color value in pallet  """
-        if self.c_main_image.mwi_get_original_image():
-            self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
-            if self.s_platform == "Darwin":
-                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-            elif self.s_platform == "Linux":
-                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-            else:
-                self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+        if int( self.a_btn_x_lbl.cget( "text")) == int( self.c_main_image.mwi_get_palette_number_line()):
+            if self.c_main_image.mwi_get_original_image():
+                self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
+                if self.s_platform == "Darwin":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                elif self.s_platform == "Linux":
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
+                else:
+                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+        else:
+            self.c_alert_windows.aw_create_alert_window( 3, "Pen Color Error", "The pen color can be set only on the current pallet line.")
+            self.a_cancel_btn.grid_forget()
 
     # ####################### __mwp_copy_a_color ########################
     def __mwp_copy_a_color( self):
@@ -558,6 +562,7 @@ class MyMainWindowPallet:
         MyToolTip( widget=a_change_color_btn, text="Click on source color, click on the button and click on target color")
         MyToolTip( widget=a_swap_color_btn, text="Click on source color, click on the button and click on target color in the same line")
         MyToolTip( widget=a_copy_line_color_btn, text="Click on source color, click on the button and click on target color")
+        MyToolTip( widget=a_pen_color_btn, text="Set the color to use with the pen tool on next click on the zoom picture")
         MyToolTip( widget=self.a_cancel_btn, text="cancel the current operation")
 
     # ####################### __mwp_max_of_two_chars_and_filter ########################

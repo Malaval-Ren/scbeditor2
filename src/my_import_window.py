@@ -101,8 +101,8 @@ class MyImportPalletWindow:
     def __scbw_do_leave_import_dialog( self):
         """ Do commun stuff when press button ok or cancel on the scb window """
         self.w_import_window.grab_release()
-        self.w_import_window.quit()
-
+        self.w_import_window.destroy()
+        
     # ####################### __ipw_import_ok_button ########################
     def __ipw_import_ok_button( self):
         """ Button ok of the import window """
@@ -367,11 +367,9 @@ class MyImportPalletWindow:
             self.w_import_window.bind("<Escape>", lambda event: self.__ipw_import_cancel_button())
             self.w_import_window.bind("<Return>", lambda event: self.__ipw_import_ok_button())
 
-            self.w_import_window.mainloop()
+            self.w_import_window.wait_window()
 
-            self.w_import_window.unbind("<Escape>" )
-            self.w_import_window.unbind("<Return>" )
-            self.w_import_window.destroy()
+            # Window is already destroyed by wait_window when closed
 
     # ####################### ipw_close_import_window ########################
     def ipw_close_import_window( self):

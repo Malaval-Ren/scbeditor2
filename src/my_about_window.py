@@ -228,14 +228,12 @@ class MyAboutWindow:
         self.w_about_window.bind( "<Escape>", lambda event: self.__aw_about_cancel_button())
         self.w_about_window.bind( "<Return>", lambda event: self.__aw_about_ok_button())
 
-        self.w_about_window.mainloop()
+        self.w_about_window.wait_window()
 
-        self.w_about_window.unbind( "<Escape>" )
-        self.w_about_window.unbind( "<Return>" )
-        self.w_about_window.destroy()
+        # Window is already destroyed by wait_window when closed
 
     # ####################### pw_close_preference_window ########################
     def aw_close_preference_window( self):
         """ Close the preference window """
         self.__aw_about_cancel_button()
-        self.w_about_window.quit()
+        self.w_about_window.destroy()
