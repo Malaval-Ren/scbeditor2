@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  sam. 24 janv. 2026 13:59:40
+date :  lun. 9 févr. 2026 20:58:06
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -111,6 +111,7 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
+> pylint: disable=protected-access  
 > pylint: disable=broad-exception-caught  
   
 --------------------------------------------------------------------
@@ -153,8 +154,8 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 > pylint: disable=line-too-long  
 > pylint: disable=too-many-instance-attributes  
   
--------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 9.97/10, +0.03)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 
 &nbsp;
 

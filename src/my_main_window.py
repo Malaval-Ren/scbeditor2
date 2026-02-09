@@ -31,6 +31,7 @@
 
 import platform
 import os
+import inspect
 import tkinter as tk_gui
 
 from datetime import datetime
@@ -396,6 +397,8 @@ class MyMainWindow:
 
                 if b_stop:
                     break
+
+            self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  : 0 -> {i_to} -> 768 _ len( a_pallet_list) = {len( a_pallet_list)}")
 
             # set to zero the color black on the rest of the pallet
             i_to = i_index

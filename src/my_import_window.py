@@ -102,7 +102,7 @@ class MyImportPalletWindow:
         """ Do commun stuff when press button ok or cancel on the scb window """
         self.w_import_window.grab_release()
         self.w_import_window.destroy()
-        
+
     # ####################### __ipw_import_ok_button ########################
     def __ipw_import_ok_button( self):
         """ Button ok of the import window """

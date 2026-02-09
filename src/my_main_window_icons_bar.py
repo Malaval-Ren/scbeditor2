@@ -216,7 +216,7 @@ class MyMainWindowIconsBar:
         """ Select the bmp file to use """
         return mt_open_file( self.w_main_windows, self.c_main_class)
 
-    # ####################### __mwib_select_load_bmp ########################
+    # ####################### __mwib_nbr_color_per_lines ########################
     def __mwib_nbr_color_per_lines( self, a_image, s_filename : str, i_width : int, i_height : int) -> tuple:
         """ Check if the image have a maximum of 16 colors per line """
         if a_image and s_filename:
@@ -532,6 +532,19 @@ class MyMainWindowIconsBar:
         i_row_line += 1
         return i_row_line
 
+    # ####################### __mwib_load_bmp ########################
+    def __mwib_load_bmp( self):
+        """ Load the bmp in the main window and do all the necessary check to be sure to have a good image to work with """
+        # Display image already in 8 bpp or a converted to 8 bpp
+        self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
+        # self.w_main_windows.update()
+        self.c_mains_image.mwi_click_in_picture_center()
+        # Increase valeur index to use the right line to be SCB ready
+        self.__mwib_validate_scb_in_bmp()
+        self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
+        # self.w_main_windows.update()
+        self.c_mains_image.mwi_click_in_picture_center()
+
     # ####################### mwib_open_box ########################
     def mwib_open_box( self, s_filepathname=''):
         """ Button load of the main window """
@@ -548,15 +561,7 @@ class MyMainWindowIconsBar:
                 self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  Cancel by user")
 
         if self.s_filename and s_ongoing_filename and self.a_original_image:
-            # Display image already in 8 bpp or a converted to 8 bpp
-            self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
-            self.w_main_windows.update()
-            self.c_mains_image.mwi_click_in_picture_center()
-            # Increase valeur index to use the right line to be SCB ready
-            self.__mwib_validate_scb_in_bmp()
-            self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
-            self.w_main_windows.update()
-            self.c_mains_image.mwi_click_in_picture_center()
+            self.__mwib_load_bmp()
 
     # ####################### mwib_reload_box ########################
     def mwib_reload_box( self):
@@ -566,16 +571,9 @@ class MyMainWindowIconsBar:
             # self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( self.s_filename)
             i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", f"Reload {self.s_filename},\nyou will lose your current modification in it?")
             if i_result == 1:
+                self.s_filename, self.a_original_image = self.__mwib_load_check_bmp( self.s_filename)
                 if self.s_filename and self.a_original_image:
-                    # Display image already in 8 bpp or a converted to 8 bpp
-                    self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
-                    self.w_main_windows.update()
-                    self.c_mains_image.mwi_click_in_picture_center()
-                    # Increase valeur index to use the right line to be SCB ready
-                    self.__mwib_validate_scb_in_bmp()
-                    self.c_main_class.mw_update_main_window( self.s_filename, self.a_original_image)
-                    self.w_main_windows.update()
-                    self.c_mains_image.mwi_click_in_picture_center()
+                    self.__mwib_load_bmp()
         else:
             self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name} : No file to reload")
 
