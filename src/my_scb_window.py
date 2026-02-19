@@ -416,7 +416,7 @@ class MyScbPalletWindow:
         self.i_height += 30 + self.MIDDLE_FRAME_HEIGHT + self.UP_MIDDLE_FRAME_HEIGHT + self.DOWN_MIDDLE_FRAME_HEIGHT
 
         if self.s_platform == "Linux":
-            self.i_width = 968
+            self.i_width = 978
             self.i_height += 10  #374
         elif self.s_platform == "Darwin":
             self.i_width = 998
