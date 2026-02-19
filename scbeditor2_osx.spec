@@ -60,7 +60,7 @@ pyz = PYZ(
 a.datas += [('ScbEditorII_T_16x16.png','./images/ScbEditorII_T_16x16.png', "DATA")]
 a.datas += [('ScbEditorII_b_T_81x81.png','./images/ScbEditorII_b_T_81x81.png', "DATA")]
 a.datas += [('openfile_b_T_81x81.png','./images/openfile_b_T_81x81.png', "DATA")]
-a.datas += [('reloadfile_b_T_81x81.png','images\\reloadfile_b_T_81x81.png', "DATA")]
+a.datas += [('reloadfile_b_T_81x81.png','./images/reloadfile_b_T_81x81.png', "DATA")]
 a.datas += [('savefile_b_T_81x81.png','./images/savefile_b_T_81x81.png', "DATA")]
 a.datas += [('color-pallet_b_T_81x81.png','./images/color-pallet_b_T_81x81.png', "DATA")]
 a.datas += [('curseur_b_T_81x81.png','./images/curseur_b_T_81x81.png', "DATA")]
@@ -101,7 +101,7 @@ app = BUNDLE(
     name='scbeditor2.app',
     icon='appIcon_T_1024x1024.icns',
     bundle_identifier='com.malaval.scbeditor2',
-    version='2.11.33.134',
+    version='2.13.40.149',
     info_plist={
         'CFBundleName': 'SCB Editor II',
         'CFBundleDisplayName': 'SCB Editor II',

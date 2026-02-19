@@ -34,6 +34,7 @@
 # pylint: disable=too-few-public-methods
 # ###############################################################################################
 
+import platform
 from tkinter import Label, Toplevel
 
 # __name__ = "MyToolTip"
@@ -49,16 +50,25 @@ class MyToolTip:
 
         self.tooltip = None
         self.label = None
+        self.s_platform = platform.system()
 
+        # ####################### on_enter ########################
         def on_enter( event):
             """Create a yellow label on enter in widget shape"""
             self.tooltip = Toplevel()
             self.tooltip.overrideredirect(True)
             self.tooltip.geometry(f'+{event.x_root+15}+{event.y_root+10}')
 
-            self.label = Label( self.tooltip, text=self.text, padx=5, pady=5, justify='left', background="Yellow")
+            if self.s_platform == "Linux":
+                self.label = Label( self.tooltip, text=self.text, padx=5, pady=5, justify='left', background="Yellow")
+            elif self.s_platform == "Darwin":
+                self.label = Label( self.tooltip, text=self.text, padx=5, pady=5, justify='left', background="Yellow", foreground="Black")
+            else:
+                self.label = Label( self.tooltip, text=self.text, padx=5, pady=5, justify='left', background="Yellow")
+
             self.label.pack()
 
+        # ####################### on_leave ########################
         def on_leave( event):
             """Delete a yellow label on leave in widget shape"""
             self.tooltip.destroy()
