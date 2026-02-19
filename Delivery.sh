@@ -455,7 +455,7 @@ then
         fi
     elif [[ "$OSTYPE" == "linux-gnu"* ]]
     then
-        if [ -d ${pyInstall_dist} ] && [[ ${pyInstall_version} != "" ]]
+        if [[ -d "${pyInstall_dist}" && "${pyInstall_version}" != "" ]]
         then
             # ls -alg ./dist
             echo -e $Green "Rename application   : " "./"$pyInstall_dist"/"$pyInstall_Name " to " "./"$pyInstall_dist"/"$pyInstall_Name$pyInstall_version  $Color_Off
