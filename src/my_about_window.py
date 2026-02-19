@@ -159,7 +159,7 @@ class MyAboutWindow:
         """ Set the size of the configuration windows (+16 for any line added in a_middle_text) """
         if self.s_platform == "Linux":
             self.i_width = 602
-            self.i_height = 384
+            self.i_height = 394
         elif self.s_platform == "Darwin":
             self.i_width = 602
             self.i_height = 316
