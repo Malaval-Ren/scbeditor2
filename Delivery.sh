@@ -484,6 +484,10 @@ then
                 exit $ERROR_SH_SUB_ERROR
             fi
             echo
+        else
+            echo -e $BRed "$pyInstall_dist or $pyInstall_version are bad parameters" $Color_Off
+            echo   
+            exit $ERROR_SH_FILE
         fi
     elif [[ "$OSTYPE" == "darwin"* ]]
     then
@@ -518,6 +522,10 @@ then
             echo -e $BRed "Application not found" $Color_Off
             exit $ERROR_SH_FILE
         fi
+    else
+        echo -e $BRed "$OSTYPE not supported" $Color_Off
+        echo   
+        exit $ERROR_SH_FILE
     fi
 
     echo
