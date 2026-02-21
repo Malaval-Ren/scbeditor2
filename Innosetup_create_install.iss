@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "scbeditor2"
-#define MyAppVersion "2.11.33.134"
+#define MyAppVersion "2.13.40.149"
 #define MyAppPublisher "Disk Crack band"
 #define MyAppExeName MyAppName + "_v" + MyAppVersion + ".exe"
 
