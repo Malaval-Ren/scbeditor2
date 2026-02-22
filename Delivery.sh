@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='2.21'
+version='2.23'
 
 # definition all colors and styles to use with an echo
 
@@ -408,6 +408,10 @@ then
         echo -e $BRed "No version file found" $Color_Off
         exit $ERROR_SH_INC_VERSION
     fi
+else
+    new_version_file=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
+    pyInstall_version="_v${new_version_file}"
+    echo -e $IGreen "version file        :" $new_version_file $Color_Off
 fi
 
 echo
@@ -555,7 +559,7 @@ then
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
-            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
+            i_number_of_picture=$( pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
             if [ "$i_number_of_picture" -ne $(( pyInstall_images_count - 1 )) ]
             then
                 echo
@@ -577,8 +581,13 @@ then
                 echo -e $BRed "pyinstaller failed ! error =" $?  $Color_Off
                 exit $ERROR_SH_FAILED
             fi
-            i_number_of_picture=$(pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name" | grep png | grep -c "^")
-            if [ $i_number_of_picture -ne $pyInstall_images_count ]
+            i_number_of_picture=$( pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name" | grep png | grep -c "^")
+            # echo -e $Green "pathname               :" "$pyInstall_dist"/"$pyInstall_Name" $Color_Off
+            # echo -e $Green "i_number_of_picture    =" $i_number_of_picture $Color_Off
+            # echo -e $Green "pyInstall_images_count =" $pyInstall_images_count $Color_Off
+            # exit 1
+
+            if [ "$i_number_of_picture" -ne $(( pyInstall_images_count + 2 )) ]
             then
                 echo
                 echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
