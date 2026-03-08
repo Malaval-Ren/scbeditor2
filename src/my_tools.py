@@ -110,12 +110,16 @@ def mt_open_file( w_main_windows, a_caller_class) -> str:
     return s_filename
 
 # ####################### mt_save_file ########################
-def mt_save_file( w_main_windows, a_caller_class, s_original_filename) -> str:
-    """ Return the selected picture file or None """
+def mt_save_file( w_main_windows, a_caller_class, s_original_filename, b_bmp_extension) -> str:
+    """ Return the selected picture file with bmp or pic extension or None """
     s_filename = ''
-    s_filename = filedialog.asksaveasfilename( parent=w_main_windows, initialfile=s_original_filename, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
-    if s_filename and s_filename != "":
-        a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
+    if b_bmp_extension is True:
+        s_filename = filedialog.asksaveasfilename( parent=w_main_windows, initialfile=s_original_filename, initialdir=a_caller_class.mw_get_pathname(), title="Select BMP File", filetypes=[("BMP Files","*.bmp")])
+    else:
+        s_filename = filedialog.asksaveasfilename( parent=w_main_windows, initialfile=s_original_filename, initialdir=a_caller_class.mw_get_pathname(), title="Select PIC File", filetypes=[("PIC Files","*.pic")])
+    if s_filename and s_filename != "" :
+        if b_bmp_extension is True:
+            a_caller_class.mw_set_pathname( os.path.dirname( s_filename))
     else:
         # user cancelled; stop this method
         s_filename = ''

@@ -468,7 +468,7 @@ class MyMainWindow:
     def mw_save_picture( self):
         """ Save the picture """
         s_current_file_name = self.c_main_icon_bar.mwib_get_get_path_filename()
-        s_new_file_name = mt_save_file( self.w_tk_root, self, os.path.basename( s_current_file_name))
+        s_new_file_name = mt_save_file( self.w_tk_root, self, os.path.basename( s_current_file_name), True)
         if s_new_file_name:
             s_new_file_name.lower()
             if s_new_file_name[-4:] != ".bmp":

@@ -36,6 +36,7 @@ a.datas += [('openfile_b_T_81x81.png','./images/openfile_b_T_81x81.png', "DATA")
 a.datas += [('reloadfile_b_T_81x81.png','./images/reloadfile_b_T_81x81.png', "DATA")]
 a.datas += [('savefile_b_T_81x81.png','./images/savefile_b_T_81x81.png', "DATA")]
 a.datas += [('color-pallet_b_T_81x81.png','./images/color-pallet_b_T_81x81.png', "DATA")]
+a.datas += [('bmp_to_pic_T_81x81.png','./images/bmp_to_pic_T_81x81.png', "DATA")]
 a.datas += [('curseur_b_T_81x81.png','./images/curseur_b_T_81x81.png', "DATA")]
 a.datas += [('preferences_b_T_81x81.png','./images/preferences_b_T_81x81.png', "DATA")]
 a.datas += [('fr_France_T_81x81.png','./images/fr_France_T_81x81.png', "DATA")]

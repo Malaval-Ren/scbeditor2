@@ -29,6 +29,8 @@
 # Disable C0301 = Line too long (80 chars by line is not enough)
 # pylint: disable=line-too-long
 # Number is reasonable in this case these are all the icons of the main windows and the application icons
+# pylint: disable=too-many-instance-attributes
+# nine is reasonable in this case these are all the icons of the main windows and the application icons
 # ###############################################################################################
 
 import platform
@@ -50,8 +52,6 @@ import src.my_constants as constant
 # ####################### MyIconPictures ########################
 class MyIconPictures:
     """ Content the pictures for human interface graphic """
-    # pylint: disable=too-many-instance-attributes
-    # nine is reasonable in this case these are all the icons of the main windows and the application icons
 
     _instance = None
     app_photo: Optional[PhotoImage] = None
@@ -60,6 +60,7 @@ class MyIconPictures:
     reload_photo: Optional[PhotoImage] = None
     save_photo: Optional[PhotoImage] = None
     color_palett_photo: Optional[PhotoImage] = None
+    bmp_to_pic_photo: Optional[PhotoImage] = None
     cursor_photo: Optional[PhotoImage] = None
     preferences_photo: Optional[PhotoImage] = None
     french_photo: Optional[PhotoImage] = None
@@ -85,6 +86,7 @@ class MyIconPictures:
                 ("reload_photo", "reloadfile_b_T_81x81.png"),
                 ("save_photo", "savefile_b_T_81x81.png"),
                 ("color_palett_photo", "color-pallet_b_T_81x81.png"),
+                ("bmp_to_pic_photo", "bmp_to_pic_T_81x81.png"),
                 ("cursor_photo", "curseur_b_T_81x81.png"),
                 ("preferences_photo", "preferences_b_T_81x81.png"),
                 ("french_photo", "fr_France_T_81x81.png"),
@@ -115,7 +117,7 @@ class MyIconPictures:
     #         if alpha.getextrema()[0] < 255:
     #             print( "\tâœ… Lâ€™image a une transparence.")
     #         else:
-    #             print( "\tðŸŸ  Lâ€™image est en mode RGBA, mais complÃ¨tement opaque.")
+    #             print( "\tí ½í¿  Lâ€™image est en mode RGBA, mais complÃ¨tement opaque.")
     #     else:
     #         print( "\tâŒ Lâ€™image nâ€™a pas de canal alpha (pas de transparence).")
 
@@ -202,6 +204,12 @@ class MyIconPictures:
         """Get color pallet icon for the main windows"""
         assert self.color_palett_photo is not None
         return self.color_palett_photo
+
+    # ####################### get_bmp_to_pic_photo ########################
+    def get_bmp_to_pic_photo( self) -> PhotoImage:
+        """Get bmp to pic icon for the main windows"""
+        assert self.bmp_to_pic_photo is not None
+        return self.bmp_to_pic_photo
 
     # ####################### get_cursor_photo ########################
     def get_cursor_photo( self) -> PhotoImage:

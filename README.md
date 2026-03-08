@@ -59,7 +59,7 @@ _Last review: January 18th, 2026, by Renaud Malaval_
 - [Python](https://www.python.org/)
   - [Windows 11](https://www.microsoft.com/en-us/software-download/windows11) : 3.14.2 with Tkinter : 8.6.15
   - [Linux Mint v22.1](https://linuxmint.com/) : 3.12.3  with Tkinter : 8.6.15
-  - [Mac OSx86 v12.7.6](https://apps.apple.com/fr/app/macos-monterey/id1576738294?mt=12) : 3.14.2 with Tkinter : 9.0.2
+  - [Mac OSx86 v12.7.6](https://apps.apple.com/fr/app/macos-monterey/id1576738294?mt=12) : 3.14.3 with Tkinter : 9.0.2
 - [Python modules](https://pypi.org/)
   - [pip](https://pypi.org/project/pip/)
   - [pylint](https://pypi.org/project/pylint/)

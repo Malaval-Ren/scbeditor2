@@ -48,8 +48,9 @@ from .my_about_window import MyAboutWindow
 from .my_import_window import MyImportPalletWindow
 from .my_alert_window import MyAlertWindow
 from .my_progress_bar_window import MyProgressBarWindow
-from .my_tools import mt_open_file
+from .my_tools import mt_open_file, mt_save_file
 from .my_tool_tips import MyToolTip
+from .my_bmp_to_pic import MyFormatPic
 
 if TYPE_CHECKING:
     from .my_main_window import MyMainWindow
@@ -85,6 +86,7 @@ class MyMainWindowIconsBar:
         self.c_the_icons: "MyIconPictures" = MyIconPictures( None)
         self.s_platform = platform.system()
         self.c_alert_windows: "MyAlertWindow" = MyAlertWindow( self.c_main_class, list_application_info)
+        self.c_format_pic: "MyFormatPic" = MyFormatPic()
         self.s_filename = ''
         self.a_original_image = None
         self.c_mains_image : "MyMainWindowImage" = None
@@ -108,7 +110,7 @@ class MyMainWindowIconsBar:
         return s_filename
 
     # ####################### __mwib_get_copy_of_image ########################
-    def __mwib_get_copy_of_image( self, s_filename, a_image) -> Image:
+    def __mwib_get_copy_of_image( self, s_filename, a_image) -> Image.Image:
         """ Create a copy of the image with additional attributes """
         a_new_image = a_image.copy()
         if hasattr( a_image, "BITFIELDS"):
@@ -128,7 +130,7 @@ class MyMainWindowIconsBar:
             os.remove( s_filename)
 
     # ####################### __mwib_convert_bmp ########################
-    def __mwib_convert_bmp( self, s_filename, a_image, b_do_all) -> Image:
+    def __mwib_convert_bmp( self, s_filename, a_image, b_do_all) -> Image.Image:
         """ Convert bmp 4 bpp to 8 bpp """
         # converted_bmp = Image.new( 'P', (320, 200), color=0)
         a_org_pal_list = a_image.getpalette()
@@ -219,6 +221,8 @@ class MyMainWindowIconsBar:
     # ####################### __mwib_nbr_color_per_lines ########################
     def __mwib_nbr_color_per_lines( self, a_image, s_filename : str, i_width : int, i_height : int) -> tuple:
         """ Check if the image have a maximum of 16 colors per line """
+        i_number_of_colors = 0
+        s_debug_string=""
         if a_image and s_filename:
             # Check if the image have a maximum of 16 colors per line
             for y in range( i_height):
@@ -227,10 +231,19 @@ class MyMainWindowIconsBar:
                     color_index = a_image.getpixel( (x, y))
                     color_set.add(color_index)
                 if len(color_set) > 16:
-                    self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors ({len(color_set)} colors).")
-                    a_image = None
-                    s_filename = ''
-                    break
+                #     self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Line {y} has more than 16 colors at index {color_index} ({len(color_set)} colors).")
+                #     a_image = None
+                #     s_filename = ''
+                #     break
+                    self.c_the_log.add_string_to_log( f"Line {y} has {len(color_set)} colors at index {color_index}. Colors: {sorted(color_set)}")
+                    if i_number_of_colors < 4:
+                        s_debug_string = s_debug_string + f"Line {y} has {len(color_set)} colors at index {color_index}\n"
+                    i_number_of_colors += 1
+
+            if i_number_of_colors > 0:  # If more than 1024 colors in total, it's not compatible
+                self.c_alert_windows.aw_create_alert_window( 3, "BMP file not compatible", f"Too many colors by line in the image ({i_number_of_colors}).\n{s_debug_string}")
+                a_image = None
+                s_filename = ''
 
         return a_image, s_filename
 
@@ -377,6 +390,19 @@ class MyMainWindowIconsBar:
                     self.w_front_window.ipw_create_import_window( a_image, self.a_original_image, self.i_selected_pallet_in_main_windows)
                     self.w_front_window = None
 
+    # ####################### __mwib_bmp_to_pic_box ########################
+    def __mwib_bmp_to_pic_box( self):
+        """ Button convert a bmp to a pic file with the same name but .pic extension. """
+        self.c_the_log.add_string_to_log( 'mwib_bmp_to_pic_box()')
+        if self.s_filename and self.a_original_image:
+            self.c_the_log.add_string_to_log( 'Do convert bmp to pic')
+            s_output_name = self.s_filename.lower()
+            if s_output_name and s_output_name.endswith(".bmp"):
+                s_output_name = s_output_name.replace(".bmp", ".pic")
+            s_new_file_name = mt_save_file( self.w_main_windows, self.c_main_class, os.path.basename( s_output_name), False)
+            if s_new_file_name:
+                self.c_format_pic.pil_to_format_pic( self.a_original_image, s_new_file_name)
+
     # ####################### __mwib_cursor_box ########################
     def __mwib_cursor_box( self):
         """ Button cursor to do something """
@@ -439,6 +465,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             self.__mwib_darwin_menu_bar()
@@ -448,6 +475,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
@@ -456,6 +484,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command='', relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
 
@@ -464,6 +493,7 @@ class MyMainWindowIconsBar:
         i_column = self.__mwib_grid_and_increment_col( a_button_reload, i_row_line, i_column)
         i_column = self.__mwib_grid_and_increment_col( a_button_save, i_row_line, i_column)
         i_column = self.__mwib_grid_and_increment_col( a_button_pallet, i_row_line, i_column)
+        i_column = self.__mwib_grid_and_increment_col( a_button_to_pic, i_row_line, i_column)
         if self.b_debug_mode:
             i_column = self.__mwib_grid_and_increment_col( a_button_cursor, i_row_line, i_column)
 
@@ -472,6 +502,7 @@ class MyMainWindowIconsBar:
         MyToolTip( widget=a_button_reload, text="Reload BMP image")
         MyToolTip( widget=a_button_save, text="Save as BMP image...")
         MyToolTip( widget=a_button_pallet, text="Import color pallet from an another BMP image...")
+        MyToolTip( widget=a_button_to_pic, text="Convert BMP to Apple IIgs PIC image...")
         if self.b_debug_mode:
             MyToolTip( widget=a_button_cursor, text="Cursor tool (Test alert dialogs)")
 
@@ -493,6 +524,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI_MAC, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, highlightbackground=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             self.__mwib_darwin_menu_bar()
@@ -502,6 +534,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI, borderwidth=0, highlightthickness=0)
         else:
@@ -510,6 +543,7 @@ class MyMainWindowIconsBar:
             a_button_reload = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_reload_photo(), compound='center', command=self.mwib_reload_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_save = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_save_photo(), compound='center', command=self.__mwib_save_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             a_button_pallet = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_color_pallet_photo(), compound='center', command=self.__mwib_import_pallet_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
+            a_button_to_pic = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_bmp_to_pic_photo(), compound='center', command=self.__mwib_bmp_to_pic_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
             if self.b_debug_mode:
                 a_button_cursor = Button( self.a_top_frame_of_main_window, width=85, height=85, image=self.c_the_icons.get_cursor_photo(), compound='center', command=self.__mwib_cursor_box, relief=s_button_style, background=constant.BACKGROUD_COLOR_UI)
 
@@ -518,15 +552,17 @@ class MyMainWindowIconsBar:
         i_row_line = self.__mwib_grid_and_increment_row( a_button_reload, i_row_line, i_column)
         i_row_line = self.__mwib_grid_and_increment_row( a_button_save, i_row_line, i_column)
         i_row_line = self.__mwib_grid_and_increment_row( a_button_pallet, i_row_line, i_column)
-        if self.b_debug_mode:
-            i_row_line = self.__mwib_grid_and_increment_row( a_button_cursor, i_row_line, i_column)
+        i_row_line = self.__mwib_grid_and_increment_row( a_button_to_pic, i_row_line, i_column)
 
         MyToolTip( widget=a_button_about, text="About...")
         MyToolTip( widget=a_button_open, text="Open BMP image...")
         MyToolTip( widget=a_button_reload, text="Reload BMP image")
         MyToolTip( widget=a_button_save, text="Save as BMP image...")
         MyToolTip( widget=a_button_pallet, text="Import color pallet from an another BMP image...")
+        MyToolTip( widget=a_button_to_pic, text="Convert BMP to PIC format for Apple IIgs...")
+
         if self.b_debug_mode:
+            i_row_line = self.__mwib_grid_and_increment_row( a_button_cursor, i_row_line, i_column)
             MyToolTip( widget=a_button_cursor, text="Cursor tool (Test alert dialogs)")
 
         i_row_line += 1
