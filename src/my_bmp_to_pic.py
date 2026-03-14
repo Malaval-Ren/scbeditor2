@@ -81,7 +81,7 @@ class MyFormatPic( ctypes.Structure):
                 c1 = p1 % 16
                 c2 = p2 % 16
 
-                self.MonImage[y * 160 + x] = (c1 << 4) | c2
+                self.MonImage[y][x] = (c1 << 4) | c2
 
         used_blocks = {pixel // 16 for pixel in pixels[y*320:(y+1)*320]}
         if len( used_blocks) != 1:

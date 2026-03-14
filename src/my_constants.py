@@ -48,7 +48,7 @@ DEFAULT_BUTTON_WIDTH = 7
 
 COLOR_WINDOWS_MENU_BAR = '#0063B1'  # rgb(0, 99, 177)
 
-# BACKGROUD_COLOR_UI = 'light grey' or 'darkgray' or 'gray'
+# BACKGROUD_COLOR_UI = 'lightgrey' or 'darkgray' or 'gray'
 # gray color for windows 211,211,211 -> '#D3D3D3'
 BACKGROUD_COLOR_UI = 'dimgray'    #dimgray -> '#696969' or  #595959
 BACKGROUD_COLOR_UI_MAC = '#696969'    #dimgray -> '#696969' or  #595959
