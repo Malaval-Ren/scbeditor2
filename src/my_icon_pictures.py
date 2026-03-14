@@ -5,7 +5,7 @@
 #
 # This is an application to do modification of bmp file to prepare convertion to a AIIGS pic file.
 #
-# Copyright (C) 2023-2026 Renaud Malaval <renaud.malaval@free.fr>.
+# Copyright (C) 2023 .. 2026 Renaud Malaval <renaud.malaval@free.fr>.
 #
 # This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -117,7 +117,7 @@ class MyIconPictures:
     #         if alpha.getextrema()[0] < 255:
     #             print( "\tâœ… Lâ€™image a une transparence.")
     #         else:
-    #             print( "\tí ½í¿  Lâ€™image est en mode RGBA, mais complÃ¨tement opaque.")
+    #             print( "\tâš ï¸ Lâ€™image est en mode RGBA, mais complÃ¨tement opaque.")
     #     else:
     #         print( "\tâŒ Lâ€™image nâ€™a pas de canal alpha (pas de transparence).")
 
