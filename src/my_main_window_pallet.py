@@ -433,7 +433,7 @@ class MyMainWindowPallet:
     def __mpw_entry_label( self, a_color_bottom_frame, a_string_var, a_color_okay_command, i_index_base_block) -> tuple:
         """ create an entry and a label for the color edition hexadecimal and decimal """
         # all parameter available for a_color_okay_command are '%P', '%s', '%S', '%v', '%V'
-        an_entry = Entry( a_color_bottom_frame, textvariable=a_string_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( a_color_okay_command, '%P', '%S', '%V', '%W'), background=constant.LIGHT_COLOR_UI, foreground='green')
+        an_entry = Entry( a_color_bottom_frame, textvariable=a_string_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( a_color_okay_command, '%P', '%S', '%V', '%W'), background=constant.LIGHT_COLOR_UI, foreground='green', borderwidth=2, relief="solid")
         an_entry.grid( row=i_index_base_block, column=0, padx=4, sticky='w')
         an_label = Label( a_color_bottom_frame, text="", width=constant.DEFAULT_BUTTON_WIDTH - 1, background='light grey', foreground='green')
         an_label.grid( row=i_index_base_block, column=1, columnspan=1, padx=4, sticky='ew')
@@ -800,6 +800,11 @@ class MyMainWindowPallet:
     # ####################### __mwp_get_color_to_use ########################
     def __mwp_get_color_to_use( self, a_work_img, a_pallet_list, i_pos_x, i_pos_y) -> str:
         """ Get the color to use for the bar chart """
+        # Check bounds before accessing pixel
+        width, height = a_work_img.size
+        if i_pos_x < 0 or i_pos_x >= width or i_pos_y < 0 or i_pos_y >= height:
+            return "black"  # Default color if out of bounds
+        
         # 3 * is to avoid to do 2 multiplications later
         palette_index = 3 * a_work_img.getpixel( ( i_pos_x, i_pos_y))
         # without the 3 * we would have: 3*palette_index:3*palette_index+3

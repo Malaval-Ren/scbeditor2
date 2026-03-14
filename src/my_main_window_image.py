@@ -528,7 +528,7 @@ class MyMainWindowImage:
         a_pic_sep_lbl_h5.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
         # font='-weight bold'
         filter_command = a_pic_frame.register( self.__mwi_set_max_len_to_four_chars_and_filter)
-        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%S', '%V', '%W'), background='white', foreground='black')
+        self.a_mouse_pos_x = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_x_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%S', '%V', '%W'), background='white', foreground='black', borderwidth=2, relief="solid")
         self.a_mouse_pos_x.grid( row=i_index_base_block, column=3, padx=4, pady=2)
         # self.a_mouse_pos_x.bind( "<FocusIn>", self.__mwi_entry_mouse_x_focus_in)
         # self.a_mouse_pos_x.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
@@ -537,7 +537,7 @@ class MyMainWindowImage:
         i_index_base_block += 1
         a_pic_sep_lbl_h4 = Label( a_mouse_click_frame, text="Y ", width=4, anchor="e", background=constant.BACKGROUD_COLOR_UI)
         a_pic_sep_lbl_h4.grid( row=i_index_base_block, column=1, columnspan=2, padx=4, pady=2, sticky='ew')
-        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%S', '%V', '%W'), background='white', foreground='black')
+        self.a_mouse_pos_y = Entry( a_mouse_click_frame, textvariable=self.a_mouse_pos_y_input_var, width=constant.DEFAULT_BUTTON_WIDTH, validate="all", validatecommand=( filter_command, '%P', '%S', '%V', '%W'), background='white', foreground='black', borderwidth=2, relief="solid")
         self.a_mouse_pos_y.grid( row=i_index_base_block, column=3, padx=4, pady=2)
         # self.a_mouse_pos_y.bind( "<FocusIn>", self.__mwi_entry_mouse_y_focus_in)
         # self.a_mouse_pos_y.bind( "<FocusOut>", self.__mwi_entry_mouse_x_y_focus_out)
@@ -719,7 +719,7 @@ class MyMainWindowImage:
         self.a_scb_cnvs.delete( "all")
         self.a_scb_cnvs_rect_lst.clear()
         i_rect_begin = -1
-        for i_loop in range( 0, constant.PICTURE_HEIGHT - 2, 2):
+        for i_loop in range( 0, constant.PICTURE_HEIGHT, 2):
             i_offset = self.a_work_img.getpixel( ( 0, i_loop))
             i_inter = int( i_offset / 16) * 16
             if i_inter == i_pallet_number:
