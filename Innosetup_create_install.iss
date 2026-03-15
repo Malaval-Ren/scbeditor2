@@ -5,6 +5,7 @@
 #define MyAppVersion "2.13.40.149"
 #define MyAppPublisher "Disk Crack band"
 #define MyAppExeName MyAppName + "_v" + MyAppVersion + ".exe"
+#define BuildDate "2026-03-15"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -14,7 +15,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 VersionInfoVersion=1.0.3.0
 ;AppVerName={#MyAppName} {#MyAppVersion}
-AppCopyright=Copyright @ 2023..2026 {#MyAppPublisher}, Renaud Malaval
+AppCopyright=Copyright @ 2023 .. 2026 {#MyAppPublisher}, Renaud Malaval
 AppPublisher={#MyAppPublisher}
 DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
