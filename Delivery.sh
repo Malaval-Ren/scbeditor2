@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-version='2.23'
+version='2.33'
 
 # definition all colors and styles to use with an echo
 
@@ -295,13 +295,24 @@ echo -e $IGreen "Current folder      :" "$currentFolder" $Color_Off
 nouvelle_date=$(date +%F)
 safe_date=$(escape_sed_replacement "$nouvelle_date")
 
+formatted_date=$(date +"%B %-d, %Y" | awk '{
+    d=$2+0; m=$1; y=$3;
+    if (d ~ /(11|12|13)$/) suffix="th";
+    else if (d % 10 == 1) suffix="st";
+    else if (d % 10 == 2) suffix="nd";
+    else if (d % 10 == 3) suffix="rd";
+    else suffix="th";
+    print m " " d suffix ", " y
+}')
+
 # Update build date with portable approach
 if [[ -f "$pyInstall_fileVersion" ]]
 then
     # Use a more portable pattern that works with both GNU and BSD sed
     sed_update "$pyInstall_fileVersion" "s/\(StringStruct(u'BuildDate'[^u]*u'\)[^']*\('\)/\1${safe_date}\2/" "Failed to update BuildDate"
 else
-    echo -e $BYellow "Warning: $pyInstall_fileVersion not found, skipping BuildDate update" $Color_Off
+    echo -e $BRed "Warning: $pyInstall_fileVersion not found, skipping BuildDate update" $Color_Off
+    exit $ERROR_SH_FILE
 fi
 echo -e $IGreen "Build date          :" "$nouvelle_date" $Color_Off
 
@@ -323,63 +334,73 @@ echo
 if [[ "$OSTYPE" == "msys" ]]
 then
     new_version_file=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
-    echo -e $BRed "new_version_file :" $new_version_file $Color_Off
     if [ -z "$new_version_file" ]
     then
-        echo -e $Green "No version file found, create it and increase version number" $Color_Off
+        echo -e $BYellow "No version file found, create it from scbeditor2_version.txt and last number + 1" $Color_Off
         temp_version=$(grep "StringStruct(u'ProductVersion'" scbeditor2_version.txt | sed -E "s/.*u'([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
-        # temp_version="${temp_version%.*}.$(( ${temp_version##*.} + 1 ))"
+        temp_version="${temp_version%.*}.$(( ${temp_version##*.} + 1 ))"
         touch "$temp_version"
     fi
 
     new_version_file=$(ls | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$')
-    echo -e $BRed "new_version_file :" $new_version_file $Color_Off
     if [ -n "$new_version_file" ]
     then
-        echo -e $IGreen "Version             :" "_v${new_version_file}" $Color_Off
+        echo -e $BGreen "Version             :" "_v${new_version_file}" $Color_Off
         echo
-        
+
         # Escape version for safe use in sed patterns
         safe_version=$(escape_sed_replacement "$new_version_file")
-        
+
         # Check file existence before updating
-        local files_to_check=("Innosetup_create_install.iss" "$pyInstall_fileVersion" "scbeditor2_osx.spec" "scbeditor2.desktop" "./Documents/manual.md")
+        echo -e $Green  "Check file with date and version to update" $Color_Off
+        files_to_check=("./Innosetup_create_install.iss" "$pyInstall_fileVersion" "./scbeditor2_osx.spec" "./scbeditor2.desktop" "./Documents/manual.md")
         for file in "${files_to_check[@]}"
         do
             if [[ ! -f "$file" ]]
             then
                 echo -e $BRed "Warning: File not found: $file (will skip this update)" $Color_Off
+                exit $ERROR_SH_FILE
             fi
         done
         echo
-        
+
         # Update all Windows files with error checking
+        echo -e $Green  "update              : Innosetup_create_install.iss" $Color_Off
         if [[ -f "Innosetup_create_install.iss" ]]
         then
             sed_update "Innosetup_create_install.iss" "s/^#define MyAppVersion \".*\"/#define MyAppVersion \"${safe_version}\"/" "Failed to update MyAppVersion in Innosetup"
+            sed_update "Innosetup_create_install.iss" "s/^#define BuildDate \".*\"/#define BuildDate \"${safe_date}\"/" "Failed to update BuildDate in Innosetup"
         fi
-        
+
+        echo -e $Green  "update              : $pyInstall_fileVersion" $Color_Off
         if [[ -f "$pyInstall_fileVersion" ]]
         then
-            sed_update "$pyInstall_fileVersion" "s/\(StringStruct(u'ProductVersion', u'\)[^']*\(',\)/\1${safe_version}\2/" "Failed to update ProductVersion"
-            
             short_version="${new_version_file%.*}"
-            safe_short=$(escape_sed_replacement "$short_version")
-            sed_update "$pyInstall_fileVersion" "s/\(StringStruct(u'FileVersion', u'\)[^']*\(',\)/\1${safe_short}\2/" "Failed to update FileVersion"
-            
+            echo -e $Green  "short_version       : $short_version" $Color_Off        
+            safe_short=$( escape_sed_replacement "$short_version")
+            sed_update "$pyInstall_fileVersion" "s/\(StringStruct(u'FileVersion', u'\)[^']*/\1${safe_short}/" "Failed to update FileVersion"
+
+            sed_update "$pyInstall_fileVersion" "s/\(StringStruct(u'ProductVersion', u'\)[^']*/\1${safe_version}/" "Failed to update ProductVersion"
+
             commated_version="${new_version_file//./, }"
             safe_commated=$(escape_sed_replacement "$commated_version")
             sed_update "$pyInstall_fileVersion" "s/\(filevers=(\)[^)]*\(),\)/\1${safe_commated}\2/" "Failed to update filevers"
             sed_update "$pyInstall_fileVersion" "s/\(prodvers=(\)[^)]*\(),\)/\1${safe_commated}\2/" "Failed to update prodvers"
         fi
 
+        # echo -e $Green  "update              : scbeditor2_win.spec" $Color_Off   # Not version info
+
         # Update all OSx86 file
+        echo -e $Green  "update              : scbeditor2_osx.spec" $Color_Off
         if [[ -f "scbeditor2_osx.spec" ]]
         then
             sed_update "scbeditor2_osx.spec" "s/^ *version='[^']*',/    version='${safe_version}',/" "Failed to update OSX spec version"
         fi
 
         # Update all Linux file
+        # echo -e $Green  "update              : scbeditor2_x64.spec" $Color_Off   # Not version info
+
+        echo -e $Green  "update              : scbeditor2.desktop" $Color_Off
         if [[ -f "scbeditor2.desktop" ]]
         then
             linux_version="${new_version_file//./-}"
@@ -388,13 +409,16 @@ then
         fi
         
         # Update manual file
+        echo -e $Green  "update              : ./Documents/manual.md" $Color_Off
         if [[ -f "./Documents/manual.md" ]]
         then
+            sed -i "s/_Last review: .*, by Renaud Malaval/_Last review: $formatted_date, by Renaud Malaval/" ./Documents/manual.md
             sed_update "./Documents/manual.md" "s/\(_Version: \)[^_]*\(_\)/\1${safe_version}\2/" "Failed to update manual version"
         fi
-        
+
         pyInstall_version="_v${new_version_file}"
-        echo -e $IGreen "Version updates completed successfully" $Color_Off
+        echo
+        echo -e $IGreen "Version update completed successfully" $Color_Off
 
         # git pull
         # git add Innosetup_create_install.iss
@@ -560,10 +584,10 @@ then
                 exit $ERROR_SH_FAILED
             fi
             i_number_of_picture=$( pyi-archive_viewer -l "$pyInstall_dist"/"$pyInstall_Name".exe | grep png | grep -c "^")
-            if [ "$i_number_of_picture" -ne $(( pyInstall_images_count - 1 )) ]
+            if [ "$i_number_of_picture" -ne "$pyInstall_images_count" ]
             then
                 echo
-                echo -e $BRed "bad number of pictures =" $i_number_of_picture  $Color_Off
+                echo -e $BRed "bad number of pictures = " $i_number_of_picture "/" $pyInstall_images_count $Color_Off
                 exit $ERROR_SH_FAILED
             fi
             mv $pyInstall_dist"/"$pyInstall_Name".exe" $pyInstall_dist"/"$pyInstall_Name$pyInstall_version".exe"
