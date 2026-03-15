@@ -13,7 +13,7 @@
 AppId={{FDCC3A87-5C4D-413B-BD67-CD9B181C557A}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-VersionInfoVersion=1.0.3.0
+VersionInfoVersion=1.0.4.0
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppCopyright=Copyright @ 2023 .. 2026 {#MyAppPublisher}, Renaud Malaval
 AppPublisher={#MyAppPublisher}
