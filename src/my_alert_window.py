@@ -291,17 +291,22 @@ class MyAlertWindow:
         """ Set the size of the configuration windows """
         self.i_width = 500
         self.i_height = 200
+        # Add 28 pixels for button_frame + padding
+        button_frame_height = 28 + 8  # 8 for padding        
+
         if i_type == 4:
             self.i_height += 10
             if self.s_platform == "Linux":
                 self.i_height += 38
             elif self.s_platform == "Darwin":
                 self.i_height += 10
+        else:
+            self.i_height += button_frame_height
 
         self.i_position_x = self.c_the_main_window.mw_get_main_window_pos_x() + int((self.c_the_main_window.mw_get_main_window_width() - self.i_width) / 2)
         self.i_position_y = self.c_the_main_window.mw_get_main_window_pos_y() + int((self.c_the_main_window.mw_get_main_window_height() - self.i_height) / 2)
 
-        s_windows_size_and_position = ( str( self.i_width) + 'x' + str( self.i_height) + '+' + str( self.i_position_x) + '+' + str( self.i_position_y))
+        s_windows_size_and_position =  f"{self.i_width}x{self.i_height}+{self.i_position_x}+{self.i_position_y}"
         self.w_alert_window.geometry( s_windows_size_and_position)  # dimension + position x/y a l'ouverture
 
         # lock resize of main window
@@ -329,58 +334,62 @@ class MyAlertWindow:
         """ Design the about box dialog """
         w_parent_window = self.c_the_main_window.mw_get_main_window()
         self.w_alert_window = Toplevel( w_parent_window)
-        self.w_alert_window.lift( aboveThis=w_parent_window)
-        # window dialog is on top of w_parent_window
-        self.w_alert_window.grab_set()
-        self.w_alert_window.focus_set()
+        if self.w_alert_window is not None:
+            self.w_alert_window.lift( aboveThis=w_parent_window)
+            # window dialog is on top of w_parent_window
+            self.w_alert_window.grab_set()
+            self.w_alert_window.focus_set()
 
-        if self.s_platform == "Darwin":
-            background_color = constant.BACKGROUD_COLOR_UI_MAC
+            if self.s_platform == "Darwin":
+                background_color = constant.BACKGROUD_COLOR_UI_MAC
+            else:
+                background_color = self.alert_background
+
+            self.w_alert_window.configure( background=background_color)
+
+            # ####################### disable_event ########################
+            # disable click on the X on top right of the window
+            def disable_event():
+                self.__aw_alert_cancel_button()
+                # pass
+
+            self.w_alert_window.protocol( "WM_DELETE_WINDOW", disable_event)
+            if s_title:
+                self.w_alert_window.title( s_title)
+            else:
+                self.w_alert_window.title( ' Alert ')
+
+            # global s_device_information
+            top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=background_color)   # darkgray or light grey
+            top_frame.pack( side='top', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
+            button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
+            button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
+
+            self.c_the_log.add_string_to_log( f"Alert type: {i_type}, message: {s_message}")
+
+            if i_type == 1:
+                self.__aw_error_block( s_message, top_frame, button_frame)
+            elif i_type == 2:
+                self.__aw_question_block( s_message, top_frame, button_frame)
+            elif i_type == 3:
+                self.__aw_warning_block( s_message, top_frame, button_frame)
+            elif i_type == 4:
+                self.__aw_choice_block( s_message, top_frame, button_frame)
+            else:
+                self.__aw_alert_block( s_message, top_frame, button_frame)
+
+            self.w_alert_window.update()
+            self.__aw_set_window_size( i_type)
+
+            self.w_alert_window.bind("<Escape>", lambda event: self.__aw_alert_cancel_button())
+            self.w_alert_window.bind("<Return>", lambda event: self.__aw_alert_ok_button())
+
+            self.w_alert_window.wait_window()
+
+            # Window is already destroyed by wait_window when closed
         else:
-            background_color = self.alert_background
-
-        self.w_alert_window.configure( background=background_color)
-
-        # ####################### disable_event ########################
-        # disable click on the X on top right of the window
-        def disable_event():
-            self.__aw_alert_cancel_button()
-            # pass
-
-        self.w_alert_window.protocol( "WM_DELETE_WINDOW", disable_event)
-        if s_title:
-            self.w_alert_window.title( s_title)
-        else:
-            self.w_alert_window.title( ' Alert ')
-
-        # global s_device_information
-        top_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=background_color)   # darkgray or light grey
-        top_frame.pack( side='top', fill='both', expand=True)   # fill :  must be 'none', 'x', 'y', or 'both'
-        button_frame = tk_gui.Frame( self.w_alert_window, relief='flat', background=constant.COLOR_WINDOWS_MENU_BAR, width=self.i_width, height=28)
-        button_frame.pack( side='bottom', fill='x', expand=False)   # fill :  must be 'none', 'x', 'y', or 'both'
-
-        self.c_the_log.add_string_to_log( f"Alert type: {i_type}, message: {s_message}")
-
-        if i_type == 1:
-            self.__aw_error_block( s_message, top_frame, button_frame)
-        elif i_type == 2:
-            self.__aw_question_block( s_message, top_frame, button_frame)
-        elif i_type == 3:
-            self.__aw_warning_block( s_message, top_frame, button_frame)
-        elif i_type == 4:
-            self.__aw_choice_block( s_message, top_frame, button_frame)
-        else:
-            self.__aw_alert_block( s_message, top_frame, button_frame)
-
-        self.w_alert_window.update()
-        self.__aw_set_window_size( i_type)
-
-        self.w_alert_window.bind("<Escape>", lambda event: self.__aw_alert_cancel_button())
-        self.w_alert_window.bind("<Return>", lambda event: self.__aw_alert_ok_button())
-
-        self.w_alert_window.wait_window()
-
-        # Window is already destroyed by wait_window when closed
+            self.c_the_log.add_string_to_log( "Error creating alert window")
+            self.answers = self.answer_cancel
 
         return self.answers
 
