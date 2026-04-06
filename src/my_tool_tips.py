@@ -60,34 +60,35 @@ class MyToolTip:
             """Create a canvas with rounded rectangle for Windows"""
             # Measure actual text width and height using font
             font = tkFont.Font( family="Arial", size=10)
-            
+
             # Calculate height and width based on lines
             lines = text.split('\n')
-            
+
             # Find the width of the longest line
-            max_line_width = max( font.measure(line) for line in lines) if lines else 0
-            
-            line_height = 15  # Height per line
-            vertical_padding = 10  # Padding top and bottom
-            height = len(lines) * line_height + vertical_padding
-            
-            side_padding = 15  # Equal padding on left and right
-            width = max_line_width + (side_padding * 2)
-            
+            if lines:
+                max_line_width = max(font.measure(line) for line in lines)
+            else:
+                max_line_width = 0
+
+            height = len(lines) * 15 + 10       # 15 is Height per line, 10 is Padding top and bottom
+            width = max_line_width + (15 * 2)   # 15 is Equal padding on left and right
+
             canvas = Canvas( parent, width=width, height=height, bg="white", highlightthickness=0, bd=0)
-            
+
             # Draw rounded rectangle (using 4 arcs and 2 rectangles)
             x1, y1, x2, y2 = 0, 0, width - 1, height - 1
-            points = [
-                canvas.create_arc( (x1, y1), (x1+radius*2, y1+radius*2), start=90, extent=90, fill="Yellow", outline="Yellow"),
-                canvas.create_arc( (x2-radius*2, y1), (x2, y1+radius*2), start=0, extent=90, fill="Yellow", outline="Yellow"),
-                canvas.create_arc( (x2-radius*2, y2-radius*2), (x2, y2), start=270, extent=90, fill="Yellow", outline="Yellow"),
-                canvas.create_arc( (x1, y2-radius*2), (x1+radius*2, y2), start=180, extent=90, fill="Yellow", outline="Yellow"),
-                canvas.create_rectangle( (x1+radius, y1), (x2-radius, y2), fill="Yellow", outline="Yellow"),
-                canvas.create_rectangle( (x1, y1+radius), (x2, y2-radius), fill="Yellow", outline="Yellow"),
-            ]
+            canvas.create_arc( (x1, y1), (x1+radius*2, y1+radius*2), start=90, extent=90, fill="Yellow", outline="Yellow")
+            canvas.create_arc( (x2-radius*2, y1), (x2, y1+radius*2), start=0, extent=90, fill="Yellow", outline="Yellow")
+            canvas.create_arc( (x2-radius*2, y2-radius*2), (x2, y2), start=270, extent=90, fill="Yellow", outline="Yellow")
+            canvas.create_arc( (x1, y2-radius*2), (x1+radius*2, y2), start=180, extent=90, fill="Yellow", outline="Yellow")
+            canvas.create_rectangle( (x1+radius, y1), (x2-radius, y2), fill="Yellow", outline="Yellow")
+            canvas.create_rectangle( (x1, y1+radius), (x2, y2-radius), fill="Yellow", outline="Yellow")
+
             # Set justify based on number of lines
-            justify = "left" if len(lines) > 1 else "center"
+            if len( lines) > 1:
+                justify = "left"
+            else:
+                justify = "center"
             canvas.create_text(width // 2, height // 2, text=text, font=("Arial", 10), fill="Black", justify=justify)
             return canvas
 

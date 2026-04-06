@@ -64,7 +64,7 @@ class MyAlertWindow:
         self.c_the_log = MyLogAnUsage( None)
         self.c_the_icons = MyIconPictures( None)
         self.s_platform = platform.system()
-        self.w_alert_window = None
+        self.w_alert_window: tk_gui.Toplevel | None = None
         self.i_height = 200
         self.i_width = 500
         self.i_position_x = 0
@@ -289,10 +289,13 @@ class MyAlertWindow:
     # ####################### __aw_set_window_size ########################
     def __aw_set_window_size( self, i_type):
         """ Set the size of the configuration windows """
+        if self.w_alert_window is None:
+            raise RuntimeError("Alert window must be initialized before setting size")
+
         self.i_width = 500
         self.i_height = 200
         # Add 28 pixels for button_frame + padding
-        button_frame_height = 28 + 8  # 8 for padding        
+        button_frame_height = 28 + 8  # 8 for padding
 
         if i_type == 4:
             self.i_height += 10

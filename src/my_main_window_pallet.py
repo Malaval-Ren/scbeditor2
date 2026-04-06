@@ -262,18 +262,22 @@ class MyMainWindowPallet:
                     self.i_around_cursor = -1
                     self.a_cancel_btn.grid_forget()
 
+    # ####################### __mwp_grid_cancel_button ########################
+    def __mwp_grid_cancel_button( self):
+        """Grid the cancel button with platform-specific padding"""
+        if self.s_platform != "Windows":
+            padx, pady = 2, 0
+        else:
+            padx, pady = 4, 4
+        self.a_cancel_btn.grid(row=self.i_index_base_block, column=5, padx=padx, pady=pady, sticky='w')
+
     # ####################### __mwp_set_pen_color ########################
     def __mwp_set_pen_color( self):
         """ Set a new color value in pallet  """
         if int( self.a_btn_x_lbl.cget( "text")) == int( self.c_main_image.mwi_get_palette_number_line()):
             if self.c_main_image.mwi_get_original_image():
                 self.i_around_cursor = int( self.a_btn_offset_lbl.cget( "text"))
-                if self.s_platform == "Darwin":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                elif self.s_platform == "Linux":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                else:
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+                self.__mwp_grid_cancel_button()
         else:
             self.c_alert_windows.aw_create_alert_window( 3, "Pen Color Error", "The pen color can be set only on the current pallet line.")
             self.a_cancel_btn.grid_forget()
@@ -284,12 +288,7 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_to_copy_offset == -1:
                 self.i_color_to_copy_offset = int( self.a_btn_offset_lbl.cget( "text"))
-                if self.s_platform == "Darwin":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                elif self.s_platform == "Linux":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                else:
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+                self.__mwp_grid_cancel_button()
 
     # ####################### __mwp_swap_a_color ########################
     def __mwp_swap_a_color( self):
@@ -297,12 +296,7 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_to_swap_offset == -1:
                 self.i_color_to_swap_offset = int( self.a_btn_offset_lbl.cget( "text"))
-                if self.s_platform == "Darwin":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                elif self.s_platform == "Linux":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                else:
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+                self.__mwp_grid_cancel_button()
 
     # ####################### __mwp_copy_line_color ########################
     def __mwp_copy_line_color( self):
@@ -310,12 +304,7 @@ class MyMainWindowPallet:
         if self.c_main_image.mwi_get_original_image():
             if self.i_color_line_to_copy_offset == -1:
                 self.i_color_line_to_copy_offset = int( self.a_btn_x_lbl.cget( "text"))
-                if self.s_platform == "Darwin":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                elif self.s_platform == "Linux":
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=2, pady=0, sticky='w')
-                else:
-                    self.a_cancel_btn.grid( row=self.i_index_base_block, column=5, padx=4, pady=4, sticky='w')
+                self.__mwp_grid_cancel_button()
 
     # ####################### __mwp_top_line_with_titles ########################
     def __mwp_top_line_with_titles( self, a_bottom_frame, i_pic_frame_width):
@@ -628,7 +617,7 @@ class MyMainWindowPallet:
             a_pallet_list = self.c_main_image.mwi_get_original_image().getpalette()
             # self.c_the_log.add_string_to_log( "mwp_color_btn_rad() a_pallet_list = ", str( len( a_pallet_list)))
             if (i_number * 3) > len( a_pallet_list):
-                self.c_the_log.add_string_to_log( "mwp_color_btn_rad() i_number = " + str( i_number) + " a_pallet_list = " + str( len( a_pallet_list)) + " FAILED" )
+                self.c_the_log.add_string_to_log( f"mwp_color_btn_rad() i_number = {i_number} a_pallet_list = {len(a_pallet_list)} FAILED" )
             else:
                 i_tmp_number = i_number * 3
                 i_red = a_pallet_list[i_tmp_number]
@@ -804,7 +793,7 @@ class MyMainWindowPallet:
         width, height = a_work_img.size
         if i_pos_x < 0 or i_pos_x >= width or i_pos_y < 0 or i_pos_y >= height:
             return "black"  # Default color if out of bounds
-        
+
         # 3 * is to avoid to do 2 multiplications later
         palette_index = 3 * a_work_img.getpixel( ( i_pos_x, i_pos_y))
         # without the 3 * we would have: 3*palette_index:3*palette_index+3
@@ -898,14 +887,14 @@ class MyMainWindowPallet:
         """ Pallet of color buttons. i_number is a value form 0 to 255 one of the pallet radio button """
         self.c_the_log.add_string_to_log( f"{inspect.currentframe().f_code.co_name}  i_number={i_number}")
         if self.i_color_to_copy_offset != -1:
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the color at index " + str( self.i_color_to_copy_offset) + " to the index " + str( i_number) + " ?")
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", f"Confirm copy of the color at index {self.i_color_to_copy_offset} to the index {i_number} ?")
             self.i_color_to_copy_offset = -1
             if i_result == 1:
                 self.__mwp_set_color_in_pallet( i_number)
             self.a_cancel_btn.grid_forget()
         elif self.i_color_line_to_copy_offset != -1:
             i_complete = int( i_number / 16)
-            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm copy of the line " + str( self.i_color_line_to_copy_offset) + " to the line " + str( i_complete) + " ?")
+            i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", f"Confirm copy of the line {self.i_color_line_to_copy_offset} to the line {i_complete} ?")
             i_color_line_to_copy_offset = self.i_color_line_to_copy_offset
             self.i_color_line_to_copy_offset = -1
             if i_result == 1:
@@ -913,7 +902,7 @@ class MyMainWindowPallet:
             self.a_cancel_btn.grid_forget()
         elif self.i_color_to_swap_offset != -1:
             if int( i_number / 16) == int( self.i_color_to_swap_offset / 16):
-                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", "Confirm swap of the color at index " + str( self.i_color_to_swap_offset) + " to the index " + str( i_number) + " ?")
+                i_result = self.c_alert_windows.aw_create_alert_window( 2, "Question", f"Confirm swap of the color at index {self.i_color_to_swap_offset} to the index {i_number} ?")
                 i_from = self.i_color_to_swap_offset
                 self.i_color_to_swap_offset = -1
                 if i_result == 1:

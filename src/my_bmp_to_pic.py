@@ -60,11 +60,6 @@ class MyFormatPic( ctypes.Structure):
         ("Couleur_Palette_1a15", ctypes.c_uint16 * (16 * 15)),
     ]
 
-    # ####################### __init__ ########################
-    def __init__( self):
-        """ Initialize the structure with default values """
-        super().__init__()
-
     # ####################### __do_pixels_and_scb ########################
     def __do_pixels_and_scb( self, pixels):
         """ Convertit les pixels d'une image PIL en format PIC pour Apple IIgs. """

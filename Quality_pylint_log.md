@@ -2,7 +2,7 @@
 
 ## *Context*
 
-date :  lun. 9 févr. 2026 20:58:06
+date :  lun. 6 avr. 2026 14:07:32
 
 | *Tools* | *version* |
 | -------------- | -------------------------------- |
@@ -14,7 +14,7 @@ date :  lun. 9 févr. 2026 20:58:06
 | Bash | 5.2.37(1)-release |
 | System | msys |
 | **Project** |  |
-| scbeditor2 | 2.11.33.134 |
+| scbeditor2 | 2.15.43.153 |
 
 &nbsp;
 
@@ -45,6 +45,16 @@ Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
   
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+
+&nbsp;
+
+## *./src/my_bmp_to_pic.py*
+
+> pylint: disable=line-too-long  
+> pylint: disable=too-many-instance-attributes  
+  
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 9.77/10, +0.23)
 
 &nbsp;
 
